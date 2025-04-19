@@ -1,3 +1,4 @@
+import NavBar from '../components/NavBar';
 import React from 'react';
 import { useState } from 'react';
 import nutrientData from '../data/nutrients';
@@ -69,6 +70,7 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
 
   return (
     <>
+    <NavBar pageTitle="Blueprint" />
       <Head>
         <title>Blueprint | FuelForm</title>
       </Head>
