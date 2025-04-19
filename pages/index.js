@@ -11,10 +11,10 @@ export default function Home() {
         
         {/* 🌸 Faded Background Image */}
         <img
-          src="/images/flower.png"
-          alt="Flower of Life"
-          className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none"
-        />
+  src="/images/flower.png"
+  alt="Flower of Life"
+  className="absolute inset-0 w-full h-full object-cover opacity-20 sm:opacity-10 pointer-events-none"
+/>
 
         {/* 🌟 Main Content */}
         <h1 className="text-5xl md:text-7xl font-extrabold text-center mb-6 relative z-10">
