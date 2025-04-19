@@ -9,7 +9,7 @@ export default function Home() {
       <p className="text-lg md:text-2xl text-center max-w-2xl mb-10">
         Fuel your body. Master your form. A system for sacred nutrition and performance.
       </p>
-      <Link href="/nutrient-blueprint">
+      <Link href="/blueprint">
   <button className="bg-white text-black px-6 py-3 rounded-2xl font-bold hover:bg-gray-200 transition">
     Discover Your Blueprint
   </button>
