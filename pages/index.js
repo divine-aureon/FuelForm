@@ -1,7 +1,12 @@
+import Head from 'next/head';
 import Link from 'next/link';
 
 export default function Home() {
   return (
+    <>
+  <Head>
+    <title>Home | FuelForm</title>
+  </Head>
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
       <h1 className="text-5xl md:text-7xl font-extrabold text-center mb-6">
         FuelForm
@@ -15,5 +20,6 @@ export default function Home() {
   </button>
 </Link>
     </main>
+    </>
   );
 }
