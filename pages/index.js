@@ -13,7 +13,7 @@ export default function Home() {
         <img
   src="/images/flower.png"
   alt="Flower of Life"
-  className="absolute inset-0 w-full h-full object-cover opacity-20 sm:opacity-10 pointer-events-none"
+  className="absolute inset-0 w-full h-full object-cover opacity-40 sm:opacity-20 pointer-events-none"
 />
 
         {/* 🌟 Main Content */}
