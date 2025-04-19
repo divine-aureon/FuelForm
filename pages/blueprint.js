@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import nutrientData from '../data/nutrients';
 import Head from 'next/head'
