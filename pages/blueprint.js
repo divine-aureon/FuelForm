@@ -125,109 +125,67 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
       <section className="max-w-3xl mx-auto">
   <h2 className="text-2xl font-semibold mb-4 text-center">Recommended Vitamins</h2>
 
-  {/* DESKTOP TABLE */}
-  <div className="hidden md:block overflow-x-auto max-w-full">
-    <table className="w-full min-w-[600px] border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="px-4 py-2 text-left whitespace-nowrap">Vitamin</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Functions</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">RDA</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Upper Limit</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Unit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {selectedvitamins.map((nutrient) => (
-          <tr key={nutrient.name} className="hover:bg-gray-100">
-            <td className="px-4 py-2 font-medium whitespace-nowrap">{nutrient.name}</td>
-            <td className="px-4 py-2 whitespace-nowrap">
-              {Array.isArray(nutrient.functions) ? nutrient.functions.join(', ') : '—'}
-            </td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.rda}</td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.ul}</td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.unit}</td>
+  <table className="w-full border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="px-4 py-2 text-left">Vitamin</th>
+        <th className="px-4 py-2 text-left">RDA</th>
+        <th className="px-4 py-2 text-left">Upper Limit</th>
+        <th className="px-4 py-2 text-left">Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {selectedVitamins.map((vitamin) => (
+        <React.Fragment key={vitamin.name}>
+          <tr className="hover:bg-gray-100">
+            <td className="px-4 py-2 font-medium">{vitamin.name}</td>
+            <td className="px-4 py-2">{vitamin.rda}</td>
+            <td className="px-4 py-2">{vitamin.ul}</td>
+            <td className="px-4 py-2">{vitamin.unit}</td>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-
-  {/* MOBILE VERSION */}
-  <div className="md:hidden space-y-4">
-    {selectedvitamins.map((nutrient) => (
-      <div
-        key={nutrient.name}
-        className="bg-white text-black rounded-xl shadow p-4 border border-gray-200"
-      >
-        <div className="font-semibold text-lg mb-1">{nutrient.name}</div>
-        <div className="text-sm text-gray-700 mb-1">
-          <span className="font-medium">RDA:</span> {nutrient.rda} {nutrient.unit}
-        </div>
-        <div className="text-sm text-gray-700 mb-1">
-          <span className="font-medium">Upper Limit:</span> {nutrient.ul ?? '—'} {nutrient.unit}
-        </div>
-        <div className="text-sm text-gray-700">
-          <span className="font-medium">Functions:</span>{' '}
-          {Array.isArray(nutrient.functions) ? nutrient.functions.join(', ') : '—'}
-        </div>
-      </div>
-    ))}
-  </div>
+          <tr>
+            <td colSpan="4" className="px-4 py-2 text-sm text-gray-700 italic border-b">
+              <span className="font-semibold">Function:</span>{' '}
+              {Array.isArray(vitamin.functions) ? vitamin.functions.join(', ') : '—'}
+            </td>
+          </tr>
+        </React.Fragment>
+      ))}
+    </tbody>
+  </table>
 </section>
 
-<section className="max-w-3xl mx-auto">
+<section className="max-w-3xl mx-auto mt-12">
   <h2 className="text-2xl font-semibold mb-4 text-center">Recommended Minerals</h2>
 
-  {/* DESKTOP TABLE */}
-  <div className="hidden md:block overflow-x-auto max-w-full">
-    <table className="w-full min-w-[600px] border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="px-4 py-2 text-left whitespace-nowrap">Mineral</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Functions</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">RDA</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Upper Limit</th>
-          <th className="px-4 py-2 text-left whitespace-nowrap">Unit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {selectedMinerals.map((nutrient) => (
-          <tr key={nutrient.name} className="hover:bg-gray-100">
-            <td className="px-4 py-2 font-medium whitespace-nowrap">{nutrient.name}</td>
-            <td className="px-4 py-2 whitespace-nowrap">
-              {Array.isArray(nutrient.functions) ? nutrient.functions.join(', ') : '—'}
-            </td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.rda}</td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.ul}</td>
-            <td className="px-4 py-2 whitespace-nowrap">{nutrient.unit}</td>
+  <table className="w-full border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="px-4 py-2 text-left">Mineral</th>
+        <th className="px-4 py-2 text-left">RDA</th>
+        <th className="px-4 py-2 text-left">Upper Limit</th>
+        <th className="px-4 py-2 text-left">Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {selectedMinerals.map((mineral) => (
+        <React.Fragment key={mineral.name}>
+          <tr className="hover:bg-gray-100">
+            <td className="px-4 py-2 font-medium">{mineral.name}</td>
+            <td className="px-4 py-2">{mineral.rda}</td>
+            <td className="px-4 py-2">{mineral.ul}</td>
+            <td className="px-4 py-2">{mineral.unit}</td>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-
-  {/* MOBILE VERSION */}
-  <div className="md:hidden space-y-4">
-    {selectedMinerals.map((nutrient) => (
-      <div
-        key={nutrient.name}
-        className="bg-white text-black rounded-xl shadow p-4 border border-gray-200"
-      >
-        <div className="font-semibold text-lg mb-1">{nutrient.name}</div>
-        <div className="text-sm text-gray-700 mb-1">
-          <span className="font-medium">RDA:</span> {nutrient.rda} {nutrient.unit}
-        </div>
-        <div className="text-sm text-gray-700 mb-1">
-          <span className="font-medium">Upper Limit:</span> {nutrient.ul ?? '—'} {nutrient.unit}
-        </div>
-        <div className="text-sm text-gray-700">
-          <span className="font-medium">Functions:</span>{' '}
-          {Array.isArray(nutrient.functions) ? nutrient.functions.join(', ') : '—'}
-        </div>
-      </div>
-    ))}
-  </div>
+          <tr>
+            <td colSpan="4" className="px-4 py-2 text-sm text-gray-700 italic border-b">
+              <span className="font-semibold">Function:</span>{' '}
+              {Array.isArray(mineral.functions) ? mineral.functions.join(', ') : '—'}
+            </td>
+          </tr>
+        </React.Fragment>
+      ))}
+    </tbody>
+  </table>
 </section>
     </main>
     </>
