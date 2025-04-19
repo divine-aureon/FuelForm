@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import nutrientData from '../data/nutrients';
+import Head from 'next/head'
 
 const ageOptions = [
   { label: "0–3 years", value: "infant" },
@@ -66,14 +67,19 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
   });
 
   return (
-    <main className="min-h-screen bg-black text-white p-8 font-sans">
-      <h1 className="text-4xl font-bold mb-8 text-center">Blueprint</h1>
-
-      <div className="bg-gray-900 p-6 rounded-2xl max-w-xl mx-auto shadow-lg mb-12">
-
-      <p className="text-sm text-gray-400 mt-2">
-  Choose your gender and age group to unlock your personalized Nutrient Blueprint.
-</p><br></br>
+    <>
+      <Head>
+        <title>Blueprint | FuelForm</title>
+      </Head>
+  
+      <main className="min-h-screen bg-black text-white p-8 font-sans">
+        <h1 className="text-4xl font-bold mb-8 text-center">Blueprint</h1>
+  
+        <div className="bg-gray-900 p-6 rounded-2xl max-w-xl mx-auto shadow-lg mb-12">
+          <p className="text-sm text-gray-400 mt-2">
+            Choose your gender and age group to unlock your personalized Nutrient Blueprint.
+          </p>
+          <br />
 
         <div className="grid gap-4">
           <label className="block">
@@ -118,7 +124,7 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
 
       <section className="max-w-3xl mx-auto mb-16">
         <h2 className="text-2xl font-semibold mb-4 text-center">Recommended Vitamins</h2>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-w-full">
           <table className="w-full border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
             <thead>
               <tr className="bg-gray-200">
@@ -148,7 +154,7 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
 
       <section className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-semibold mb-4 text-center">Recommended Minerals</h2>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-w-full">
           <table className="w-full border-collapse rounded-2xl overflow-hidden shadow bg-white text-black">
             <thead>
               <tr className="bg-gray-200">
@@ -176,5 +182,6 @@ const rda = baseRDA ? Math.round(baseRDA * modifier) : 'Varies';
         </div>
       </section>
     </main>
+    </>
   );
 }
