@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base Styling ---------- */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #0f172a; /* FuelForm's deep backdrop */
+  color: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  padding: 2rem;
+}
+
+/* ---------- Custom Animations ---------- */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+  }
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 2s infinite;
+}
+
+/* ---------- Button Background Utility ---------- */
+.bg-button-image {
+  @appnpm list tailwindcssly bg-cover bg-center bg-no-repeat;
+  background-image: url('/images/button.jpg');
+}
