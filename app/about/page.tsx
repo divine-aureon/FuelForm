@@ -2,13 +2,23 @@
 // pages/about.js
 
 
-import NavBar from 'components/NavBar';
+import NavBar from '@/components/NavBar2';
+import Image from "next/image";
 
 export default function About() {
   return (
     <>
       <NavBar pageTitle="About" />
-      <main className="bg-gray-950 text-white min-h-screen p-6 pt-20">
+
+     
+      <main className="text-white min-h-screen p-6 pt-20 relative">
+      <Image
+        src="/images/info.webp"
+        alt="background"
+        fill
+        className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none z-[-1]"
+        priority
+      />
   <div className="max-w-3xl mx-auto">
     <h1 className="text-4xl font-bold mb-4 text-white pl-0">About FuelForm</h1>
     <div className="bg-gray-900 rounded-2xl p-6 text-gray-300 shadow-lg">

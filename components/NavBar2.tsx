@@ -13,7 +13,9 @@ type NavBarProps = {
 
 export default function NavBar({ pageTitle }: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const toggleMenu = () => setIsOpen(!isOpen);
   const router = useRouter();
 
@@ -32,7 +34,6 @@ export default function NavBar({ pageTitle }: NavBarProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   return (
     <header className="bg-gray-950 text-white px-6 py-4 flex items-center justify-between shadow-md relative">
       <div className="flex items-center space-x-2">
@@ -47,13 +48,10 @@ export default function NavBar({ pageTitle }: NavBarProps) {
 
         {isOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg z-50 py-2">
-            <Link href="/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Command Centre</Link>
-            <Link href="/fuelsync" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FuelSync</Link>
-            <Link href="/fuelform" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FuelForm</Link>
-            <Link href="/formforge" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FormForge</Link>
-            <Link href="/blueprint" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Nutrient Blueprint</Link>
-            <Link href="/fuelstats" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FuelStats</Link>
-            <Link href="/settings" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Settings</Link>
+            <Link href="/" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Home</Link>
+            <Link href="/login" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Login/Register</Link>
+            <Link href="/about" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ About</Link>
+            <Link href="/sources" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Sources</Link>
             <button
   onClick={async () => {
     await auth.signOut();

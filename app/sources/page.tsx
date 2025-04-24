@@ -1,12 +1,20 @@
 'use client';
 
-import NavBar from 'components/NavBar';
+import NavBar from '@/components/NavBar2';
+import Image from "next/image";
 
 export default function Sources() {
   return (
     <>
       <NavBar pageTitle="Sources" />
       <main className="bg-gray-950 text-white min-h-screen p-8">
+        <Image
+                src="/images/info.webp"
+                alt="background"
+                fill
+                className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none"
+                priority
+              />
         <h1 className="text-2xl">Sources</h1>
 
         <section className="max-w-3xl mx-auto p-6">

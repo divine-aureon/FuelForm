@@ -12,7 +12,7 @@ export default function Home() {
         {/* 🌸 Faded Background Image */}
         
         <Image
-  src="/images/home.jpg"
+  src="/images/home.webp"
   alt="background"
   fill
   className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none"
