@@ -75,20 +75,20 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4">
       <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col space-y-4">
-        <h1 className="text-4xl font-bold text-center mb-6 animate-pulseGlow">
+        <h1 className="text-4xl font-bold text-center  mb-6 animate-pulseGlow">
           {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}
         </h1>
 
 
         
         <form onSubmit={handleSubmit} className="space-y-4">
-        <label className="block text-sm text-gray-300 mb-1">Email Address</label>
+        <label className="block text-sm text-white  mb-1">Email Address</label>
           <input
             type="email"
             placeholder=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 bg-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
           />
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
             placeholder= ""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 rounded bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
           />
 
