@@ -1,13 +1,12 @@
 'use client';
 
-import BottomNav from '@/components/BottomNav';
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Sources() {
   return (
     <>
-      <BottomNav />
-      <main className="relative bg-gray-950 text-white min-h-screen p-8 pb-16">
+      <main className="relative bg-gray-950 text-white min-h-screen p-8 pb-20">
         <Image
                 src="/images/info.webp"
                 alt="background"
@@ -126,6 +125,13 @@ export default function Sources() {
             healthcare provider before making changes to your diet, supplements, or lifestyle — especially
             if you have any pre-existing conditions or are taking medication.
           </p>
+        </div>
+        <div className="all-[unset]">
+        <div className="fixed bottom-0 left-0 w-full bg-black text-white text-center py-5 border-t border-white/20 z-50">
+        <Link href="/" className="text-base text-[32px] hover:underline">
+          Home
+        </Link>
+        </div>
         </div>
         </div>
       </main>

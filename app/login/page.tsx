@@ -7,7 +7,7 @@ import { auth, db } from '../../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import useIsLoggedIn from '../hooks/useIsLoggedIn';
 import convertWeight from '../hooks/useFuelUnits';
-import BottomNav from "@/components/BottomNav";
+import Link from "next/link";
 
 
 export default function LoginPage() {
@@ -78,9 +78,8 @@ export default function LoginPage() {
 
   return (
     <>
-    <BottomNav />
 
-    <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4 pb-16">
+    <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4 pb-20">
       <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col">
         <h1 className="text-4xl font-bold text-center  mb-6 pulse-glow">
           {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}
@@ -266,6 +265,13 @@ export default function LoginPage() {
               </span>
             </p>
           )}
+        </div>
+        <div className="all-[unset]">
+        <div className="fixed bottom-0 left-0 w-full bg-black text-white text-center py-5 border-t border-white/20 z-50">
+        <Link href="/" className="text-base text-[32px] hover:underline">
+          Home
+        </Link>
+        </div>
         </div>
       </div>
     </main>
