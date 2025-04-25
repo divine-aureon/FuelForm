@@ -7,11 +7,11 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 
-type NavBarProps = {
+type BottomNavProps = {
   pageTitle: string;
 };
 
-export default function NavBar({ pageTitle }: NavBarProps) {
+export default function BottomNav({ pageTitle }: BottomNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -34,7 +34,7 @@ export default function NavBar({ pageTitle }: NavBarProps) {
   }, []);
 
   return (
-    <header className="bg-gray-950 text-white px-6 py-4 flex items-center justify-between shadow-md relative">
+<nav className="fixed bottom-0 left-0 right-0 bg-gray-950 backdrop-blur-lg text-white px-6 py-4 flex items-center justify-between shadow-inner z-50">
       <div className="flex items-center space-x-2">
         <h1 className="text-lg font-bold tracking-wide">FuelForm</h1>
         <span className="text-sm text-gray-400">| {pageTitle}</span>
@@ -46,8 +46,8 @@ export default function NavBar({ pageTitle }: NavBarProps) {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg z-50 py-2">
-            <Link href="/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Command Centre</Link>
+          <div className="absolute bottom-16 right-0 mb-2 w-48 bg-gray-900 rounded-lg shadow-lg z-50 py-2">
+          <Link href="/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ Command Centre</Link>
             <Link href="/fuelsync" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FuelSync</Link>
             <Link href="/fuelform" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FuelForm</Link>
             <Link href="/formforge" className="block px-4 py-2 hover:bg-gray-800" onClick={() => setIsOpen(false)}>✦ FormForge</Link>
@@ -67,7 +67,7 @@ export default function NavBar({ pageTitle }: NavBarProps) {
           </div>
         )}
       </div>
-    </header>
+    </nav>
   );
 
 }

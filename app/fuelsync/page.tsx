@@ -111,7 +111,7 @@ useEffect(() => {
   return (
     <>
       <NavBar pageTitle="FuelSync" />
-      <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden">
+      <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden pb-16">
       <div className="absolute inset-0 bg-black/30 z-0"></div>
 
       <div className="relative z-10 min-h-screen text-white flex flex-col items-center items-center px-6 pt-5">

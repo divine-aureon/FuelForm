@@ -7,6 +7,8 @@ import { auth, db } from '../../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import useIsLoggedIn from '../hooks/useIsLoggedIn';
 import convertWeight from '../hooks/useFuelUnits';
+import BottomNav from "@/components/BottomNav";
+
 
 export default function LoginPage() {
   const isLoggedIn = useIsLoggedIn(); // auto-redirect if needed
@@ -72,16 +74,21 @@ export default function LoginPage() {
     }
   };
 
+  
+
   return (
-    <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4">
-      <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col space-y-4">
-        <h1 className="text-4xl font-bold text-center  mb-6 animate-pulseGlow">
+    <>
+    <BottomNav />
+
+    <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4 pb-16">
+      <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col">
+        <h1 className="text-4xl font-bold text-center  mb-6 pulse-glow">
           {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}
         </h1>
 
 
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-1">
         <label className="block text-sm text-white  mb-1">Email Address</label>
           <input
             type="email"
@@ -220,7 +227,7 @@ export default function LoginPage() {
   </>
 )}
           {/* Optional: Future CAPTCHA container */}
-          <div id="recaptcha-container" className="mt-2" />
+          <div id="recaptcha-container" className="mt-4" />
 
           {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
 
@@ -237,7 +244,7 @@ export default function LoginPage() {
         
         </form>
 
-        <div className="text-sm text-center">
+        <div className="text-sm text-center mt-6">
           {mode === 'login' ? (
             <p>
               Don't Have an Account?{' '}
@@ -262,5 +269,6 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+   </>
   );
 }

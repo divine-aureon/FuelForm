@@ -1,13 +1,13 @@
 'use client';
 
-import NavBar from '@/components/NavBar2';
+import BottomNav from '@/components/BottomNav';
 import Image from "next/image";
 
 export default function Sources() {
   return (
     <>
-      <NavBar pageTitle="Sources" />
-      <main className="bg-gray-950 text-white min-h-screen p-8">
+      <BottomNav />
+      <main className="relative bg-gray-950 text-white min-h-screen p-8 pb-16">
         <Image
                 src="/images/info.webp"
                 alt="background"
@@ -15,6 +15,8 @@ export default function Sources() {
                 className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none"
                 priority
               />
+
+<div className="relative z-10">
         <h1 className="text-2xl">Sources</h1>
 
         <section className="max-w-3xl mx-auto p-6">
@@ -124,6 +126,7 @@ export default function Sources() {
             healthcare provider before making changes to your diet, supplements, or lifestyle — especially
             if you have any pre-existing conditions or are taking medication.
           </p>
+        </div>
         </div>
       </main>
     </>
