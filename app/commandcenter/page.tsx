@@ -5,7 +5,7 @@
 import useFuelFormData from "../hooks/useFuelFormData";
 import { useRouter } from "next/navigation"; // ✅ For App Router
 import { logoutUser } from "@/lib/auth";
-import NavBar from "@/components/NavBar";
+import NavPortal from '@/components/NavPortal';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -14,7 +14,7 @@ const { profile, latestSync } = useFuelFormData();
 
   return (
     
-    <><NavBar pageTitle="Command Center" />
+    <>
     
     <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden pb-16">
     <div className="absolute inset-0 bg-black/30 z-0"></div>
@@ -102,6 +102,7 @@ const { profile, latestSync } = useFuelFormData();
 </div>
 </div>
     </main>
+    <NavPortal />
     </>
   );
   

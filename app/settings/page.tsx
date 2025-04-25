@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import NavBar from "components/NavBar";
 import Link from "next/link";
 import type { User } from 'firebase/auth';
+import NavPortal from '@/components/NavPortal';
 
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
@@ -111,7 +111,6 @@ setOriginalHeightCm(data.height_cm || "");
 
   return (
     <>
-<NavBar pageTitle="Modify Biometrics" /> 
     
     <div className="min-h-screen flex bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed items-start justify-center bg-black relative pt-5">
     <div className="absolute inset-0 bg-black/30 z-0"></div>
@@ -241,6 +240,7 @@ setOriginalHeightCm(data.height_cm || "");
 )}
       </div>
     </div>
+    <NavPortal />
     </>
   );
 }

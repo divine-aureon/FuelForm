@@ -7,9 +7,9 @@ import useFuelSync from "../hooks/useFuelSync";
 import { auth, db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateAllNutrition } from "@/lib/processingCore";
-import NavBar from "@/components/NavBar";
 import useFuelFormData from "../hooks/useFuelFormData";
 import { Listbox } from '@headlessui/react'
+import NavPortal from '@/components/NavPortal';
 
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
@@ -110,13 +110,13 @@ useEffect(() => {
 
   return (
     <>
-      <NavBar pageTitle="FuelSync" />
+      
       <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden pb-16">
       <div className="absolute inset-0 bg-black/30 z-0"></div>
 
       <div className="relative z-10 min-h-screen text-white flex flex-col items-center items-center px-6 pt-5">
-      <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg glowing-button">
-        <h1 className="text-2xl text-center font-bold mb-6 animate-pulse">Initiate FuelSync Protocol</h1>
+      <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
+        <h1 className="text-2xl text-center font-bold mb-6 pulse-glow">Initiate FuelSync Protocol</h1>
 
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
         <p className="text-white font-semibold mb-1">
@@ -171,7 +171,7 @@ useEffect(() => {
 
           <button
             type="submit"
-            className="glowing-button bg-white text-black px-4 py-3 w-full rounded-lg font-semibold"
+            className="bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
           >
             Sync Now!
           </button>
@@ -183,6 +183,7 @@ useEffect(() => {
       </div>
       </div>
       </main>
+      <NavPortal />
     </>
     
   );

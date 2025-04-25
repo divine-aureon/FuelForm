@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getDoc, doc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";import { auth, db } from 'lib/firebase'; // Adjust path if different
 import Link from "next/link";
-import NavBar from "@/components/NavBar";
+import NavPortal from '@/components/NavPortal';
 
 interface SyncData {
   weight_lbs: number;
@@ -126,7 +126,7 @@ export default function NutrientBlueprint() {
   };
 
   return (
-    <><NavBar pageTitle="Nutrient Blueprint" />
+    <>
     <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden pb-16">
     <div className="absolute inset-0 bg-black/30 z-0"></div>
 
@@ -250,6 +250,7 @@ export default function NutrientBlueprint() {
 </section>
       </main>
       </main>
+      <NavPortal />
     </>
   );
 }
