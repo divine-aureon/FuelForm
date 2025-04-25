@@ -39,7 +39,9 @@ interface UserProfile {
   preferredHeightUnit: string;
   preferredWeightUnit: string;
   age: number;
+  email: string; // ✅ Add email here
   latestSync?: SyncData;
+  isPaid: boolean;
 }
 
 const defaultProfile: UserProfile = {
@@ -56,12 +58,15 @@ const defaultProfile: UserProfile = {
   preferredHeightUnit: "",
   preferredWeightUnit: "",
   age: 0,
+  email: "", // ✅ Add email here
+  isPaid: false,
   latestSync: {
     weight_lbs: 0,
     weight_kg: 0,
     steps: 0,
     exerciseMinutes: 0,
     exerciseIntensity: "low",
+    
   },
 };
 

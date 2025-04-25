@@ -68,10 +68,10 @@ export default function LoginPage() {
       
           // If the user has paid, route them to the paid command center
           if (userData.isPaid) {
-            router.push('/(protected-paid)/commandcenter');  // Redirect to the premium command center
+            router.push('/pro/commandcenter');  // Redirect to the premium command center
           } else {
             // Otherwise, route them to the free command center
-            router.push('/(protected-free)/commandcenter');  // Redirect to the free version
+            router.push('/free/commandcenter');  // Redirect to the free version
           }
         }
       } else {
@@ -146,7 +146,7 @@ const finalBirthDay = birthDay || "00";
           isPaid: false,
           createdAt: serverTimestamp(),
         });
-        router.push('/(protected-free)/commandcenter');
+        router.push('/free/commandcenter');
       }
 
     } catch (err: any) {
