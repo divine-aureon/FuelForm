@@ -7,7 +7,6 @@ import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { User } from 'firebase/auth';
-import NavPortal from '@/components/NavPortal';
 
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
@@ -240,7 +239,6 @@ setOriginalHeightCm(data.height_cm || "");
 )}
       </div>
     </div>
-    <NavPortal />
     </>
   );
 }

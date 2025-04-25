@@ -1,6 +1,6 @@
 "use client";
 
-import useFuelFormData from "../hooks/useFuelFormData";
+import useFuelFormData from "@/lib/hooks/useFuelFormData";
 
 interface MacroRange {
   proteinMin: number;

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import NavMenu from '../components/NavMenu';
@@ -22,7 +22,7 @@ export default function NavPortal() {
       {/* Expanding drawer from bottom */}
       <div
         className={`fixed bottom-[64px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${
-          isOpen ? 'max-h-[50vh] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+          isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         } overflow-hidden`}
       >
         <div className="bg-gray-900 rounded-t-2xl shadow-2xl p-6 w-full max-w-2xl mx-auto text-center">

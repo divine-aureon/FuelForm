@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { useState , useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useFuelSync from "../hooks/useFuelSync";
+import useFuelSync from "@/lib/hooks/useFuelSync";
 import { auth, db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateAllNutrition } from "@/lib/processingCore";
-import useFuelFormData from "../hooks/useFuelFormData";
+import useFuelFormData from "@/lib/hooks/useFuelFormData";
 import { Listbox } from '@headlessui/react'
-import NavPortal from '@/components/NavPortal';
 
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
@@ -183,7 +182,6 @@ useEffect(() => {
       </div>
       </div>
       </main>
-      <NavPortal />
     </>
     
   );

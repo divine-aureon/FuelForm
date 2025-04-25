@@ -1,19 +1,24 @@
-// lib/hooks/useAuthGuard.ts
-import { useAuth } from "@/lib/auth"; // adjust if needed
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+// lib/hooks/useAuthGaurd.ts
+"use client";
 
-export function useAuthGuard() {
-  const { user, loading } = useAuth();
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+
+export default function useAuthGuard() {
   const router = useRouter();
 
   useEffect(() => {
-    // Once loading finishes, if no user is logged in, redirect to login
-    if (!loading && !user) {
-      router.replace("/login"); // replace avoids back button going to protected page
-    }
-  }, [user, loading, router]);
+    // Only run on the client-side
+    if (typeof window !== "undefined") {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          router.push("/login"); // Redirect to login if no user is authenticated
+        }
+      });
 
-  // Optionally return something if needed (like user)
-  return { user, loading };
+      return () => unsubscribe(); // Cleanup on component unmount
+    }
+  }, [router]);
 }

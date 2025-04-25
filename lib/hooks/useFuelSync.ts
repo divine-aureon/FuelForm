@@ -1,6 +1,6 @@
 "use client";
 
-import useFuelFormData from "../hooks/useFuelFormData"; // Adjust this path to match your project
+import useFuelFormData from "@/lib/hooks/useFuelFormData"; // Adjust this path to match your project
 
 interface SyncData {
   weight_lbs: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import useFuelFormData from "../hooks/useFuelFormData";
+import useFuelFormData from "@/lib/hooks/useFuelFormData";
 
 export default function useFuelUnits() {
   const { profile } = useFuelFormData();

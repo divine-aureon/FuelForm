@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getDoc, doc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";import { auth, db } from 'lib/firebase'; // Adjust path if different
 import Link from "next/link";
-import NavPortal from '@/components/NavPortal';
 
 interface SyncData {
   weight_lbs: number;
@@ -250,7 +249,6 @@ export default function NutrientBlueprint() {
 </section>
       </main>
       </main>
-      <NavPortal />
     </>
   );
 }

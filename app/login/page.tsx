@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { loginUser, registerUser } from '../../lib/auth';
 import { auth, db } from '../../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import useIsLoggedIn from '../hooks/useIsLoggedIn';
-import convertWeight from '../hooks/useFuelUnits';
+import useIsLoggedIn from '@/lib/hooks/useIsLoggedIn';
+import convertWeight from '@/lib/hooks/useFuelUnits';
 import Link from "next/link";
 
 
