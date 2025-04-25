@@ -3,31 +3,41 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { loginUser, registerUser } from '../../lib/auth';
-import { auth, db } from '../../lib/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import useIsLoggedIn from '@/lib/hooks/useIsLoggedIn';
-import convertWeight from '@/lib/hooks/useFuelUnits';
+import { db } from '../../lib/firebase';
+import { setDoc, doc, serverTimestamp , getDoc } from 'firebase/firestore';
 import Link from "next/link";
-
-
+  
 export default function LoginPage() {
-  const isLoggedIn = useIsLoggedIn(); // auto-redirect if needed
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryMode = useSearchParams()?.get("querymode") ?? null;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [gender, setGender] = useState('');
-  const [weight_lbs, setWeightlbs] = useState('');
-  const [weight_kg, setWeightkg] = useState('');
-  const [height_cm, setHeightcm] = useState('');
-  const [feet, setHeightFeet] = useState('');
-  const [inches, setHeightInches] = useState(''); 
-  const [preferredHeightUnit, setPreferredHeightUnit] = useState('cm');
-  const [preferredWeightUnit, setPreferredWeightUnit] = useState('lbs')
+
+  function convertCmToFeetInches(cm: number) {
+    const totalInches = cm / 2.54;
+    const feet = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return { feet, inches };
+  }
+  
+  function convertFeetInchesToCm(feet: number, inches: number) {
+    return feet * 30.48 + inches * 2.54;
+  }
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [birthMonth, setBirthMonth] = useState("");
+  const [birthDay, setBirthDay] = useState("");
+  const [gender, setGender] = useState("");
+  const [weightLbs, setWeightlbs] = useState("");
+  const [weightKg, setWeightkg] = useState("");
+  const [height_cm, setHeightcm] = useState("");
+  const [heightFeet, setHeightFeet] = useState("");
+  const [heightInches, setHeightInches] = useState(""); 
+  const [preferredHeightUnit, setPreferredHeightUnit] = useState("cm");
+  const [preferredWeightUnit, setPreferredWeightUnit] = useState("lbs")
 
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -47,26 +57,98 @@ export default function LoginPage() {
 
     try {
       if (mode === 'login') {
-        await loginUser(email, password);
+        // Login logic
+        const userCred = await loginUser(email, password);
+        const userRef = doc(db, 'users', userCred.user.uid);
+        const userDoc = await getDoc(userRef);
+        
+        // Check if the user exists in Firestore
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+      
+          // If the user has paid, route them to the paid command center
+          if (userData.isPaid) {
+            router.push('/(protected-paid)/commandcenter');  // Redirect to the premium command center
+          } else {
+            // Otherwise, route them to the free command center
+            router.push('/(protected-free)/commandcenter');  // Redirect to the free version
+          }
+        }
       } else {
+        // Registration logic
         const userCred = await registerUser(email, password);
+        
+
+
+
+// Height
+let finalHeightCm = 0;
+let finalFeet = 0;
+let finalInches = 0;
+
+if (preferredHeightUnit === "cm") {
+  finalHeightCm = Number(height_cm);
+  const { feet: convertedFeet, inches: convertedInches } = convertCmToFeetInches(finalHeightCm);
+  finalFeet = convertedFeet;
+  finalInches = convertedInches;
+} else {
+  const feetNum = Number(heightFeet);
+  const inchesNum = Number(heightInches);
+  finalFeet = feetNum;
+  finalInches = inchesNum;
+  finalHeightCm = convertFeetInchesToCm(feetNum, inchesNum);
+}
+
+// Weight
+let finalWeightLbs = 0;
+let finalWeightKg = 0;
+
+if (preferredWeightUnit === "lbs") {
+  finalWeightLbs = Number(weightLbs);
+  finalWeightKg = Number((finalWeightLbs / 2.20462).toFixed(2));
+} else {
+  finalWeightKg = Number(weightKg);
+  finalWeightLbs = Number((finalWeightKg * 2.20462).toFixed(2));
+}
+
+const finalBirthYear = birthYear || "0000";
+const finalBirthMonth = birthMonth || "00";
+const finalBirthDay = birthDay || "00";
+
+        // 🗓 Build DateOfBirth
+        const DateOfBirth = `${finalBirthYear.padStart(4, '0')}-${finalBirthMonth.padStart(2, '0')}-${finalBirthDay.padStart(2, '0')}`;   
+
+        // 🧠 Calculate age directly from birth values
+  const birthY = Number(birthYear);
+  const birthM = Number(birthMonth);
+  const birthD = Number(birthDay);
+  const today = new Date();
+
+  let age = today.getFullYear() - birthY;
+  const monthDiff = today.getMonth() + 1 - birthM;
+  const dayDiff = today.getDate() - birthD;
+
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
         await setDoc(doc(db, 'users', userCred.user.uid), {
-          name: '',
-          birthday: '',
-          gender: '',
+          name,
+          birthday: DateOfBirth,
+          gender,
           preferredHeightUnit: 'cm',
           preferredWeightUnit: 'lbs',
-          height_cm: 0,
-          height_ft_in: { feet: 0, inches: 0 },
-          heightUnit: 'cm',
-          heightCm: 0,
-          age: 0,
-          weight_lbs,
+          height_cm: finalHeightCm,
+          height_ft_in: { finalFeet, finalInches },
+          age,
+          weight_lbs: finalWeightLbs,
+          weight_kg: finalWeightKg,
+          isPaid: false,
           createdAt: serverTimestamp(),
         });
+        router.push('/(protected-free)/commandcenter');
       }
 
-      router.push('/commandcenter');
     } catch (err: any) {
       setError(err.message || 'Authentication failed.');
     } finally {
@@ -88,8 +170,9 @@ export default function LoginPage() {
 
         
         <form onSubmit={handleSubmit} className="space-y-1">
-        <label className="block text-sm text-white  mb-1">Email Address</label>
+        <label htmlFor="email" className="block text-sm text-white  mb-1">Email Address</label>
           <input
+            id="email"
             type="email"
             placeholder=""
             value={email}
@@ -98,8 +181,9 @@ export default function LoginPage() {
             required
           />
 
-<label className="block text-sm text-gray-300 mb-1">Password</label>
+<label htmlFor="password" className="block text-sm text-gray-300 mb-1">Password</label>
           <input
+            id="password"
             type="password"
             placeholder= ""
             value={password}
@@ -110,8 +194,9 @@ export default function LoginPage() {
 
 {mode === 'register' && (
   <>
-  <label className="block text-sm text-gray-300 mb-1">Name</label>
+  <label htmlFor="name" className="block text-sm text-gray-300 mb-1">Name</label>
     <input
+      id="name"
       type="text"
       placeholder=""
       value={name}
@@ -120,18 +205,40 @@ export default function LoginPage() {
       required
     />
 
-<label className="block text-sm text-gray-300 mb-1">Date of Birth</label>
-    <input
-      type="date"
-      placeholder="Birthday"
-      value={birthday}
-      onChange={(e) => setBirthday(e.target.value)}
-      className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      required
-    />
+<fieldset className="mb-4">
+  <legend className="block text-sm text-gray-300 mb-1">Date of Birth</legend>
+  
+  <div className="flex gap-2">
+    <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
+      <option value="">Month</option>
+      {Array.from({ length: 12 }, (_, i) => {
+        const val = String(i + 1).padStart(2, '0');
+        return <option key={val} value={val}>{val}</option>;
+      })}
+    </select>
 
-<label className="block text-sm text-gray-300 mb-1">Gender</label>
+    <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
+      <option value="">Day</option>
+      {Array.from({ length: 31 }, (_, i) => {
+        const val = String(i + 1).padStart(2, '0');
+        return <option key={val} value={val}>{val}</option>;
+      })}
+    </select>
+
+    <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
+      <option value="">Year</option>
+      {Array.from({ length: 100 }, (_, i) => {
+        const year = String(new Date().getFullYear() - i);
+        return <option key={year} value={year}>{year}</option>;
+      })}
+    </select>
+  </div>
+</fieldset>
+
+
+<label htmlFor="gender" className="block text-sm text-gray-300 mb-1">Gender</label>
     <select
+      id="gender"
       value={gender}
       onChange={(e) => setGender(e.target.value)}
       className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -142,59 +249,86 @@ export default function LoginPage() {
       <option value="female">Female</option>
     </select>
 
-    <label className="block text-sm text-gray-300 mb-1">Enter Weight</label>
+    <fieldset className="mb-4">
+  <legend className="block text-sm text-gray-300 mb-2">Enter Weight</legend>
 
-    {preferredWeightUnit === "lbs" ? (
-  <input
-    type="number"
-    placeholder="(lbs)"
-    value={weight_lbs}
-    onChange={(e) => setWeightlbs(e.target.value)}
-    className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    required
-  />
-) : (
-  <input
-    type="number"
-    placeholder="(kg)"
-    value={weight_kg}
-    onChange={(e) => setWeightkg(e.target.value)}
-    className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    required
-  />
-)}
+  {preferredWeightUnit === "lbs" ? (
+    <div>
+      <label htmlFor="weightLbs" className="block text-xs text-gray-400 mb-1">Weight (lbs)</label>
+      <input
+        id="weightLbs"
+        type="number"
+        placeholder="(lbs)"
+        value={weightLbs}
+        onChange={(e) => setWeightlbs(e.target.value)}
+        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        required
+      />
+    </div>
+  ) : (
+    <div>
+      <label htmlFor="weightKg" className="block text-xs text-gray-400 mb-1">Weight (kg)</label>
+      <input
+        id="weightKg"
+        type="number"
+        placeholder="(kg)"
+        value={weightKg}
+        onChange={(e) => setWeightkg(e.target.value)}
+        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        required
+      />
+    </div>
+  )}
+</fieldset>
 
-<label className="block text-sm text-gray-300 mb-1">Enter Height</label>
 
-{/* Height Input */}
-{preferredHeightUnit === "ft/in" ? (
-  <div className="flex space-x-2">
-    <input
-      type="number"
-      placeholder="(Feet)"
-      value={feet}
-      onChange={(e) => setHeightFeet(e.target.value)}
-      className="w-1/2 px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      required
-    />
-    <input
-      type="number"
-      placeholder="(Inches)"
-      value={inches}
-      onChange={(e) => setHeightInches(e.target.value)}
-      className="w-1/2 px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      required
-    />
-  </div> ) : (
-  <input
-    type="number"
-    placeholder="(cm)"
-    value={height_cm}
-    onChange={(e) => setHeightcm(e.target.value)}
-    className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    required
-  />
-)}
+<fieldset className="mb-4">
+  <legend className="block text-sm text-gray-300 mb-1">Enter Height</legend>
+
+  {preferredHeightUnit === "ft" ? (
+    <div className="flex space-x-2">
+      <div className="w-1/2">
+        <label htmlFor="heightFeet" className="block text-xs text-gray-400 mb-1">Feet</label>
+        <input
+          id="heightFeet"
+          type="number"
+          placeholder="Feet"
+          value={heightFeet}
+          onChange={(e) => setHeightFeet(e.target.value)}
+          className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required
+        />
+      </div>
+
+      <div className="w-1/2">
+        <label htmlFor="heightInches" className="block text-xs text-gray-400 mb-1">Inches</label>
+        <input
+          id="heightInches"
+          type="number"
+          placeholder="Inches"
+          value={heightInches}
+          onChange={(e) => setHeightInches(e.target.value)}
+          className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required
+        />
+      </div>
+    </div>
+  ) : (
+    <div>
+      <label htmlFor="heightCm" className="block text-xs text-gray-400 mb-1">Height (cm)</label>
+      <input
+        id="heightCm"
+        type="number"
+        placeholder="Centimeters"
+        value={height_cm}
+        onChange={(e) => setHeightcm(e.target.value)}
+        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        required
+      />
+    </div>
+  )}
+</fieldset>
+
 
     <div className="flex gap-4">
       <div className="w-1/2">
@@ -223,7 +357,9 @@ export default function LoginPage() {
       </div>
       
     </div>
+    
   </>
+ 
 )}
           {/* Optional: Future CAPTCHA container */}
           <div id="recaptcha-container" className="mt-4" />
