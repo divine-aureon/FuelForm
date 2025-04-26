@@ -40,18 +40,20 @@ export default function FuelSyncPage() {
       ? lastWeightKg?.toString() || ""
       : lastWeightLbs?.toString() || "");
 
-  const handleSubmit = async () => {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return setStatus("You must be logged in.");
+  // 📅 Generate today's date string
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const dateString = `${yyyy}-${mm}-${dd}`;
 
-    // 📅 Generate today's date string
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const dateString = `${yyyy}-${mm}-${dd}`;
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
+      const userId = auth.currentUser!.uid;
+      const syncRef = collection(db, "users", userId, "syncs");
+      const syncDocRef = doc(syncRef, dateString);
+
       const parsedWeight = parseFloat(weight);
 
       const weight_lbs = preferredWeightUnit === "kg"
@@ -73,8 +75,6 @@ export default function FuelSyncPage() {
         exerciseIntensity: parsedExerciseIntensity,
       });
 
-      const syncRef = collection(db, "users", userId, "syncs");
-
       const recommendedMacros = [
         { name: "Estimated TDEE", value: `${calculated.tdee} kcal` },
         { name: "Protein", value: `${calculated.macros.proteinMin}–${calculated.macros.proteinMax} g` },
@@ -88,7 +88,8 @@ export default function FuelSyncPage() {
       const recommendedMinerals = calculated.minerals;
 
 
-      const syncDocRef = doc(syncRef, dateString);
+   
+
       await setDoc(syncDocRef, {
         weight_lbs: +weight_lbs.toFixed(2),
         weight_kg: +weight_kg.toFixed(2),
@@ -116,7 +117,7 @@ export default function FuelSyncPage() {
     if (status === "Sync complete!") {
       const timeout = setTimeout(() => {
         router.push("/free/calculating");
-      }, 3000); // optional delay (1 second)
+      }, 500); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
@@ -191,10 +192,6 @@ export default function FuelSyncPage() {
                 Sync Now!
               </button>
             </form>
-
-            {status && <p className="mt-6 text-green-400 text-center">{status}</p>}
-            <p className="mg-1">&nbsp;</p>
-
           </div>
         </div>
       </main>
