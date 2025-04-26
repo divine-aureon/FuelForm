@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import useFuelSync from "@/lib/hooks/useFuelSync";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
-import { calculateAllNutrition } from "@/lib/processingCore";
+import { calculateProjectedFuel } from "@/lib/fuelCalculatorCore";
 import useFuelFormData from "@/lib/hooks/useFuelFormData";
 import { Listbox } from '@headlessui/react'
 
@@ -66,11 +66,11 @@ export default function FuelSyncPage() {
       const parsedExerciseMinutes = Number(exerciseMinutes);
       const parsedExerciseIntensity = intensity;
 
-      const calculated = calculateAllNutrition({
+      const calculated = calculateProjectedFuel({
         weight_lbs,
-        steps: parsedSteps,
-        exerciseMinutes: parsedExerciseMinutes,
-        intensity: parsedExerciseIntensity,
+        projectedSteps: parsedSteps,
+        projectedExerciseMinutes: parsedExerciseMinutes,
+        exerciseIntensity: parsedExerciseIntensity,
       });
 
       const syncRef = collection(db, "users", userId, "syncs");
@@ -95,29 +95,28 @@ export default function FuelSyncPage() {
         projectedSteps: parsedSteps,
         projectedExerciseMinutes: parsedExerciseMinutes,
         exerciseIntensity: parsedExerciseIntensity,
-        calorieGoal: 0,
         recommendedMacros,
         recommendedVitamins,
         recommendedMinerals,
-        sleepQuality,
-        sleepDuration,
-        mood,
+        sleepQuality: sleepQuality || null,
+        sleepDuration: sleepDuration || null,
+        mood: mood || null,
         actualSteps: 0,
         actualExerciseMinutes: 0,
         timestamp: serverTimestamp(),
       });
       setStatus("Sync complete!");
     } catch (error) {
-      console.error("Error: Please Enter Data", error);
-      setStatus("❌ Unable to.");
+      console.error("Error Syncing FuelForm", error);
+      setStatus("❌ Unable to Sync. Please check your Data.");
     }
   };
 
   useEffect(() => {
     if (status === "Sync complete!") {
       const timeout = setTimeout(() => {
-        router.push("/calculating");
-      }, 1000); // optional delay (1 second)
+        router.push("/free/calculating");
+      }, 3000); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
