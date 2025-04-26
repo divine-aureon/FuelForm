@@ -13,6 +13,8 @@ export default function LoginPage() {
   const queryMode = useSearchParams()?.get("querymode") ?? null;
 
 
+  const [loading, setLoading] = useState(false);
+
   function convertCmToFeetInches(cm: number) {
     const totalInches = cm / 2.54;
     const feet = Math.floor(totalInches / 12);
@@ -31,8 +33,6 @@ export default function LoginPage() {
   const [birthMonth, setBirthMonth] = useState("");
   const [birthDay, setBirthDay] = useState("");
   const [gender, setGender] = useState("");
-  const [weightLbs, setWeightlbs] = useState("");
-  const [weightKg, setWeightkg] = useState("");
   const [height_cm, setHeightcm] = useState("");
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState(""); 
@@ -42,7 +42,6 @@ export default function LoginPage() {
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (queryMode === 'register' || queryMode === 'login') {
@@ -99,18 +98,6 @@ if (preferredHeightUnit === "cm") {
   finalHeightCm = convertFeetInchesToCm(feetNum, inchesNum);
 }
 
-// Weight
-let finalWeightLbs = 0;
-let finalWeightKg = 0;
-
-if (preferredWeightUnit === "lbs") {
-  finalWeightLbs = Number(weightLbs);
-  finalWeightKg = Number((finalWeightLbs / 2.20462).toFixed(2));
-} else {
-  finalWeightKg = Number(weightKg);
-  finalWeightLbs = Number((finalWeightKg * 2.20462).toFixed(2));
-}
-
 const finalBirthYear = birthYear || "0000";
 const finalBirthMonth = birthMonth || "00";
 const finalBirthDay = birthDay || "00";
@@ -141,8 +128,6 @@ const finalBirthDay = birthDay || "00";
           height_cm: finalHeightCm,
           height_ft_in: { finalFeet, finalInches },
           age,
-          weight_lbs: finalWeightLbs,
-          weight_kg: finalWeightKg,
           isPaid: false,
           createdAt: serverTimestamp(),
         });
@@ -156,7 +141,13 @@ const finalBirthDay = birthDay || "00";
     }
   };
 
-  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-2xl animate-pulse">Confirming Access Codes...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -248,39 +239,6 @@ const finalBirthDay = birthDay || "00";
       <option value="male">Male</option>
       <option value="female">Female</option>
     </select>
-
-    <fieldset className="mb-4">
-  <legend className="block text-sm text-gray-300 mb-2">Enter Weight</legend>
-
-  {preferredWeightUnit === "lbs" ? (
-    <div>
-      <label htmlFor="weightLbs" className="block text-xs text-gray-400 mb-1">Weight (lbs)</label>
-      <input
-        id="weightLbs"
-        type="number"
-        placeholder="(lbs)"
-        value={weightLbs}
-        onChange={(e) => setWeightlbs(e.target.value)}
-        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        required
-      />
-    </div>
-  ) : (
-    <div>
-      <label htmlFor="weightKg" className="block text-xs text-gray-400 mb-1">Weight (kg)</label>
-      <input
-        id="weightKg"
-        type="number"
-        placeholder="(kg)"
-        value={weightKg}
-        onChange={(e) => setWeightkg(e.target.value)}
-        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        required
-      />
-    </div>
-  )}
-</fieldset>
-
 
 <fieldset className="mb-4">
   <legend className="block text-sm text-gray-300 mb-1">Enter Height</legend>

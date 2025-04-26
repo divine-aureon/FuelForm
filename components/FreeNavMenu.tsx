@@ -23,26 +23,26 @@ export default function FreeNavMenu({ onClose }: NavMenuProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <Link href="/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
 
-      <Link href="/dawnsync" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/dawnsync" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
         ✦DawnSync✦
       </Link>
-      <Link href="/dusksync" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/dusksync" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
         ✦DuskSync✦
       </Link>
-      <Link href="/macrovault" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/macrovault" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
         ✦Macro Vault✦
       </Link>
-      <Link href="/strengtharchive" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/strengtharchive" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
         ✦Strength Archive✦
       </Link>
-      <Link href="/blueprintecho" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/blueprintecho" className="block px-4 py-2 text-orange-500 hover:bg-gray-800" onClick={onClose}>
         ✦Blueprint Echo✦
       </Link>
-      <Link href="/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/free/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦Biometrics✦
       </Link>
       <button

@@ -42,7 +42,7 @@ const { profile, latestSync } = useFuelFormData();
 <div className="bg-white/5 p-4 rounded-xl mb-6 w-full max-w-md">
   <button
     className="w-full bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-300 transition glowing-button"
-    onClick={() => router.push("/dawnsync")}
+    onClick={() => router.push("/free/dawnsync")}
   >
     Initiate DawnSync Protocol
   </button>
@@ -50,7 +50,7 @@ const { profile, latestSync } = useFuelFormData();
 <div className="bg-white/5 p-4 rounded-xl mb-6 w-full max-w-md">
   <button
     className="w-full bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-300 transition glowing-button"
-    onClick={() => router.push("/dusksync")}
+    onClick={() => router.push("/free/dusksync")}
   >
     Initiate DuskSync Protocol
   </button>
