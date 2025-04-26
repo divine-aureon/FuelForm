@@ -15,7 +15,7 @@ export default function CalculatingPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center">
+    <main className="min-h-screen bg-[url('/images/loading.webp')] bg-cover bg-center bg-no-repeat text-white flex  justify-center px-4 pb-20">
       <h1 className="text-3xl md:text-5xl font-bold text-white animate-pulse text-center">
       Applying Updated BioMetrics...
       </h1>

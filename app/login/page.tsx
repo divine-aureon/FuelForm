@@ -146,7 +146,7 @@ export default function LoginPage() {
   return (
     <>
 
-      <main className="min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed text-white flex  justify-center px-4 pb-20">
+      <main className="min-h-screen bg-[url('/images/login.webp')] bg-cover bg-center bg-no-repeat text-white flex justify-center px-4 pb-20">
         <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col">
           <h1 className="text-4xl font-bold text-center  mb-6 pulse-glow">
             {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}

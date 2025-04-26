@@ -15,7 +15,7 @@ const { profile, latestSync } = useFuelFormData();
     
     <>
     
-    <main className="relative min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed bg-black text-white overflow-hidden pb-16">
+    <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat bg-black text-white overflow-hidden pb-16">
     <div className="absolute inset-0 bg-black/30 z-0 "></div>
   
       {/* Foreground Content */}

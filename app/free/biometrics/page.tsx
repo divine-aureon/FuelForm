@@ -119,7 +119,7 @@ export default function Settings() {
   return (
     <>
 
-      <div className="min-h-screen flex bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat bg-fixed items-start justify-center bg-black relative pt-5 mb-16">
+      <main className="min-h-screen flex bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat items-start justify-center bg-black relative pt-5 mb-16">
         <div className="absolute inset-0 bg-black/30 z-0"></div>
         <div className="w-full max-w-md px-4 z-10">
           <h1 className="text-2xl font-bold mb-6 text-center">Modify Biometrics</h1>
@@ -238,7 +238,7 @@ export default function Settings() {
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
-      </div>
+      </main>
     </>
   );
 }
