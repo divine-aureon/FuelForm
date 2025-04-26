@@ -69,7 +69,7 @@ setOriginalHeightCm(data.height_cm || "");
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleSave = async () => {
 

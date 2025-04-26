@@ -103,7 +103,7 @@ useEffect(() => {
 
     return () => clearTimeout(timeout);
   }
-}, [status]);
+}, [router,status]);
 
 
 

@@ -33,8 +33,8 @@ const { profile, latestSync } = useFuelFormData();
     <p><strong>Gender:</strong> {profile.gender}</p>
     <p><strong>Height:</strong> {
       profile.heightUnit === "cm"
-        ? `${Math.round(profile.heightCm)} cm`
-        : `${Math.floor(profile.heightCm / 2.54 / 12)}'${Math.round(profile.heightCm / 2.54 % 12)}\"`
+        ? `${Math.round(profile.height_cm)} cm`
+        : `${Math.floor(profile.height_cm / 2.54 / 12)}'${Math.round(profile.height_cm / 2.54 % 12)}\"`
     }</p>
   </div>
 )}
