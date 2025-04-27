@@ -109,6 +109,7 @@ export default function LoginPage() {
 
         await setDoc(doc(db, 'users', userCred.user.uid), {
           name,
+          email: userCred.user.email,
           birthday: DateOfBirth,
           gender,
           preferredHeightUnit: 'cm',
@@ -117,6 +118,7 @@ export default function LoginPage() {
           height_ft_in: { feet: finalFeet, inches: finalInches },
           age,
           isPaid: false,
+          calorieGoal: 0,
           createdAt: serverTimestamp(),
         });
         router.push('/loginaccess');
