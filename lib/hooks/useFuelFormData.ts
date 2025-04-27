@@ -77,7 +77,7 @@ export default function useFuelFormData() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userRef = doc(db, "users", user.uid);
-        const syncRef = collection(db, "users", user.uid, "sync");
+        const syncRef = collection(db, "users", user.uid, "syncs");
 
         const [profileSnap, syncSnap] = await Promise.all([
           getDoc(userRef),

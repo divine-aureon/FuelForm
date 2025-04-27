@@ -7,6 +7,7 @@ import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { User } from 'firebase/auth';
+import { profile } from "console";
 
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
@@ -33,6 +34,7 @@ export default function Settings() {
   const [originalHeightCm, setOriginalHeightCm] = useState("");
 
   const router = useRouter();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

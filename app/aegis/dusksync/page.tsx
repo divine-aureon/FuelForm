@@ -116,7 +116,7 @@ export default function FuelSyncPage() {
   useEffect(() => {
     if (status === "Sync complete!") {
       const timeout = setTimeout(() => {
-        router.push("/aegis/calculating");
+        router.push("/aegis/loadingpages/calculating");
       }, 500); // optional delay (1 second)
 
       return () => clearTimeout(timeout);

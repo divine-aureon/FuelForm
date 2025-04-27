@@ -114,7 +114,7 @@ export default function LoginPage() {
           preferredHeightUnit: 'cm',
           preferredWeightUnit: 'lbs',
           height_cm: finalHeightCm,
-          height_ft_in: { finalFeet, finalInches },
+          height_ft_in: { feet: finalFeet, inches: finalInches },
           age,
           isPaid: false,
           createdAt: serverTimestamp(),
