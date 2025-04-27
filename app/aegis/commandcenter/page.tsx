@@ -49,7 +49,7 @@ export default function NutrientBlueprint() {
         <div className="relative z-20 mt-40 flex flex-col items-center">
 
           <div>
-            <h1>{profile.name}'s Nutrient Blueprint</h1>
+            <h1>{profile.name}&apos;s Nutrient Blueprint</h1>
             <p>Age: {profile.age}</p>
             <p>Gender: {profile.gender}</p>
             <h2>Macros</h2>
