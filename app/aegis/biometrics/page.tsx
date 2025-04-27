@@ -107,7 +107,7 @@ export default function Settings() {
   useEffect(() => {
     if (status === "Biometrics Confirmed!") {
       const timeout = setTimeout(() => {
-        router.push("/free/applyingchanges");
+        router.push("/aegis/loadingpages/applyingchanges");
       }, 500); // optional delay (1 second)
 
       return () => clearTimeout(timeout);

@@ -1,18 +1,10 @@
-"use client";
+import useProfile from '@/lib/hooks/useProfile'; 
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import useFuelFormData from "@/lib/hooks/useFuelFormData";
+const useProGuard = () => {
+  const { profile } = useProfile();
+  const isPaidUser = profile?.isPaid ?? false;  // Default to false if undefined
 
-export default function usePaidGuard() {
-  const router = useRouter();
-  const { profile } = useFuelFormData();
+  return isPaidUser;
+};
 
-  useEffect(() => {
-    if (!profile) return; // Still loading
-
-    if (!profile.isPaid) {
-      router.push("/commandcenter"); // Redirect free users back to free dashboard
-    }
-  }, [profile, router]);
-}
+export default useProGuard;

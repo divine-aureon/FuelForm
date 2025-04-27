@@ -61,14 +61,8 @@ export default function LoginPage() {
         // Check if the user exists in Firestore
         if (userDoc.exists()) {
           const userData = userDoc.data();
-
-          // If the user has paid, route them to the paid command center
-          if (userData.isPaid) {
-            router.push('/pro/commandcenter');  // Redirect to the premium command center
-          } else {
-            // Otherwise, route them to the free command center
-            router.push('/free/commandcenter');  // Redirect to the free version
-          }
+        
+          router.push('/loginaccess');  // Regular login access for everyone
         }
       } else {
         // Registration logic
@@ -125,7 +119,7 @@ export default function LoginPage() {
           isPaid: false,
           createdAt: serverTimestamp(),
         });
-        router.push('/free/commandcenter');
+        router.push('/loginaccess');
       }
 
     } catch (err: any) {
@@ -134,14 +128,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-2xl animate-pulse">Confirming Access Codes...</p>
-      </div>
-    );
-  }
 
   return (
     <>

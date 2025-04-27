@@ -116,7 +116,7 @@ export default function FuelSyncPage() {
   useEffect(() => {
     if (status === "Sync complete!") {
       const timeout = setTimeout(() => {
-        router.push("/free/calculating");
+        router.push("/aegis/loadingpages/calculating");
       }, 500); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
@@ -140,6 +140,8 @@ export default function FuelSyncPage() {
                 Weight - {preferredWeightUnit === "kg" ? "kg" : "lbs"}
                 <input
                   type="number"
+                  step="0.1"
+                  min="0"
                   placeholder={
                     preferredWeightUnit === "kg"
                       ? lastWeightKg?.toString() || ""

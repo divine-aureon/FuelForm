@@ -22,27 +22,27 @@ export default function NavMenu({ onClose }: NavMenuProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Link href="/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+    <div className="flex flex-col gap-2 z-60">
+      <Link href="/aegis/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
 
-      <Link href="/dawnsync" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/dawnsync" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ DawnSync ✦
       </Link>
-      <Link href="/dusksync" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/dusksync" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ DuskSync ✦
       </Link>
-      <Link href="/macrovault" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/macrovault" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Macro Vault ✦
       </Link>
-      <Link href="/strengtharchive" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/strengtharchive" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Strength Archive ✦
       </Link>
-      <Link href="/blueprintecho" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/blueprintecho" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Blueprint Echo ✦
       </Link>
-      <Link href="/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/aegis/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Biometrics ✦
       </Link>
       <button
