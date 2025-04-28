@@ -8,7 +8,8 @@ interface SyncData {
   steps: number;
   exerciseMinutes: number;
   exerciseIntensity: string;
-  recommendedMacros?: any[];
+  activeRecommendedMacros?: any[];
+  recoveryRecommendedMacros?: any[];
   recommendedVitamins?: any[];
   recommendedMinerals?: any[];
   timestamp?: any;
@@ -23,7 +24,8 @@ export default function useFuelSync(): SyncData {
     steps: latestSync?.steps || 0,
     exerciseMinutes: latestSync?.exerciseMinutes || 0,
     exerciseIntensity: latestSync?.exerciseIntensity || "low",
-    recommendedMacros: latestSync?.recommendedMacros || [],
+    activeRecommendedMacros: latestSync?.activeRecommendedMacros || [],
+    recoveryRecommendedMacros: latestSync?.recoveryRecommendedMacros || [],
     recommendedVitamins: latestSync?.recommendedVitamins || [],
     recommendedMinerals: latestSync?.recommendedMinerals || [],
     timestamp: latestSync?.timestamp || null,
