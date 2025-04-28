@@ -63,7 +63,7 @@ export default function BlueprintPage() {
 
     {/* HEADER: white background */}
     <div className="bg-white text-black font-bold text-center py-2">
-      Today's Energy Expenditure
+      Todays Energy Expenditure
     </div>
 
     {/* BODY: gradient background */}
