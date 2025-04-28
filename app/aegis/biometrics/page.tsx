@@ -198,9 +198,9 @@ export default function Settings() {
     <>
 
       <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center 
-      bg-no-repeat bg-black text-white overflow-hidden pb-16">
-        <div className="absolute inset-0 bg-black/30 z-0"></div>
-        <div className="relative z-10 text-white flex flex-col items-center px-0 pt-0">
+      bg-no-repeat bg-black text-white overflow-hidden p-16 flex flex-col items-center">
+        <div className="bg-black/30 z-0 "></div>
+        <div className="w-full max-w-md relative z-10 text-white px-0 pt-0 flex flex-col items-center">
           <h1 className="text-4xl font-bold mb-6 text-center pulse-glow">Modify Biometrics</h1>
           <p className="text-lg text-white font-semibold mb-2 mt-4">
             Designate Your Chosen Identity

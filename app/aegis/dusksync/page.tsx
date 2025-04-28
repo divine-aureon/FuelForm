@@ -4,41 +4,28 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useFuelSync from "@/lib/hooks/useFuelSync";
-import { auth, db } from "@/lib/firebase";
+import { auth, db, } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
-import { calculateProjectedFuel } from "@/lib/fuelCalculatorCore";
+import { calculateFinalizedFuel } from "@/lib/fuelCalculatorCore";
 import useFuelFormData from "@/lib/hooks/useFuelFormData";
+import useFuelUnits from "@/lib/hooks/useFuelUnits";
 import { Listbox } from '@headlessui/react'
-
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
-export default function FuelSyncPage() {
+export default function duskSyncPage() {
   const router = useRouter();
   const sync = useFuelSync();
+  const { profile } = useFuelFormData();
 
-  const [weight_lbs, setWeight_lbs] = useState(sync.weight_lbs?.toString() || "");
-  const [weight_kg, setWeight_kg] = useState(sync.weight_kg?.toString() || "");
   const [steps, setSteps] = useState(sync.steps?.toString() || "");
   const [exerciseMinutes, setExerciseMinutes] = useState(sync.exerciseMinutes?.toString() || "");
   const [intensity, setIntensity] = useState(sync.exerciseIntensity || "low");
   const [status, setStatus] = useState("");
+  const weight_lbs = sync.weight_lbs;
 
-  const { profile } = useFuelFormData();
-  const preferredWeightUnit = profile?.preferredWeightUnit ?? "lbs";
-  const lastWeightLbs = sync.weight_lbs;
-  const lastWeightKg = sync.weight_kg;
   const lastSteps = sync.steps;
   const lastExerciseMinutes = sync.exerciseMinutes;
-
-  const [mood, setMood] = useState("");
-  const [sleepQuality, setSleepQuality] = useState("");
-  const [sleepDuration, setSleepDuration] = useState("");
-
-  const [weight, setWeight] = useState(
-    preferredWeightUnit === "kg"
-      ? lastWeightKg?.toString() || ""
-      : lastWeightLbs?.toString() || "");
 
   // 📅 Generate today's date string
   const today = new Date();
@@ -54,29 +41,20 @@ export default function FuelSyncPage() {
       const syncRef = collection(db, "users", userId, "syncs");
       const syncDocRef = doc(syncRef, dateString);
 
-      const parsedWeight = parseFloat(weight);
-
-      const weight_lbs = preferredWeightUnit === "kg"
-        ? parsedWeight * 2.20462
-        : parsedWeight;
-
-      const weight_kg = preferredWeightUnit === "lbs"
-        ? parsedWeight * 0.4536
-        : parsedWeight;
-
       const parsedSteps = Number(steps);
       const parsedExerciseMinutes = Number(exerciseMinutes);
       const parsedExerciseIntensity = intensity;
 
-      const calculated = calculateProjectedFuel({
+      const calculated = calculateFinalizedFuel({
         weight_lbs,
-        projectedSteps: parsedSteps,
-        projectedExerciseMinutes: parsedExerciseMinutes,
+        actualSteps: parsedSteps,
+        actualExerciseMinutes: parsedExerciseMinutes,
         exerciseIntensity: parsedExerciseIntensity,
       });
 
-      const recommendedMacros = [
-        { name: "Estimated TDEE", value: `${calculated.tdee} kcal` },
+      const activeTDEE = `${calculated.tdee} kcal`;
+
+      const activeRecommendedMacros = [
         { name: "Protein", value: `${calculated.macros.proteinMin}–${calculated.macros.proteinMax} g` },
         { name: "Carbohydrates", value: `${calculated.macros.carbsMin}–${calculated.macros.carbsMax} g` },
         { name: "Fats", value: `${calculated.macros.fatsMin}–${calculated.macros.fatsMax} g` },
@@ -84,28 +62,14 @@ export default function FuelSyncPage() {
 
       ];
 
-      const recommendedVitamins = calculated.vitamins;
-      const recommendedMinerals = calculated.minerals;
-
-
-   
-
       await setDoc(syncDocRef, {
-        weight_lbs: +weight_lbs.toFixed(2),
-        weight_kg: +weight_kg.toFixed(2),
-        projectedSteps: parsedSteps,
-        projectedExerciseMinutes: parsedExerciseMinutes,
+        actualSteps: parsedSteps,
+        actualExerciseMinutes: parsedExerciseMinutes,
         exerciseIntensity: parsedExerciseIntensity,
-        recommendedMacros,
-        recommendedVitamins,
-        recommendedMinerals,
-        sleepQuality: sleepQuality || null,
-        sleepDuration: sleepDuration || null,
-        mood: mood || null,
-        actualSteps: 0,
-        actualExerciseMinutes: 0,
+        activeRecommendedMacros,
+        activeTDEE,
         timestamp: serverTimestamp(),
-      });
+      },{ merge: true });
       setStatus("Sync complete!");
     } catch (error) {
       console.error("Error Syncing FuelForm", error);
@@ -126,82 +90,68 @@ export default function FuelSyncPage() {
 
 
   return (
-      <>
-        
-        <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat bg-black text-white overflow-hidden pb-16">
+    <>
+
+      <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat bg-black text-white overflow-hidden pb-16">
         <div className="absolute inset-0 bg-black/30 z-0"></div>
-  
+
         <div className="relative z-10 min-h-screen text-white flex flex-col items-center items-center px-6 pt-5">
-        <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
-          <h1 className="text-2xl text-center font-bold mb-6 pulse-glow">Initiate DuskSync Protocol</h1>
-  
-          <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-          <p className="text-white font-semibold mb-1">
-          Weight - {preferredWeightUnit === "kg" ? "kg" : "lbs"}
-          <input
-    type="number"
-    placeholder={
-      preferredWeightUnit === "kg"
-        ? lastWeightKg?.toString() || ""
-        : lastWeightLbs?.toString() || ""
-    }
-    onChange={(e) => setWeight(e.target.value)}
-    className="w-full p-3 mb-4 rounded bg-white/10 text-white border-none focus:outline-none appearance-none"
-    required
-  />
-  </p>
-  <p className="text-white font-semibold mb-1">Steps</p>
-            <input
-              type="number"
-              placeholder= {lastSteps?.toString()}
-              className="w-full p-3 rounded-lg bg-white/10 placeholder-white/60 border-none focus:outline-none appearance-none"
-              onChange={(e) => setSteps(e.target.value)}
-            />
-        <p className="text-white font-semibold mb-1">Exercise Minutes</p>
-  
-            <input
-              type="number"
-              placeholder={lastExerciseMinutes?.toString()}
-              className="w-full p-3 rounded-lg bg-white/10 placeholder-white/60 border-none focus:outline-none appearance-none"
-              onChange={(e) => setExerciseMinutes(e.target.value)}
-            />
-                  <p className="text-white font-semibold mb-1">Exercise Intensity</p>
-  
-                  <Listbox value={intensity} onChange={setIntensity}>
-    <div className="relative">
-      <Listbox.Button className="w-full p-3 mb-4 rounded bg-white/10 text-white">
-        {intensity}
-      </Listbox.Button>
-      <Listbox.Options className="absolute bottom-full mb-2 w-full bg-gray-800 backdrop-blur-md text-white rounded shadow-lg z-10 border-none">
-        {intensityOptions.map((option) => (
-          <Listbox.Option
-            key={option}
-            value={option}
-            className="cursor-pointer px-4 py-2 hover:bg-white/20"
-          >
-            {option}
-          </Listbox.Option>
-        ))}
-      </Listbox.Options>
-    </div>
-  </Listbox>
-  
-            <button
-              type="submit"
-              className="bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
-            >
-              Sync Now!
-            </button>
-          </form>
-          
-          {status && <p className="mt-6 text-green-400 text-center">{status}</p>}
-          <p className="mg-1">&nbsp;</p>
-          
+          <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
+            <h1 className="text-2xl text-center font-bold mb-6 pulse-glow">Initiate DuskSync Protocol</h1>
+
+            <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+              <p className="text-white font-semibold mb-1">Steps</p>
+              <input
+                type="number"
+                placeholder={lastSteps?.toString()}
+                className="w-full p-3 rounded-lg bg-white/10 placeholder-white/60 border-none focus:outline-none appearance-none"
+                onChange={(e) => setSteps(e.target.value)}
+              />
+              <p className="text-white font-semibold mb-1">Exercise Minutes</p>
+
+              <input
+                type="number"
+                placeholder={lastExerciseMinutes?.toString()}
+                className="w-full p-3 rounded-lg bg-white/10 placeholder-white/60 border-none focus:outline-none appearance-none"
+                onChange={(e) => setExerciseMinutes(e.target.value)}
+              />
+              <p className="text-white font-semibold mb-1">Exercise Intensity</p>
+
+              <Listbox value={intensity} onChange={setIntensity}>
+                <div className="relative">
+                  <Listbox.Button className="w-full p-3 mb-4 rounded bg-white/10 text-white">
+                    {intensity}
+                  </Listbox.Button>
+                  <Listbox.Options className="absolute bottom-full mb-2 w-full bg-gray-800 backdrop-blur-md text-white rounded shadow-lg z-10 border-none">
+                    {intensityOptions.map((option) => (
+                      <Listbox.Option
+                        key={option}
+                        value={option}
+                        className="cursor-pointer px-4 py-2 hover:bg-white/20"
+                      >
+                        {option}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </div>
+              </Listbox>
+
+              <button
+                type="submit"
+                className="bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
+              >
+                Sync Now!
+              </button>
+            </form>
+
+            {status && <p className="mt-6 text-green-400 text-center">{status}</p>}
+            <p className="mg-1">&nbsp;</p>
+
+          </div>
         </div>
-        </div>
-        </main>
-      </>
-      
-    );
-    
-  }
+      </main>
+    </>
+
+  );
+
+}

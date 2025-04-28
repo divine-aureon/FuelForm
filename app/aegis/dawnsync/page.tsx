@@ -13,7 +13,7 @@ import { Listbox } from '@headlessui/react'
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
-export default function FuelSyncPage() {
+export default function dawnSyncPage() {
   const router = useRouter();
   const sync = useFuelSync();
 
@@ -75,8 +75,9 @@ export default function FuelSyncPage() {
         exerciseIntensity: parsedExerciseIntensity,
       });
 
-      const recommendedMacros = [
-        { name: "Estimated TDEE", value: `${calculated.tdee} kcal` },
+      const recoveryTDEE = `${calculated.tdee} kcal`;
+
+      const recoveryRecommendedMacros = [
         { name: "Protein", value: `${calculated.macros.proteinMin}–${calculated.macros.proteinMax} g` },
         { name: "Carbohydrates", value: `${calculated.macros.carbsMin}–${calculated.macros.carbsMax} g` },
         { name: "Fats", value: `${calculated.macros.fatsMin}–${calculated.macros.fatsMax} g` },
@@ -96,16 +97,17 @@ export default function FuelSyncPage() {
         projectedSteps: parsedSteps,
         projectedExerciseMinutes: parsedExerciseMinutes,
         exerciseIntensity: parsedExerciseIntensity,
-        recommendedMacros,
+        recoveryRecommendedMacros,
         recommendedVitamins,
         recommendedMinerals,
+        recoveryTDEE,
         sleepQuality: sleepQuality || null,
         sleepDuration: sleepDuration || null,
         mood: mood || null,
         actualSteps: 0,
         actualExerciseMinutes: 0,
         timestamp: serverTimestamp(),
-      });
+      },{ merge: true });
       setStatus("Sync complete!");
     } catch (error) {
       console.error("Error Syncing FuelForm", error);
@@ -132,7 +134,7 @@ export default function FuelSyncPage() {
       bg-no-repeat bg-black text-white overflow-hidden pb-16">
         <div className="absolute inset-0 bg-black/30 z-0"></div>
 
-        <div className="relative z-10 text-white px-0 pt-0">
+        <div className="relative z-10 text-white flex flex-col items-center px-0 pt-0">
           <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
             <h1 className="text-3xl text-center font-bold mb-6 pulse-glow">Initiate DawnSync Protocol</h1>
 

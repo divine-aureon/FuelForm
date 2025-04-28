@@ -19,9 +19,12 @@ interface SyncData {
   steps: number;
   exerciseMinutes: number;
   exerciseIntensity: string;
-  recommendedMacros?: any[];
+  recoveryRecommendedMacros?: any[];
+  activeRecommendedMacros?: any[];
   recommendedVitamins?: any[];
   recommendedMinerals?: any[];
+  recoveryTDEE?: string;
+  activeTDEE?: string;
   timestamp?: any;
 }
 
