@@ -145,7 +145,7 @@ export default function BlueprintPage() {
           </table>
 
           {/*bottom of page buttons*/}
-          <div className="fixed bottom-16 left-0 w-full flex justify-between px-4 z-[60]">
+          <div className="fixed bottom-16 left-0 w-full flex justify-between px-4 z-45">
             <button className="flex items-center justify-center gap-2 w-full bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-300 transition glowing-button mr-2"
               onClick={() => router.push("/aegis/dawnsync")}>
               <Sun size={20} />DawnSync
