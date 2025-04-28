@@ -13,7 +13,7 @@ import { Listbox } from '@headlessui/react'
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
-export default function duskSyncPage() {
+export default function DuskSyncPage() {
   const router = useRouter();
   const sync = useFuelSync();
   const { profile } = useFuelFormData();

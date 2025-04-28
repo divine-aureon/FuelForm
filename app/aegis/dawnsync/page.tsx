@@ -13,7 +13,7 @@ import { Listbox } from '@headlessui/react'
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
-export default function dawnSyncPage() {
+export default function DawnSyncPage() {
   const router = useRouter();
   const sync = useFuelSync();
 
