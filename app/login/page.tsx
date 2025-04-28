@@ -6,6 +6,14 @@ import { loginUser, registerUser } from '../../lib/auth';
 import { db } from '../../lib/firebase';
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import Link from "next/link";
+import Head from "next/head";
+import Script from "next/script";
+
+declare global {
+  interface Window {
+    grecaptcha: any;
+  }
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,6 +43,26 @@ export default function LoginPage() {
     }
   }, [queryMode]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.grecaptcha) {
+      console.log("✅ grecaptcha found immediately, initializing...");
+      window.grecaptcha.ready(() => {
+        if (!document.querySelector("#recaptcha-container iframe")) {
+          console.log("Rendering reCAPTCHA now...");
+          window.grecaptcha.render("recaptcha-container", {
+            sitekey: "6Lfbtx4rAAAAACkf2TYkidh9FTFU0g_Ni6_FUeVj",
+          });
+        } else {
+          console.log("reCAPTCHA already rendered.");
+        }
+      });
+    } else {
+      console.error("❌ grecaptcha not available immediately!");
+    }
+  }, []);
+  
+
+
   function convertCmToFeetInches(cm: number) {
     const totalInches = cm / 2.54;
     const feet = Math.floor(totalInches / 12);
@@ -61,7 +89,7 @@ export default function LoginPage() {
         // Check if the user exists in Firestore
         if (userDoc.exists()) {
           const userData = userDoc.data();
-        
+
           router.push('/loginaccess');  // Regular login access for everyone
         }
       } else {
@@ -133,6 +161,12 @@ export default function LoginPage() {
 
   return (
     <>
+
+      <script
+        src="https://www.google.com/recaptcha/api.js"
+        async
+        defer
+      ></script>
 
       <main className="min-h-screen bg-[url('/images/login.webp')] bg-cover bg-center bg-no-repeat text-white flex justify-center px-4 pb-20">
         <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col">
@@ -302,7 +336,7 @@ export default function LoginPage() {
 
             )}
             {/* Optional: Future CAPTCHA container */}
-            <div id="recaptcha-container" className="mt-4" />
+            <div id="recaptcha-container" className="flex justify-center my-4 p-4"></div>
 
             {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
 

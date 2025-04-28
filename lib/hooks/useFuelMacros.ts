@@ -25,7 +25,7 @@ export default function useFuelMacros(): MacroRange {
 
   // Protein Range (0.7g–1.0g per lb)
   const proteinMin = Math.round(weightInLbs * 0.7);
-  const proteinMax = Math.round(weightInLbs * 1.0);
+  const proteinMax = Math.round(weightInLbs * 1.2);
 
   // Fat Range (0.3g–0.45g per lb)
   const fatMin = Math.round(weightInLbs * 0.3);

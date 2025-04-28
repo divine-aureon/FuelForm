@@ -197,11 +197,12 @@ export default function Settings() {
   return (
     <>
 
-      <main className="min-h-screen flex bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat items-start justify-center bg-black relative pt-5 mb-16">
+      <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center 
+      bg-no-repeat bg-black text-white overflow-hidden pb-16">
         <div className="absolute inset-0 bg-black/30 z-0"></div>
-        <div className="w-full max-w-md px-4 z-10">
-          <h1 className="text-2xl font-bold mb-6 text-center">Modify Biometrics</h1>
-          <p className="text-white font-semibold text-sm mb-2 mt-4">
+        <div className="relative z-10 text-white flex flex-col items-center px-0 pt-0">
+          <h1 className="text-4xl font-bold mb-6 text-center pulse-glow">Modify Biometrics</h1>
+          <p className="text-lg text-white font-semibold mb-2 mt-4">
             Designate Your Chosen Identity
           </p>
           <input
@@ -209,39 +210,40 @@ export default function Settings() {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full mb-4 p-2 rounded bg-gray-800 text-white"
+            className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
           />
-          <p className="text-white font-semibold text-sm mb-2 mt-4">
+          <p className="text-white font-semibold text-lg mb-2 mt-2">
             Gender
           </p>
           <select
             value={gender}
             onChange={(e) => setGender(e.target.value)}
-            className="w-full p-2 mb-4 rounded bg-gray-800 text-white"
+            className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <p className="text-white font-semibold text-sm mb-2 mt-4">
+          <p className="text-white font-semibold text-lg mb-2 mt-2">
             Incarnation Signature
           </p>
           <div className="flex gap-2 mb-4">
-            <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="p-2 rounded bg-gray-800 text-white">
+            <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="p-2 rounded bg-gray-800/70 text-white">
+              
               <option value="">Month</option>
               {[...Array(12)].map((_, i) => {
                 const month = (i + 1).toString().padStart(2, "0");
                 return <option key={i} value={month}>{month}</option>;
               })}
             </select>
-            <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="p-2 rounded bg-gray-800 text-white">
+            <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="p-2 rounded bg-gray-800/70 text-white">
               <option value="">Day</option>
               {[...Array(31)].map((_, i) => {
                 const day = (i + 1).toString().padStart(2, "0");
                 return <option key={i} value={day}>{day}</option>;
               })}
             </select>
-            <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="p-2 rounded bg-gray-800 text-white">
+            <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="p-2 rounded bg-gray-800/70 text-white">
               <option value="">Year</option>
               {[...Array(100)].map((_, i) => {
                 const year = new Date().getFullYear() - i;
@@ -251,13 +253,13 @@ export default function Settings() {
           </div>
 
 
-          <p className="text-white font-semibold text-sm mb-2 mt-4">
+          <p className="text-white font-semibold text-lg mb-2 mt-2">
             Calibrate Your Form of Measurement
           </p>
           <select
             value={heightUnit}
             onChange={(e) => setHeightUnit(e.target.value)}
-            className="w-full p-2 mb-4 rounded bg-gray-800 text-white"
+            className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
           >
             <option value="cm">Centimeters (cm)</option>
             <option value="ft">Feet & Inches</option>
@@ -266,12 +268,12 @@ export default function Settings() {
           <select
             value={weightUnit}
             onChange={(e) => setWeightUnit(e.target.value)}
-            className="w-full p-2 mb-4 rounded bg-gray-800 text-white"
+            className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
           >
             <option value="lbs">Pounds (lbs)</option>
             <option value="kg">Kilograms (kg)</option>
           </select>
-          <p className="text-white font-semibold text-sm mb-2 mt-4">
+          <p className="text-white font-semibold text-lg mb-2 mt-4">
             Set Height Parameter ({heightUnit === "cm" ? "cm" : "ft/in"})
           </p>
 
@@ -281,7 +283,7 @@ export default function Settings() {
               placeholder={`Height (${heightUnit})`}
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
-              className="w-full p-2 mb-4 rounded bg-gray-800 text-white"
+              className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
               min="30"
               max="280"
             />
@@ -292,7 +294,7 @@ export default function Settings() {
                 placeholder="Feet"
                 value={heightFeet}
                 onChange={(e) => setHeightFeet(e.target.value)}
-                className="w-1/2 p-2 rounded bg-gray-800 text-white"
+                className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
                 min="0"
               />
               <input
@@ -300,7 +302,7 @@ export default function Settings() {
                 placeholder="Inches"
                 value={heightInches}
                 onChange={(e) => setHeightInches(e.target.value)}
-                className="w-1/2 p-2 rounded bg-gray-800 text-white"
+                className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
                 min="0"
                 max="11"
               />

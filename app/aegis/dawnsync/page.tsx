@@ -128,15 +128,16 @@ export default function FuelSyncPage() {
   return (
     <>
 
-      <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center bg-no-repeat bg-black text-white overflow-hidden pb-16">
+      <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center 
+      bg-no-repeat bg-black text-white overflow-hidden pb-16">
         <div className="absolute inset-0 bg-black/30 z-0"></div>
 
-        <div className="relative z-10 min-h-screen text-white flex flex-col items-center items-center px-6 pt-5">
+        <div className="relative z-10 text-white px-0 pt-0">
           <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
-            <h1 className="text-2xl text-center font-bold mb-6 pulse-glow">Initiate DawnSync Protocol</h1>
+            <h1 className="text-3xl text-center font-bold mb-6 pulse-glow">Initiate DawnSync Protocol</h1>
 
             <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-              <p className="text-white font-semibold mb-1">
+              <p className="text-lg text-white font-semibold mb-1">
                 Weight - {preferredWeightUnit === "kg" ? "kg" : "lbs"}
                 <input
                   type="number"
@@ -148,21 +149,21 @@ export default function FuelSyncPage() {
                       : lastWeightLbs?.toString() || ""
                   }
                   onChange={(e) => setWeight(e.target.value)}
-                  className="w-full p-3 mb-4 rounded bg-white/10 text-white border-none focus:outline-none appearance-none"
+                  className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
                   required
                 />
               </p>
-              <p className="text-white font-semibold mb-1">
+              <p className="text-lg text-white font-semibold mb-1">
                 Mood
                 <input
                   type="text"
                   placeholder="Happy, Tired, Focused, etc."
                   onChange={(e) => setMood(e.target.value)}
-                  className="w-full p-3 mb-4 rounded bg-white/10 text-white border-none focus:outline-none appearance-none"
+                  className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
                   required
                 />
               </p>
-              <p className="text-white font-semibold mb-1">
+              <p className="text-lg text-white font-semibold mb-1">
                 Sleep Quality
                 <input
                   type="number"
@@ -170,12 +171,12 @@ export default function FuelSyncPage() {
                   max="10"
                   placeholder="1-10"
                   onChange={(e) => setSleepQuality(e.target.value)}
-                  className="w-full p-3 mb-4 rounded bg-white/10 text-white border-none focus:outline-none appearance-none"
+                  className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
                   required
                 />
               </p>
 
-              <p className="text-white font-semibold mb-1">
+              <p className="text-lg text-white font-semibold mb-1">
                 Sleep Duration (hours)
                 <input
                   type="number"
@@ -183,7 +184,7 @@ export default function FuelSyncPage() {
                   step="0.1"
                   placeholder="Hours"
                   onChange={(e) => setSleepDuration(e.target.value)}
-                  className="w-full p-3 mb-4 rounded bg-white/10 text-white border-none focus:outline-none appearance-none"
+                  className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
                   required
                 />
               </p>
