@@ -1,6 +1,6 @@
 "use client";
 
-import useFuelFormData from "@/lib/hooks/useFuelFormData"; // Adjust this path to match your project
+import useFuelFormData from "@/lib/hooks/CoreData"; // Adjust this path to match your project
 
 interface SyncData {
   weight_lbs: number;
@@ -8,10 +8,10 @@ interface SyncData {
   steps: number;
   exerciseMinutes: number;
   exerciseIntensity: string;
-  activeRecommendedMacros?: any[];
-  recoveryRecommendedMacros?: any[];
-  recommendedVitamins?: any[];
-  recommendedMinerals?: any[];
+  activeMacros?: any[];
+  recoveryMacros?: any[];
+  vitamins?: any[];
+  minerals?: any[];
   timestamp?: any;
 }
 
@@ -24,10 +24,10 @@ export default function useFuelSync(): SyncData {
     steps: latestSync?.steps || 0,
     exerciseMinutes: latestSync?.exerciseMinutes || 0,
     exerciseIntensity: latestSync?.exerciseIntensity || "low",
-    activeRecommendedMacros: latestSync?.activeRecommendedMacros || [],
-    recoveryRecommendedMacros: latestSync?.recoveryRecommendedMacros || [],
-    recommendedVitamins: latestSync?.recommendedVitamins || [],
-    recommendedMinerals: latestSync?.recommendedMinerals || [],
+    activeMacros: latestSync?.activeMacros || [],
+    recoveryMacros: latestSync?.recoveryMacros || [],
+    vitamins: latestSync?.vitamins || [],
+    minerals: latestSync?.minerals || [],
     timestamp: latestSync?.timestamp || null,
   };
 }

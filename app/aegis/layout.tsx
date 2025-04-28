@@ -1,9 +1,9 @@
 // app/(protected)/layout.tsx
 "use client"; // Ensure this runs on the client side
 
-import useAuthGuard from "@/lib/hooks/useAuthGuard"; // Import the auth guard
+import useAuthGuard from "@/lib/hooks/AuthGuard"; // Import the auth guard
 import NavPortal from '@/components/NavPortal';
-import usePaidGuard from "@/lib/hooks/usePaidGuard";
+import usePaidGuard from "@/lib/hooks/PaidGuard";
 import Overlay from "@/components/overlay";  // Import the overlay component
 
 import { Exo_2 } from 'next/font/google';

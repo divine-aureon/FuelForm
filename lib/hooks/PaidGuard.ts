@@ -1,4 +1,4 @@
-import useProfile from '@/lib/hooks/useProfile'; 
+import useProfile from '@/lib/hooks/ProfileData'; 
 
 const useProGuard = () => {
   const { profile } = useProfile();

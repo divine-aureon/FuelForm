@@ -1,44 +1,24 @@
 'use client';
-
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useFuelSync from "@/lib/hooks/useFuelSync";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
-import { calculateProjectedFuel } from "@/lib/fuelCalculatorCore";
-import useFuelFormData from "@/lib/hooks/useFuelFormData";
-import { Listbox } from '@headlessui/react'
-
-
-const intensityOptions = ["None", "Light", "Moderate", "High"]
+import { calculateRecoveryFuel } from "@/lib/FusionCore";
+import useFuelFormData from "@/lib/hooks/CoreData";
 
 export default function DawnSyncPage() {
   const router = useRouter();
-  const sync = useFuelSync();
-
-  const [weight_lbs, setWeight_lbs] = useState(sync.weight_lbs?.toString() || "");
-  const [weight_kg, setWeight_kg] = useState(sync.weight_kg?.toString() || "");
-  const [steps, setSteps] = useState(sync.steps?.toString() || "");
-  const [exerciseMinutes, setExerciseMinutes] = useState(sync.exerciseMinutes?.toString() || "");
-  const [intensity, setIntensity] = useState(sync.exerciseIntensity || "low");
   const [status, setStatus] = useState("");
+  const { profile, latestSync } = useFuelFormData();
 
-  const { profile } = useFuelFormData();
+  const [weight_lbs, setWeightLbs] = useState("");
+  const [weight_kg, setWeightKg] = useState("");
+
   const preferredWeightUnit = profile?.preferredWeightUnit ?? "lbs";
-  const lastWeightLbs = sync.weight_lbs;
-  const lastWeightKg = sync.weight_kg;
-  const lastSteps = sync.steps;
-  const lastExerciseMinutes = sync.exerciseMinutes;
 
   const [mood, setMood] = useState("");
   const [sleepQuality, setSleepQuality] = useState("");
   const [sleepDuration, setSleepDuration] = useState("");
-
-  const [weight, setWeight] = useState(
-    preferredWeightUnit === "kg"
-      ? lastWeightKg?.toString() || ""
-      : lastWeightLbs?.toString() || "");
 
   // 📅 Generate today's date string
   const today = new Date();
@@ -47,67 +27,57 @@ export default function DawnSyncPage() {
   const dd = String(today.getDate()).padStart(2, "0");
   const dateString = `${yyyy}-${mm}-${dd}`;
 
+  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+  
+    if (input === "") {
+      setWeightLbs("");
+      setWeightKg("");
+      return;
+    }
+  
+    const parsed = parseFloat(input);
+    if (isNaN(parsed)) return; // Guard against nonsense
+    
+    if (preferredWeightUnit === "lbs") {
+      setWeightLbs(parsed.toString());
+      setWeightKg((parsed * 0.453592).toString());
+    } else {
+      setWeightKg(parsed.toString());
+      setWeightLbs((parsed * 2.20462).toString());
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
+    e.preventDefault(); 
+    try { console.log("Debug Profile:");
+
+      const { recoveryTDEE, recoveryMacros, vitamins, minerals } = calculateRecoveryFuel({
+        weight_lbs,
+        weight_kg,        // ← live state value
+        height_cm: profile.height_cm,
+        gender: profile.gender,
+        age: profile.age
+      });
+
       const userId = auth.currentUser!.uid;
       const syncRef = collection(db, "users", userId, "syncs");
       const syncDocRef = doc(syncRef, dateString);
 
-      const parsedWeight = parseFloat(weight);
-
-      const weight_lbs = preferredWeightUnit === "kg"
-        ? parsedWeight * 2.20462
-        : parsedWeight;
-
-      const weight_kg = preferredWeightUnit === "lbs"
-        ? parsedWeight * 0.4536
-        : parsedWeight;
-
-      const parsedSteps = Number(steps);
-      const parsedExerciseMinutes = Number(exerciseMinutes);
-      const parsedExerciseIntensity = intensity;
-
-      const calculated = calculateProjectedFuel({
-        weight_lbs,
-        projectedSteps: parsedSteps,
-        projectedExerciseMinutes: parsedExerciseMinutes,
-        exerciseIntensity: parsedExerciseIntensity,
-      });
-
-      const recoveryTDEE = `${calculated.tdee} kcal`;
-
-      const recoveryRecommendedMacros = [
-        { name: "Protein", value: `${calculated.macros.proteinMin}–${calculated.macros.proteinMax} g` },
-        { name: "Carbohydrates", value: `${calculated.macros.carbsMin}–${calculated.macros.carbsMax} g` },
-        { name: "Fats", value: `${calculated.macros.fatsMin}–${calculated.macros.fatsMax} g` },
-        { name: "Fiber", value: `${calculated.macros.fiber} g` }
-
-      ];
-
-      const recommendedVitamins = calculated.vitamins;
-      const recommendedMinerals = calculated.minerals;
-
-
-   
-
       await setDoc(syncDocRef, {
-        weight_lbs: +weight_lbs.toFixed(2),
-        weight_kg: +weight_kg.toFixed(2),
-        projectedSteps: parsedSteps,
-        projectedExerciseMinutes: parsedExerciseMinutes,
-        exerciseIntensity: parsedExerciseIntensity,
-        recoveryRecommendedMacros,
-        recommendedVitamins,
-        recommendedMinerals,
+        weight_lbs,
+        weight_kg,
+        recoveryMacros,
+        vitamins,
+        minerals,
         recoveryTDEE,
         sleepQuality: sleepQuality || null,
         sleepDuration: sleepDuration || null,
         mood: mood || null,
-        actualSteps: 0,
-        actualExerciseMinutes: 0,
         timestamp: serverTimestamp(),
-      },{ merge: true });
+      }, { merge: true });
+
+
       setStatus("Sync complete!");
     } catch (error) {
       console.error("Error Syncing FuelForm", error);
@@ -118,8 +88,9 @@ export default function DawnSyncPage() {
   useEffect(() => {
     if (status === "Sync complete!") {
       const timeout = setTimeout(() => {
+        
         router.push("/aegis/loadingpages/calculating");
-      }, 500); // optional delay (1 second)
+      }, 1111); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
@@ -132,7 +103,7 @@ export default function DawnSyncPage() {
 
       <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center 
       bg-no-repeat bg-black text-white overflow-hidden pb-16">
-        <div className="absolute inset-0 bg-black/30 z-0"></div>
+        <div className="absolute inset-0 z-0"></div>
 
         <div className="relative z-10 text-white flex flex-col items-center px-0 pt-0">
           <div className="w-full max-w-md bg-white/20 rounded-xl p-6 shadow-lg">
@@ -140,17 +111,13 @@ export default function DawnSyncPage() {
 
             <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
               <p className="text-lg text-white font-semibold mb-1">
-                Weight - {preferredWeightUnit === "kg" ? "kg" : "lbs"}
+                Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
                 <input
                   type="number"
                   step="0.1"
                   min="0"
-                  placeholder={
-                    preferredWeightUnit === "kg"
-                      ? lastWeightKg?.toString() || ""
-                      : lastWeightLbs?.toString() || ""
-                  }
-                  onChange={(e) => setWeight(e.target.value)}
+                  value={preferredWeightUnit === "lbs" ? weight_lbs.toString() : weight_kg.toString()} onChange={handleWeightChange}
+                  placeholder="Enter weight"
                   className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
                   required
                 />
@@ -192,11 +159,11 @@ export default function DawnSyncPage() {
               </p>
               <button
                 type="submit"
-                className="bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
+                className="text-3xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
               >
                 Sync Now!
               </button>
-            </form>
+            </form>            
           </div>
         </div>
       </main>

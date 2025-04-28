@@ -3,7 +3,7 @@
 
 'use client';
 
-import useFuelFormData from "@/lib/hooks/useFuelFormData";
+import useFuelFormData from "@/lib/hooks/CoreData";
 import { Sun, Moon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,12 +16,12 @@ export default function BlueprintPage() {
     ? `${profile.height_cm} cm`
     : `${profile.height_ft_in.feet}'${profile.height_ft_in.inches}"`;
 
-  const activemacros = latestSync?.activeRecommendedMacros || [];
-  const macros = latestSync?.recoveryRecommendedMacros || [];
-  const minerals = latestSync?.recommendedMinerals || [];
-  const vitamins = latestSync?.recommendedVitamins || [];
-  const mergedMacros = (latestSync?.recoveryRecommendedMacros || []).map((recoveryMacro) => {
-    const matchingActive = (latestSync?.activeRecommendedMacros || []).find(
+  const activemacros = latestSync?.activeMacros || [];
+  const macros = latestSync?.recoveryMacros || [];
+  const minerals = latestSync?.minerals || [];
+  const vitamins = latestSync?.vitamins || [];
+  const mergedMacros = (latestSync?.recoveryMacros || []).map((recoveryMacro) => {
+    const matchingActive = (latestSync?.activeMacros || []).find(
       (activeMacro) => activeMacro.name === recoveryMacro.name
     );
 
@@ -35,7 +35,6 @@ export default function BlueprintPage() {
   const recoveryTDEE = latestSync?.recoveryTDEE;
   const activeTDEE = latestSync?.activeTDEE;
 
-
   return (
     <>
       <main className="relative min-h-screen bg-[url('/images/bg.webp')] 
@@ -44,7 +43,7 @@ export default function BlueprintPage() {
         {/* Dark overlay */}
 
         <div className="flex flex-col justify-center">
-          <div className="absolute inset-0 bg-black/30 z-0"></div>
+          <div className="absolute inset-0 z-0"></div>
 
           {/* Top Bar */}
           <div className="w-full flex justify-center z-10">
@@ -59,14 +58,31 @@ export default function BlueprintPage() {
           </div>
 
           <section className="max-w-lg mx-auto mt-4">
-            <h2 className="text-2xl font-semibold mb-2 text-center">Energy Targets</h2>
-            <div className="text-center text-lg font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)] 
-          bg-gradient-to-b from-white/80 to-white/60 text-black rounded-2xl p-5">
+  <div className="w-full rounded-2xl overflow-hidden 
+    shadow-[0_0_20px_rgba(255,255,255,0.2)]">
 
-              <p>Recovery TDEE: {recoveryTDEE || "[pending]"}</p>
-              <p>Active TDEE: {activeTDEE || "[pending]"}</p>
-            </div>
-          </section>
+    {/* HEADER: white background */}
+    <div className="bg-white text-black font-bold text-center py-2">
+      Today's Energy Expenditure
+    </div>
+
+    {/* BODY: gradient background */}
+    <div className="bg-gradient-to-b from-white/80 to-white/60 text-black p-3">
+      <div className="grid grid-cols-2 gap-4 text-left">
+        <div className="text-gray-600 italic text-right">Recovery TDEE:</div>
+        <div className="text-left">
+          {recoveryTDEE !== undefined ? `${recoveryTDEE} kcal` : "[pending]"}
+        </div>
+
+        <div className="text-gray-600 italic text-right">Active TDEE:</div>
+        <div className="text-left">
+          {activeTDEE !== undefined ? `${activeTDEE} kcal` : "[pending]"}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
           <section className="max-w-lg mx-auto mt-4">
             <h2 className="text-2xl font-semibold mb-4 text-center">Recommended Macronutrients</h2>
@@ -75,16 +91,16 @@ export default function BlueprintPage() {
               <tbody>
                 {mergedMacros.map((macro, index) => (
                   <tr key={index} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 font-medium">{macro.name}</td>
+                    <td className="px-4 py-2 font-bold">{macro.name}</td>
                     <td className="px-4 py-2">
                       {typeof macro.recoveryValue === "object" && macro.recoveryValue !== null
-                        ? macro.recoveryValue.value
-                        : macro.recoveryValue}
+                        ? `${macro.recoveryValue.value}g`
+                        : `${macro.recoveryValue}g`}
                     </td>
                     <td className="px-4 py-2">
                       {typeof macro.activeValue === "object" && macro.activeValue !== null
-                        ? macro.activeValue.value
-                        : macro.activeValue}
+                        ? `${macro.activeValue}g`
+                        : `${macro.activeValue}g`}
                     </td>
                   </tr>
                 ))}
@@ -106,7 +122,7 @@ export default function BlueprintPage() {
                 </tr>
               </thead>
               <tbody>
-                {(latestSync?.recommendedVitamins || []).map((vitamin, index) => (
+                {(latestSync?.vitamins || []).map((vitamin, index) => (
                   <React.Fragment key={index}>
                     <tr className="hover:bg-gray-100">
                       <td className="px-4 py-2 font-medium">{vitamin.name}</td>
@@ -140,7 +156,7 @@ export default function BlueprintPage() {
                 </tr>
               </thead>
               <tbody>
-                {(latestSync?.recommendedMinerals || []).map((mineral, index) => (
+                {(latestSync?.minerals || []).map((mineral, index) => (
                   <React.Fragment key={index}>
                     <tr className="hover:bg-gray-100">
                       <td className="px-4 py-2 font-medium">{mineral.name}</td>
@@ -159,7 +175,7 @@ export default function BlueprintPage() {
               </tbody>
             </table>
 
-            {/*bottom of page buttons*/}
+            {/*DAWNSYNC & DUSKSYNC*/}
             <div className="fixed bottom-16 left-0 w-full flex justify-between px-4 z-45">
               <button className="flex items-center justify-center gap-2 w-full bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-300 transition glowing-button mr-2"
                 onClick={() => router.push("/aegis/dawnsync")}>
