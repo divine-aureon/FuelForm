@@ -24,13 +24,13 @@ export default function SuccessPage() {
   }, [user, router]);
 
   return (
-    <main className="min-h-screen bg-[url('/images/loading.webp')] bg-cover bg-center bg-no-repeat text-white flex  justify-center px-4 pb-20">
-      <h1 className="text-3xl md:text-5xl font-bold text-white animate-pulse text-center">
-      Upgrading Access Codes...
-      </h1>
-      <h1 className="text-3xl md:text-5xl font-bold text-white animate-pulse text-center">
-      Initializing Enhanced Systems...
-      </h1>
-    </main>
+    <div className="bg-[url('/images/loading.webp')] 
+    bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center min-h-screen text-center space-y-4">
+        <p className="text-xl font-bold text-white animate-pulse">Upgrading Access Codes...</p>
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping" />
+          <div className="relative w-16 h-16 rounded-full bg-blue-500 animate-pulse" />
+        </div>
+      </div>
   );
 }
