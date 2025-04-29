@@ -35,7 +35,7 @@ export default function TransitionPage() {
 
     const timeout = setTimeout(() => {
       redirectToCheckout();
-    }, 1500); // 1.5 second delay for cool animation (adjust as you want)
+    }, 1000); // 1.5 second delay for cool animation (adjust as you want)
 
     return () => clearTimeout(timeout);
   }, []);
@@ -43,7 +43,7 @@ export default function TransitionPage() {
   return (
     <div className="bg-[url('/images/loading.webp')] 
       bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center min-h-screen text-center space-y-4">
-      <p className="text-xl font-bold text-white animate-pulse">Transporting...</p>
+      <p className="text-xl font-bold text-white animate-pulse">Teleporting...</p>
       <div className="relative w-16 h-16">
         <div className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping" />
         <div className="relative w-16 h-16 rounded-full bg-blue-500 animate-pulse" />
