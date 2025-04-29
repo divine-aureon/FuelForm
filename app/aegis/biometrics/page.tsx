@@ -5,9 +5,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import type { User } from 'firebase/auth';
-import { profile } from "console";
+
 
 
 function toSafeString(value: any): string {
@@ -65,17 +64,12 @@ export default function Settings() {
           setBirthYear(year || "");
           setBirthMonth(month || "");
           setBirthDay(day || "");
-
           setGender(data.gender || "");
           setHeightUnit(data.preferredHeightUnit || "cm");
-          console.log("Loaded heightUnit:", data.heightUnit);
-
           setHeightCm(data.height_cm || "");
           setHeightFeet(data.height_ft_in?.feet || ""); // ✅ safer now
           setHeightInches(data.height_ft_in?.inches || "");
           setWeightUnit(data.preferredWeightUnit || "lbs");
-
-          // 🛡️ Now setting original values for smart-change detection
           setOriginalName(data.name || "");
           setOriginalBirthYear(year || "");
           setOriginalBirthMonth(month || "");
@@ -101,7 +95,7 @@ export default function Settings() {
 
     setSaving(true);
     setError("");
-    setStatus("Biometrics Confirmed!");
+    setStatus("success");
 
     try {
       let finalFeet = "";
@@ -168,31 +162,39 @@ export default function Settings() {
 
       if (Object.keys(updates).length > 0) {
         await updateDoc(doc(db, "users", user.uid), updates);
-        console.log("✅ Biometrics updated with:", updates);
       } else {
-        console.log("ℹ️ No changes detected — skipping update.");
       }
 
       setSuccess(true);
     } catch (err) {
       console.error(err);
-      setError("Unable to update.");
+      setError("failure");
     }
 
     setSaving(false);
   };
 
   useEffect(() => {
-    if (status === "Biometrics Confirmed!") {
+    if (status === "success") {
       const timeout = setTimeout(() => {
-        router.push("/aegis/loadingpages/applyingchanges");
-      }, 500); // optional delay (1 second)
+        router.push("/aegis/commandcenter");
+      }, 1300); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
   }, [status, router]);
 
-  if (loading) return <div className="text-white">Loading...</div>;
+  if (status === "success")
+    return (
+      <div className="bg-[url('/images/loading.webp')] 
+    bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center min-h-screen text-center space-y-4">
+        <p className="text-xl font-bold text-white animate-pulse">Adjusting Biometrics...</p>
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping" />
+          <div className="relative w-16 h-16 rounded-full bg-blue-500 animate-pulse" />
+        </div>
+      </div>
+    );
 
   return (
     <>
@@ -201,7 +203,7 @@ export default function Settings() {
       bg-no-repeat bg-black text-white overflow-hidden pb-16 flex flex-col items-center">
         <div className=" z-0 "></div>
         <div className="w-full max-w-md relative z-0 text-white flex-col items-center">
-          <h1 className="text-4xl font-bold p-2 text-center pulse-glow">Modify Biometrics</h1>
+          <h1 className="text-4xl font-bold p-2 text-centerpulse-glow">Modify Biometrics</h1>
           <p className=" text-lg text-white font-semibold mb-2 mt-4">
             Designate Your Chosen Identity
           </p>
@@ -309,10 +311,10 @@ export default function Settings() {
             </div>
           )}
 
-          <div className="mt-6"></div>
+          <div className="mt-2"></div>
           <button
             onClick={handleSave}
-            className="w-full bg-white text-black px-4 py-2 rounded-xl font-bold hover:bg-gray-300 transition glowing-button"
+            className="w-full bg-white text-black px-4 py-4 rounded-xl font-bold hover:bg-gray-300 transition glowing-button"
             disabled={saving}
           >
             {saving ? "Saving..." : "Save Changes"}

@@ -29,16 +29,16 @@ export default function DawnSyncPage() {
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-  
+
     if (input === "") {
       setWeightLbs("");
       setWeightKg("");
       return;
     }
-  
+
     const parsed = parseFloat(input);
     if (isNaN(parsed)) return; // Guard against nonsense
-    
+
     if (preferredWeightUnit === "lbs") {
       setWeightLbs(parsed.toString());
       setWeightKg((parsed * 0.453592).toString());
@@ -49,8 +49,9 @@ export default function DawnSyncPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
-    try { console.log("Debug Profile:");
+    e.preventDefault();
+    try {
+      console.log("Debug Profile:");
 
       const { recoveryTDEE, recoveryMacros, vitamins, minerals } = calculateRecoveryFuel({
         weight_lbs,
@@ -78,25 +79,34 @@ export default function DawnSyncPage() {
       }, { merge: true });
 
 
-      setStatus("Sync complete!");
+      setStatus("success");
     } catch (error) {
-      console.error("Error Syncing FuelForm", error);
-      setStatus("❌ Unable to Sync. Please check your Data.");
+      setStatus("failure");
     }
   };
 
   useEffect(() => {
-    if (status === "Sync complete!") {
+    if (status === "success") {
       const timeout = setTimeout(() => {
-        
-        router.push("/aegis/loadingpages/calculating");
-      }, 1111); // optional delay (1 second)
+
+        router.push("/aegis/commandcenter");
+      }, 1300); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
   }, [status, router]);
 
-
+  if (status === "success")
+    return (
+      <div className="bg-[url('/images/loading.webp')] 
+    bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center min-h-screen text-center space-y-4">
+        <p className="text-xl font-bold text-white animate-pulse">Syncing In Progress...</p>
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping" />
+          <div className="relative w-16 h-16 rounded-full bg-blue-500 animate-pulse" />
+        </div>
+      </div>
+    );
 
   return (
     <>
@@ -163,7 +173,7 @@ export default function DawnSyncPage() {
               >
                 Sync Now!
               </button>
-            </form>            
+            </form>
           </div>
         </div>
       </main>

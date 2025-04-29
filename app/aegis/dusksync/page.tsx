@@ -61,22 +61,34 @@ export default function DuskSyncPage() {
       }, { merge: true });
 
 
-      setStatus("Sync complete!");
+      setStatus("success");
     } catch (error) {
-      console.error("Error Syncing FuelForm", error);
-      setStatus("❌ Unable to Sync. Please check your Data.");
+      setStatus("failiure");
     }
   };
 
   useEffect(() => {
-    if (status === "Sync complete!") {
+    if (status === "success") {
       const timeout = setTimeout(() => {
-        router.push("/aegis/loadingpages/calculating");
-      }, 1111); // optional delay (1 second)
+
+        router.push("/aegis/commandcenter");
+      }, 1300); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
   }, [status, router]);
+
+  if (status === "success")
+    return (
+      <div className="bg-[url('/images/loading.webp')] 
+    bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center min-h-screen text-center space-y-4">
+        <p className="text-xl font-bold text-white animate-pulse">Syncing In Progress...</p>
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping" />
+          <div className="relative w-16 h-16 rounded-full bg-blue-500 animate-pulse" />
+        </div>
+      </div>
+    );
 
 
 
@@ -143,10 +155,6 @@ export default function DuskSyncPage() {
                 Sync Now!
               </button>
             </form>
-
-            {status && <p className="mt-6 text-green-400 text-center">{status}</p>}
-            <p className="mg-1">&nbsp;</p>
-
           </div>
         </div>
       </main>

@@ -45,19 +45,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.grecaptcha) {
-      console.log("✅ grecaptcha found immediately, initializing...");
       window.grecaptcha.ready(() => {
         if (!document.querySelector("#recaptcha-container iframe")) {
-          console.log("Rendering reCAPTCHA now...");
           window.grecaptcha.render("recaptcha-container", {
             sitekey: "6Lfbtx4rAAAAACkf2TYkidh9FTFU0g_Ni6_FUeVj",
           });
         } else {
-          console.log("reCAPTCHA already rendered.");
         }
       });
     } else {
-      console.error("❌ grecaptcha not available immediately!");
     }
   }, []);
   
@@ -90,7 +86,7 @@ export default function LoginPage() {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
-          router.push('/loginaccess');  // Regular login access for everyone
+          router.push('/aegis/commandcenter');  // Regular login access for everyone
         }
       } else {
         // Registration logic
@@ -149,7 +145,7 @@ export default function LoginPage() {
           calorieGoal: 0,
           createdAt: serverTimestamp(),
         });
-        router.push('/loginaccess');
+        router.push('/commandcenter');
       }
 
     } catch (err: any) {
