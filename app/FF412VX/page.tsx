@@ -11,17 +11,20 @@ export default function SuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!user?.uid) return;  // <-- If user isn't ready, don't run
+
     async function handleSuccess() {
-      if (user?.uid) {
-        const userRef = doc(db, 'users', user.uid);
+      try {
+        const userRef = doc(db, 'users', user?.uid!);  // <-- Now 100% safe
         await updateDoc(userRef, { isPaid: true });
+        router.push('/aegis/commandcenter');
+      } catch (error) {
+        console.error("Error updating isPaid:", error);
       }
-  
-      router.push('/aegis/commandcenter');
     }
-  
+
     handleSuccess();
-  }, [user, router]);
+  }, [user, router]); // <-- depend on user and router
 
   return (
     <div className="bg-[url('/images/loading.webp')] 
