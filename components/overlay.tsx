@@ -26,12 +26,15 @@ export default function Overlay({ isPaidUser }: { isPaidUser: boolean }) {
     <p className="text-white/80 text-center mb-8">
       Upgrade now to activate all command center features.
     </p>
-    <button
-      onClick={handleCheckout}
-      className="px-8 py-4 bg-blue-500 z-80 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 pointer-events-auto  hover:scale-105 animate-pulse"
-    >
-      Access All Features
-    </button>
+    <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm flex items-center justify-center pointer-events-none">
+  <button
+    type="button"
+    onClick={handleCheckout}
+    className="relative z-80 pointer-events-auto touch-manipulation transition duration-300 ease-out"
+  >
+    Access All Features
+  </button>
+</div>
   </div>
 </div>
 
