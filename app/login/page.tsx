@@ -145,7 +145,7 @@ export default function LoginPage() {
           calorieGoal: 0,
           createdAt: serverTimestamp(),
         });
-        router.push('/commandcenter');
+        router.push('/aegis/commandcenter');
       }
 
     } catch (err: any) {

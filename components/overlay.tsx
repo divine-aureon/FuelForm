@@ -28,7 +28,7 @@ export default function Overlay({ isPaidUser }: { isPaidUser: boolean }) {
     </p>
     <button
       onClick={handleCheckout}
-      className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-105 animate-pulse"
+      className="px-8 py-4 bg-blue-500 z-80 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-105 animate-pulse"
     >
       Access All Features
     </button>
