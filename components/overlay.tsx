@@ -5,10 +5,9 @@ import { FreeModal } from "@/components/OverlaySyncSimModal"
 import SyncSimulator from "@/components/SyncSimulator"
 import { useState } from "react";
 
-const [modalStatus, setModalStatus] = useState(false);
-
 export default function Overlay({ isPaidUser }: { isPaidUser: boolean }) {
   const router = useRouter();
+  const [modalStatus, setModalStatus] = useState(false);
   if (isPaidUser) return null; // No overlay if paid
 
   function goToTransition() {

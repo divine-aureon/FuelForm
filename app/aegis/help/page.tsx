@@ -3,7 +3,7 @@
 
 export default function HelpPage() {
   return (
-    <main className="bg-[url('/images/bg.webp')] 
+    <main className="bg-[url(/images/bg.webp)] 
     bg-cover bg-center bg-no-repeat min-h-screen flex flex-col items-center justify-start pt-8 pb-20">
       <section className="w-full max-w-2xl bg-white/40 rounded-2xl shadow-md p-6">
         <h1 className="text-4xl font-bold text-center mb-6 animate-pulse">
@@ -11,12 +11,12 @@ export default function HelpPage() {
         </h1>
 
         <p className="mb-4 text-center">
-          Congratulations, Commander. You've entered the next evolution of vitality tracking — powered by the <span className="font-semibold">FusionCore</span>.
+          Congratulations, Commander. Youve entered the next evolution of vitality tracking — powered by the <span className="font-semibold">FusionCore</span>.
         </p>
 
         <h2 className="text-2xl font-bold mt-8 mb-4">How to Use FuelForm</h2>
         <p className="mb-4">
-          Each day, you’ll perform two Syncs — <span className="font-semibold">DawnSync</span> and <span className="font-semibold">DuskSync</span> — to keep your Blueprint updated with real-time stats, nutrition, and workout tracking.
+          Each day, you&#39;ll perform two Syncs — <span className="font-semibold">DawnSync</span> and <span className="font-semibold">DuskSync</span> — to keep your Blueprint updated with real-time stats, nutrition, and workout tracking.
         </p>
 
         <h2 className="text-2xl font-bold mt-8 mb-4">DawnSync & DuskSync Explained</h2>
@@ -52,7 +52,7 @@ export default function HelpPage() {
 
         <h2 className="text-2xl font-bold mt-8 mb-4">Understanding the Database</h2>
         <p className="mb-4">
-          Your data is securely stored in FuelForm’s cloud database. Each Sync (Dawn or Dusk) creates a new log for that day, ensuring your Blueprint evolves with you. No Sync = no updates. Syncing daily keeps your stats alive!
+          Your data is securely stored in FuelForm&#39;s cloud database. Each Sync (Dawn or Dusk) creates a new log for that day, ensuring your Blueprint evolves with you. No Sync = no updates. Syncing daily keeps your stats alive!
         </p>
 
         <div className="mt-10 text-center">
