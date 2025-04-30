@@ -200,8 +200,8 @@ export default function Settings() {
     <>
 
       <main className="relative min-h-screen bg-[url('/images/bg.webp')] bg-cover bg-center 
-      bg-no-repeat bg-black text-white overflow-hidden pb-16 flex flex-col items-center">
-        <div className=" z-0 "></div>
+      bg-no-repeat bg-black text-white pb-16 flex flex-col items-center">
+        <div className=" z-0"></div>
         <div className="w-full max-w-md relative z-0 text-white flex-col items-center">
           <h1 className="text-4xl font-bold p-2 text-centerpulse-glow">Modify Biometrics</h1>
           <p className=" text-lg text-white font-semibold mb-2 mt-4">

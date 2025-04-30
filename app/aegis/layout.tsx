@@ -6,6 +6,7 @@ import Overlay from "@/components/overlay";
 import { Exo_2 } from 'next/font/google';
 import { useState, useEffect } from "react";
 import useProfile from '@/lib/hooks/ProfileData'; 
+import PageWrapper from "@/components/pagewrapper"
 
 const exo2 = Exo_2({
   subsets: ['latin'],
@@ -46,6 +47,7 @@ export default function FreeCommandCenterLayout({ children }: { children: React.
   }
 
   return (
+    <PageWrapper>
     <>
       <div className={exo2.className}>
         <Overlay isPaidUser={isPaidUser} />
@@ -53,5 +55,6 @@ export default function FreeCommandCenterLayout({ children }: { children: React.
         <NavPortal />
       </div>
     </>
+    </PageWrapper>
   );
 }

@@ -26,7 +26,6 @@ export default function NavMenu({ onClose }: NavMenuProps) {
       <Link href="/aegis/commandcenter" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
-
       <Link href="/aegis/dawnsync" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ DawnSync ✦
       </Link>
@@ -44,6 +43,9 @@ export default function NavMenu({ onClose }: NavMenuProps) {
       </Link>
       <Link href="/aegis/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Biometrics ✦
+      </Link>
+      <Link href="/aegis/help" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+        ✦ Help Center ✦
       </Link>
       <button
         onClick={handleLogout}

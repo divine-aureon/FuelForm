@@ -164,8 +164,10 @@ export default function LoginPage() {
         defer
       ></script>
 
-      <main className="min-h-screen bg-[url('/images/login.webp')] bg-cover bg-center bg-no-repeat text-white flex justify-center px-4 pb-20">
-        <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl flex flex-col">
+<main className="min-h-screen bg-[url('/images/login.webp')] bg-cover bg-center bg-no-repeat 
+text-white px-4 pb-16 mb-5">
+  <div className="flex justify-center">
+  <div className="max-w-md w-full bg-black/70 p-8 rounded-2xl shadow-xl">
           <h1 className="text-4xl font-bold text-center  mb-6 pulse-glow">
             {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}
           </h1>
@@ -342,7 +344,8 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
 
-              className="w-full mt-6 py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 transition text-white font-semibold shadow"
+              className="w-full mt-6 py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 
+              transition text-white font-semibold shadow glowing-button"
             >
               {loading ? 'Engaging...' : mode === 'login' ? 'Login' : 'Register'}
             </button>
@@ -379,6 +382,7 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
+        </div>
         </div>
       </main>
     </>
