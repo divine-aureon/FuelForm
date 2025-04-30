@@ -64,7 +64,7 @@ export default function HelpPage() {
           Contact Support<br/>
           <br />
         <a
-          href="fuelform.online@email.com?subject=FuelForm%20Support"
+          href="fuelform.online@gmail.com?subject=FuelForm%20Support"
           className="text-white underline hover:text-blue-400"
         >
           FuelForm.Online@gmail.com
