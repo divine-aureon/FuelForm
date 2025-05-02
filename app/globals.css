@@ -144,3 +144,9 @@ main {
   scrollbar-width: none;
   /* Firefox */
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+
+.font-exo {
+  font-family: 'Exo 2', sans-serif;
+}

@@ -17,7 +17,7 @@ export async function POST() {
     ],
     mode: 'subscription', // or 'payment' if one-time
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/FF412VX`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/aegis/commandcenter`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/command-center`,
   });
 
   return NextResponse.json({ id: session.id });

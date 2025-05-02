@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import useAuth from '../../lib/useAuth';
+import useAuth from '@/lib/hooks/useAuth';
 
 export default function SuccessPage() {
   const { user } = useAuth();
@@ -17,7 +17,7 @@ export default function SuccessPage() {
       try {
         const userRef = doc(db, 'users', user?.uid!);  // <-- Now 100% safe
         await updateDoc(userRef, { isPaid: true });
-        router.push('/aegis/commandcenter');
+        router.push('/command-center');
       } catch (error) {
         console.error("Error updating isPaid:", error);
       }
