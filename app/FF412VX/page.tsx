@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import useAuth from '@/lib/hooks/useAuth';
+import useAuth from '@/lib/useAuth';
 
 export default function SuccessPage() {
   const { user } = useAuth();

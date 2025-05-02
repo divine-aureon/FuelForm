@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "../../lib/firebase";
+import { auth } from "../firebase";
 
 export default function useIsLoggedIn(shouldRedirect = true): boolean {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
