@@ -14,7 +14,7 @@ export default function DawnSyncPage() {
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
     setBackgroundMode("main");
-  }, []);
+  }, [setBackgroundMode]);
 
   const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;

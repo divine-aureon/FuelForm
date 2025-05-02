@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     setBackgroundMode("loginpage");
-  }, []);
+  }, [setBackgroundMode]);
 
 
   const router = useRouter();

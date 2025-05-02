@@ -23,7 +23,7 @@ export default function PaidBiometricsPage() {
     const { setBackgroundMode } = useBackground();
     useEffect(() => {
       setBackgroundMode("main");
-    }, []);
+    }, [setBackgroundMode]);
     
 
   const { profile } = useProfile();

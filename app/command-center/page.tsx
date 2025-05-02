@@ -24,7 +24,7 @@ export default function PaidCommandCenter() {
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
     setBackgroundMode("main");
-  }, []);
+  }, [setBackgroundMode]);
 
 
   const { profile, latestSync } = useFuelFormData();

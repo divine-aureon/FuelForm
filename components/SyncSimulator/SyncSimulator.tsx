@@ -141,7 +141,7 @@ export default function SyncSimulator() {
                 <h1 className="text-4xl flex justify-center font-bold pulse-glow">
                     Sync Simulator</h1>
                     <h2 className="text-lg flex justify-center p-3">                    
-                        Sync Simulator lets you test how FuelForm's FusionCore calculates your calories 
+                        Sync Simulator lets you test how FuelForms FusionCore calculates your calories 
                         and macros based on your Biometrics, steps, and exercise.
                     </h2>
             </div>

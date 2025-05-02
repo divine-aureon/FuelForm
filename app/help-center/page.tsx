@@ -13,7 +13,7 @@ export default function HelpPage() {
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
     setBackgroundMode("main");
-  }, []);
+  }, [setBackgroundMode]);
 
   const { profile } = useProfile();
   const isPaidUser = profile?.isPaid ?? false;

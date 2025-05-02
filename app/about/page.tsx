@@ -11,7 +11,7 @@ export default function AboutPage() {
   
     useEffect(() => {
       setBackgroundMode("infopage");
-    }, []);
+    }, [setBackgroundMode]);
 
   return (
     <>
