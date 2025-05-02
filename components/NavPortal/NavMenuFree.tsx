@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
+import { Unlock } from 'lucide-react';
 
 type NavMenuProps = {
   onClose: () => void;
@@ -23,6 +24,12 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
 
   return (
     <div className="flex flex-col gap-2 z-60 ">
+      <div className="text-center">
+      <Link href="https://buy.stripe.com/3cs6rl8wZ0tL2is144" className="text-green-200 block px-4 pt-2 hover:bg-gray-800 animate-pulse pulse-glow" onClick={onClose}>
+        ✦ UNLOCK ACCESS CODES ✦
+      <p className="text-s text-green-200 pb-2">1-Month Free Trial. No payment today.</p>
+      </Link>
+      </div>
       <Link href="/command-center" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
