@@ -1,4 +1,4 @@
-import PaidDuskSyncPage from "@/components/DuskSync/paid";
+import PaidDuskSyncPage from "@/components/Pages/DuskSync/paid";
 
 export default function FreeCommandCenter() {
   return (

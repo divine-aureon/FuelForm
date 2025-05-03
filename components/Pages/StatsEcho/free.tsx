@@ -1,4 +1,4 @@
-import PaidStatsEchoPage from "@/components/StatsEcho/paid";
+import PaidStatsEchoPage from "@/components/Pages/StatsEcho/paid";
 
 export default function FreeStatsEchoPage() {
   return (

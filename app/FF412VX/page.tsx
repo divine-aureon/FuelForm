@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import useAuth from '@/lib/useAuth';
-import SuccessLoad from "@/components/SuccessLoad";
+import SuccessLoad from "@/components/Loading/SuccessLoad";
 
 
 export default function SuccessPage() {

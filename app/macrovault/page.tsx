@@ -1,21 +1,27 @@
 'use client';
 
 import useProfile from "@/lib/hooks/ProfileData";
-import PaidMacroVaultPage from "@/components/MacroVault/paid";
-import FreeMacroVaultPage from "@/components/MacroVault/free";
+import PaidMacroVaultPage from "@/components/Pages/MacroVault/paid";
+import FreeMacroVaultPage from "@/components/Pages/MacroVault/free";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import { useState, useEffect } from 'react';
-import NavLoad from "@/components/NavLoad";
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import NavLoad from "@/components/Loading/NavLoad";
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import useFuelFormData from "@/lib/hooks/CoreData";
+
 
 
 export default function MacroVaultPage() {
 
-    const { setBackgroundMode } = useBackground();
-    useEffect(() => {
-      setBackgroundMode("main");
-    }, [setBackgroundMode]);
+    const { preferences } = useFuelFormData();
+
+  const { setBackgroundMode } = useBackground();
+  useEffect(() => {
+    if (preferences?.background) {
+      setBackgroundMode(preferences.background);
+    }
+  }, [preferences?.background, setBackgroundMode]);
 
   const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;

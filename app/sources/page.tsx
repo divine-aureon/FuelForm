@@ -3,16 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from 'react';
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 
 export default function SourcesPage() {
 
 
   const { setBackgroundMode } = useBackground();
+  
   useEffect(() => {
-    setBackgroundMode("main");
+    setBackgroundMode("infopage");
   }, [setBackgroundMode]);
-
   
   return (
       <div className="mb-20">

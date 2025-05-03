@@ -1,4 +1,4 @@
-import PaidMacroVaultPage from "@/components/MacroVault/paid";
+import PaidMacroVaultPage from "@/components/Pages/MacroVault/paid";
 
 export default function FreeMacroVaultPage() {
   return (

@@ -1,20 +1,25 @@
 'use client';
 
 import useProfile from "@/lib/hooks/ProfileData";
-import PaidStatsEchoPage from "@/components/StatsEcho/paid";
-import FreeStatsEchoPage from "@/components/StatsEcho/free";
+import PaidStatsEchoPage from "@/components/Pages/StatsEcho/paid";
+import FreeStatsEchoPage from "@/components/Pages/StatsEcho/free";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import { useState, useEffect } from 'react';
-import NavLoad from "@/components/NavLoad";
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import NavLoad from "@/components/Loading/NavLoad";
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import useFuelFormData from "@/lib/hooks/CoreData";
 
 export default function DawnSyncPage() {
 
+    const { preferences } = useFuelFormData();
+
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    setBackgroundMode("main");
-  }, [setBackgroundMode]);
+    if (preferences?.background) {
+      setBackgroundMode(preferences.background);
+    }
+  }, [preferences?.background, setBackgroundMode]);
 
   const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;

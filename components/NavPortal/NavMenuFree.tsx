@@ -45,6 +45,9 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
       <Link href="/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Biometrics ✦
       </Link>
+      <Link href="/neurosettings" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+        ✦ NeuroSettings ✦
+      </Link>
       <Link href="/help-center" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Help Center ✦
       </Link>

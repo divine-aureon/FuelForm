@@ -5,10 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { loginUser, registerUser } from '../../lib/auth';
 import { db } from '../../lib/firebase';
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import Link from "next/link";
-import Head from "next/head";
-import Script from "next/script";
 
 declare global {
   interface Window {
@@ -151,8 +149,13 @@ export default function LoginPage() {
           height_ft_in: { feet: finalFeet, inches: finalInches },
           age,
           isPaid: false,
-          calorieGoal: 0,
           createdAt: serverTimestamp(),
+          neuro: {
+            preferences: {
+              background: "Neural Link",
+              navIcon: "Atom"
+            }
+          }
         });
         router.push('/command-center');
       }
@@ -393,5 +396,6 @@ export default function LoginPage() {
         </div>
       </div>
     </>
+    
   );
 }

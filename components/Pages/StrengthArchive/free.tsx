@@ -1,4 +1,4 @@
-import PaidStrengthArchivePage from "@/components/StrengthArchive/paid";
+import PaidStrengthArchivePage from "@/components/Pages/StrengthArchive/paid";
 
 export default function FreeStrengthArchivePage() {
   return (

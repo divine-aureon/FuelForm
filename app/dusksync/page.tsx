@@ -1,21 +1,26 @@
 'use client';
 
 import useProfile from "@/lib/hooks/ProfileData";
-import PaidDuskSyncPage from "@/components/DuskSync/paid";
-import FreeDuskSyncPage from "@/components/DuskSync/free";
+import PaidDuskSyncPage from "@/components/Pages/DuskSync/paid";
+import FreeDuskSyncPage from "@/components/Pages/DuskSync/free";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import { useState, useEffect } from 'react';
-import NavLoad from "@/components/NavLoad";
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import NavLoad from "@/components/Loading/NavLoad";
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import useFuelFormData from "@/lib/hooks/CoreData";
+
 
 export default function DuskSyncPage() {
 
+    const { preferences } = useFuelFormData();
+
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    setBackgroundMode("main");
-  }, [setBackgroundMode]);
-
+    if (preferences?.background) {
+      setBackgroundMode(preferences.background);
+    }
+  }, [preferences?.background, setBackgroundMode]);
   const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;
 

@@ -2,7 +2,7 @@
 'use client';
 
 import useFuelFormData from "@/lib/hooks/CoreData";
-import { Sun, Moon, Lock } from "lucide-react";
+import { Sun, Moon, Lock , CircleCheckBig } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -16,18 +16,23 @@ import { BuildVitaminData } from "@/components/NutrientDisplay/BuildVitaminData"
 import { BuildMineralData } from "@/components/NutrientDisplay/BuildMineralData"
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
-import NavLoad from "@/components/NavLoad";
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import NavLoad from "@/components/Loading/NavLoad";
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import type { User } from 'firebase/auth';
+import TodaysSync from '@/lib/hooks/TodaysSync'
+import Link from 'next/link';
 
 export default function PaidCommandCenter() {
+  const { profile, latestSync, preferences } = useFuelFormData();
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    setBackgroundMode("main");
-  }, [setBackgroundMode]);
-
-
-  const { profile, latestSync } = useFuelFormData();
+    if (preferences?.background) {
+      setBackgroundMode(preferences.background);
+    }
+  }, [preferences?.background, setBackgroundMode]);
 
   const router = useRouter();
 
@@ -48,6 +53,8 @@ export default function PaidCommandCenter() {
       activeValue: matchingActive?.value || "[pending]",
     };
   });
+
+  const { hasDuskSyncedToday, hasDawnSyncedToday } = TodaysSync();
 
   const EnergyData = BuildEnergyData(latestSync);
   const Nutrient_V = BuildVitaminData(latestSync);
@@ -70,10 +77,18 @@ export default function PaidCommandCenter() {
       <div className="bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">
         <h2 className="text-4xl text-center font-bold text-white pulse-glow">Vital Systems Online</h2>
         <hr className="my-2 border-t-4 border-white/30" />
+        <div className="w-full flex items-center gap-6">
+        <div className="flex-1">
         <h2 className="text-left text-white ml-4 text-xs">Name: {profile.name}</h2>
         <h2 className="text-left text-white ml-4 text-xs">Age: {profile.age}</h2>
         <h2 className="text-left text-white ml-4 text-xs">Gender: {profile.gender}</h2>
         <h2 className="text-left text-white ml-4 text-xs">Height: {heightDisplay}</h2>
+        </div>
+        <Link href="/statsecho" className="flex-1 flex items-center justify-center">
+        <div className="w-40 h-20 bg-[url('/images/sine.gif')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl flex items-center justify-center text-white text-xl glowing-button"> Stats Echo </div>
+        </Link>
+        </div>
       </div>
 
 
@@ -97,18 +112,37 @@ export default function PaidCommandCenter() {
       <div className="fixed bottom-16 left-0 w-full flex justify-between z-30">
         {isPaidUser ? (
           <>
-            <button
-              className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button mr-1"
-              onClick={() => router.push("/dawnsync")}
-            >
-              <Sun size={20} />DawnSync
-            </button>
-            <button
-              className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button ml-1"
-              onClick={() => router.push("/dusksync")}
-            >
-              <Moon size={20} />DuskSync
-            </button>
+            {hasDawnSyncedToday ? (
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 w-full bg-gray-500/80 text-white rounded-lg mr-1 cursor-default px-4 py-2"
+              >
+                <Sun size={20} /> DawnSynced <CircleCheckBig size={20} /> 
+              </button>
+            ) : (
+              <button
+                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button mr-1 px-4 py-2"
+                onClick={() => router.push("/dawnsync")}
+              >
+                <Sun size={20} /> DawnSync 
+              </button>
+            )}
+
+            {hasDuskSyncedToday ? (
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 w-full bg-gray-500/80 text-white rounded-lg ml-1 cursor-default px-4 py-2"
+              >
+                <Moon size={20} /> DuskSynced <CircleCheckBig size={20} /> 
+              </button>
+            ) : (
+              <button
+                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button ml-1 px-4 py-2"
+                onClick={() => router.push("/dusksync")}
+              >
+                <Moon size={20} /> DuskSync
+              </button>
+            )}
           </>
         ) : (
           <>
@@ -127,7 +161,7 @@ export default function PaidCommandCenter() {
           </>
         )}
       </div>
-      
+
       <footer className="pt-4 pb-2">
         {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
       </footer>

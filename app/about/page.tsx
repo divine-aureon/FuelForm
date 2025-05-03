@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from 'react';
-import { useBackground } from '@/components/Backgrounds/BackgroundContext';
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 
 export default function AboutPage() {
 

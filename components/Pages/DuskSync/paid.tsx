@@ -1,16 +1,22 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter , useSearchParams } from "next/navigation";
 import { auth, db, } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateActiveFuel } from "@/lib/FusionCore";
 import useFuelFormData from "@/lib/hooks/CoreData";
 import { Listbox } from '@headlessui/react'
+import DuskSyncGuard from "@/components/SyncGuards/DuskSyncGuard"
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
 export default function FreeDuskSyncPage() {
+
+  const searchParams = useSearchParams();
+  const queryMode = searchParams.get('querymode');
+
+
   const router = useRouter();
   const [status, setStatus] = useState("");
   const { profile, latestSync } = useFuelFormData();
@@ -57,7 +63,8 @@ export default function FreeDuskSyncPage() {
         minerals,
         activeMacros,
         activeTDEE,
-        timestamp: serverTimestamp(),
+        duskSync: true,
+        duskTimestamp: serverTimestamp(),
       }, { merge: true });
 
 
@@ -72,7 +79,7 @@ export default function FreeDuskSyncPage() {
       const timeout = setTimeout(() => {
 
         router.push("/command-center");
-      }, 1300); // optional delay (1 second)
+      }, 0); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
@@ -137,6 +144,9 @@ export default function FreeDuskSyncPage() {
             </button>
           </form>
         </div>
+
+      {queryMode !== 'override' && <DuskSyncGuard />}
+
       </>
       );
 

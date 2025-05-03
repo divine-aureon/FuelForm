@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
+import ImagePreloader from '@/components/Backgrounds/ImagePreloader';
 import './globals.css';
 
 
@@ -39,6 +40,7 @@ export default function Home() {
           <Link href="/sources" className="hover:underline hover:text-white transition">Sources</Link>
         </div>
       </main>
+      <ImagePreloader/>
     </>
   );
 }

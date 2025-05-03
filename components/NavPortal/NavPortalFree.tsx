@@ -2,10 +2,37 @@
 
 import { useState } from 'react';
 import NavMenuFree from './NavMenuFree';
+import useFuelFormData from "@/lib/hooks/CoreData";
+import {
+  Crown,
+  Flame,
+  Zap,
+  Star,
+  Shield,
+  Atom,
+  Heart,
+  Bird
+} from 'lucide-react';
 
 export default function NavPortalFree() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+
+    const { preferences } = useFuelFormData();
+  
+    const LucideIconMap: Record<string, React.ElementType> = {
+      Atom: Atom,
+      Crown: Crown,
+      Flame: Flame,
+      Star: Star,
+      Zap: Zap,
+      Shield: Shield,
+      Heart: Heart,
+      Bird: Bird,
+    };
+    
+    const Icon = LucideIconMap[preferences?.navIcon || "Atom"];
+    
 
   return (
     <>
@@ -15,8 +42,8 @@ export default function NavPortalFree() {
           onClick={toggleMenu}
           className="text-xl font-bold tracking-wide transition-all hover:scale-105 pulse-glow"
         >
-          {isOpen ? 'DEACTIVATE NavPortal' : 'ACTIVATE NavPortal'}
-        </button>
+          {isOpen ? <p className="flex items-center justify-center gap-2"> DEACTIVATE NavPortal <Icon size={20} /> </p> : <p className="flex items-center justify-center gap-2"> ACTIVATE NavPortal <Icon size={20} /> </p>}
+          </button>
       </nav>
 
       {/* Expanding drawer from bottom */}

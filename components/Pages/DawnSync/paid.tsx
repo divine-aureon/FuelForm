@@ -1,12 +1,17 @@
 'use client';
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateRecoveryFuel } from "@/lib/FusionCore";
 import useFuelFormData from "@/lib/hooks/CoreData";
+import DawnSyncGuard from "@/components/SyncGuards/DawnSyncGuard"
 
 export default function PaidDawnSyncPage() {
+
+  const searchParams = useSearchParams();
+  const queryMode = searchParams.get('querymode');
+
   const router = useRouter();
   const [status, setStatus] = useState("");
   const { profile, latestSync } = useFuelFormData();
@@ -75,7 +80,8 @@ export default function PaidDawnSyncPage() {
         sleepQuality: sleepQuality || null,
         sleepDuration: sleepDuration || null,
         mood: mood || null,
-        timestamp: serverTimestamp(),
+        dawnSync: true,
+        dawnTimestamp: serverTimestamp(),
       }, { merge: true });
 
 
@@ -90,7 +96,7 @@ export default function PaidDawnSyncPage() {
       const timeout = setTimeout(() => {
 
         router.push("/command-center");
-      }, 1300); // optional delay (1 second)
+      }, 0); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
@@ -145,7 +151,7 @@ export default function PaidDawnSyncPage() {
               step="0.1"
               placeholder="Hours"
               onChange={(e) => setSleepDuration(e.target.value)}
-              className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
+              className="w-full p-3 mb-2 rounded bg-gray-800/30 text-white border-none focus:outline-none appearance-none"
               required
             />
           </p>
@@ -157,6 +163,9 @@ export default function PaidDawnSyncPage() {
           </button>
         </form>
       </div>
+      
+      {queryMode !== 'override' && <DawnSyncGuard />}
+      
     </>
   );
 

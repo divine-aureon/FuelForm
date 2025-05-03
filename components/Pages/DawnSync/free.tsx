@@ -1,4 +1,4 @@
-import PaidDawnSyncPage from "@/components/DawnSync/paid";
+import PaidDawnSyncPage from "@/components/Pages/DawnSync/paid";
 
 export default function FreeDawnSyncPage() {
   return (

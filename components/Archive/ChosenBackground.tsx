@@ -1,5 +1,6 @@
 'use client';
-import { useBackground } from './BackgroundContext';
+
+import { useBackground } from '../Backgrounds/BackgroundMaker';
 
 const backgroundMap: Record<string, string> = {
   main: "bg-[url('/images/bg.webp')]",

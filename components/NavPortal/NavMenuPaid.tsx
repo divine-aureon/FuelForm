@@ -27,16 +27,19 @@ export default function NavMenuPaid({ onClose }: NavMenuProps) {
         ✦ Command Centre ✦
       </Link>
       <Link href="/macrovault" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ Macro Vault ✦
+        ✦ MacroVault ✦
       </Link>
       <Link href="/strengtharchive" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ Strength Archive ✦
+        ✦ StrengthArchive ✦
       </Link>
       <Link href="/statsecho" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ Stats Echo ✦
+        ✦ StatsEcho ✦
       </Link>
       <Link href="/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Biometrics ✦
+      </Link>
+      <Link href="/neurosettings" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+        ✦ NeuroSettings ✦
       </Link>
       <Link href="/help-center" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
         ✦ Help Center ✦
