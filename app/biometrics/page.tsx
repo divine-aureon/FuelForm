@@ -213,8 +213,11 @@ export default function PaidBiometricsPage() {
   if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
 
   return (
-    <>
+    <div className="bg-white/20 rounded-xl p-3">
       <h1 className="text-4xl font-bold p-2 text-center pulse-glow">Modify Biometrics</h1>
+      <h1 className="text-md font-bold p-2 text-center">
+      “Before you can change, you must know where you are. These are your fundamentals.”
+      </h1>
       <p className=" text-lg text-white font-semibold mb-2 mt-4">
         Designate Your Chosen Identity
       </p>
@@ -334,6 +337,6 @@ export default function PaidBiometricsPage() {
         {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
       </footer>
 
-    </>
+    </div>
   );
 }

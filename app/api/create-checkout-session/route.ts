@@ -16,7 +16,7 @@ export async function POST() {
       },
     ],
     mode: 'subscription', // or 'payment' if one-time
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/FF412VX`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/FF418VX`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/command-center`,
   });
 

@@ -107,7 +107,11 @@ export default function PaidDawnSyncPage() {
   return (
     <>
       <div className="bg-white/20 rounded-xl p-6 shadow-lg">
-        <h1 className="text-3xl text-center font-bold mb-6 pulse-glow">Initiate DawnSync Protocol</h1>
+        <h1 className="text-3xl text-center font-bold mb-3 pulse-glow">Initiate DawnSync Protocol</h1>
+        <h1 className="text-md text-center font-bold mb-6">
+        “Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.”
+          </h1>
+
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-lg text-white font-semibold mb-1">
@@ -153,7 +157,7 @@ export default function PaidDawnSyncPage() {
               step="0.1"
               placeholder="Hours"
               onChange={(e) => setSleepDuration(e.target.value)}
-              className="w-full p-3 mb-2 rounded bg-gray-800/30 text-white border-none focus:outline-none appearance-none"
+              className="w-full p-3 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
               required
             />
           </p>

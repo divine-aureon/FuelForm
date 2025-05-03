@@ -90,7 +90,11 @@ export default function FreeDuskSyncPage() {
   return (
     <>
         <div className="bg-white/20 rounded-xl p-6 shadow-lg">
-          <h1 className="text-3xl text-center font-bold mb-6 pulse-glow">Initiate DuskSync Protocol</h1>
+          <h1 className="text-3xl text-center font-bold mb-3 pulse-glow">Initiate DuskSync Protocol</h1>
+          <h1 className="text-md text-center font-bold mb-6">
+          “The day is done. Sync the work and restore your baseline.”
+            </h1>
+
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <p className="text-xl text-white font-semibold mb-1">Steps

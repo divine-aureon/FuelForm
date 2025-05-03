@@ -27,7 +27,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
       <link rel="apple-touch-icon" href="/icons/icon-512x512.png" />
       </>
       <body
-        className={`${inter.className} ${exo2.className} bg-cover bg-center 
+        className={`${inter.className} ${exo2.className} overflow-y-scroll scrollbar-hidden bg-cover bg-center 
         bg-no-repeat bg-fixed text-white`}
       >      <BackgroundMaker>
           <div className="flex flex-col min-h-screen">

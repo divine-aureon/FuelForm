@@ -112,9 +112,11 @@ export default function PaidNeuroSettingsPage() {
     return (
 
         <>
-            <div className="bg-white/20 rounded-xl p-6 shadow-lg">
-                <h1 className="text-3xl text-center font-bold mb-6 pulse-glow">Accessing NeuroSettings</h1>
-
+            <div className="bg-white/20 rounded-xl p-6 shadow-lg mb-8">
+                <h1 className="text-3xl text-center font-bold mb-2 pulse-glow">Accessing NeuroSettings</h1>
+                <h1 className="text-md text-center font-bold mb-6">
+                “Optimize the interface to align with your rhythm, pace, and focus.”
+                </h1>
                 <form onSubmit={handleSubmit} className="space-y-4"> 
                     <div className="bg-white/30 rounded-xl text-3xl text-white p-3"> Preferences
                     <p className="text-lg text-white font-semibold mb-1">
