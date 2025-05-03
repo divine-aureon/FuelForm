@@ -14,7 +14,7 @@ export default function PaidDawnSyncPage() {
 
   const router = useRouter();
   const [status, setStatus] = useState("");
-  const { profile, latestSync } = useFuelFormData();
+  const { profile, latestSync , fitnessGoals } = useFuelFormData();
 
   const [weight_lbs, setWeightLbs] = useState("");
   const [weight_kg, setWeightKg] = useState("");
@@ -63,7 +63,8 @@ export default function PaidDawnSyncPage() {
         weight_kg,        // ← live state value
         height_cm: profile.height_cm,
         gender: profile.gender,
-        age: profile.age
+        age: profile.age,
+        calorieGoal: fitnessGoals?.calorieGoal
       });
 
       const userId = auth.currentUser!.uid;
@@ -82,6 +83,7 @@ export default function PaidDawnSyncPage() {
         mood: mood || null,
         dawnSync: true,
         dawnTimestamp: serverTimestamp(),
+        timestamp: serverTimestamp(),
       }, { merge: true });
 
 

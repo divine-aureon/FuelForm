@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+import useFuelFormData from "@/lib/hooks/CoreData";
 
 type MacroRange = {
   recovery: string;
@@ -21,9 +22,14 @@ interface EnergyBreakdownProps {
 }
 
 export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
+
+    const { fitnessGoals } = useFuelFormData();
+
   return (
     <div className="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg pt-2 w-full max-w-lg mx-auto mt-4 text-black overflow-hidden">
       <h2 className="text-center font-bold text-lg mb-3">Energy Breakdown</h2>
+      <h2 className="text-center text-gray-800 text-3md">All Calculations Include Your Set Calorie Goal</h2>
+      <h2 className="text-center text-gray-800 text-3md mb-3">10% Thermic Effect of Food Applied</h2>
       <table className="w-full text-sm md:text-base text-center overflow-hidden">
         <thead>
           <tr className="bg-white/50 font-semibold">

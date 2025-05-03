@@ -154,6 +154,9 @@ export default function LoginPage() {
             preferences: {
               background: "Neural Link",
               navIcon: "Atom"
+            },
+            fitnessGoals: {
+              calorieGoal: 0,
             }
           }
         });

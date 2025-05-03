@@ -19,7 +19,7 @@ export default function FreeDuskSyncPage() {
 
   const router = useRouter();
   const [status, setStatus] = useState("");
-  const { profile, latestSync } = useFuelFormData();
+  const { profile, latestSync , fitnessGoals } = useFuelFormData();
 
   const [steps, setSteps] = useState(latestSync?.steps?.toString() || "");
   const [exerciseMinutes, setExerciseMinutes] = useState(latestSync?.exerciseMinutes?.toString() || "");
@@ -49,6 +49,7 @@ export default function FreeDuskSyncPage() {
           height_cm: profile.height_cm,
           gender: profile.gender,
           age: profile.age,
+          calorieGoal : fitnessGoals?.calorieGoal
         });
 
       const userId = auth.currentUser!.uid;
@@ -65,6 +66,7 @@ export default function FreeDuskSyncPage() {
         activeTDEE,
         duskSync: true,
         duskTimestamp: serverTimestamp(),
+        timestamp: serverTimestamp(),
       }, { merge: true });
 
 
