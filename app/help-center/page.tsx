@@ -59,7 +59,7 @@ export default function HelpPage() {
               then calculates your final Active TDEE. This allows FuelForm to adjust your daily nutrient targets based on your real energy output,
               closing the loop for a complete picture of your days activity and recovery</li>
             <li className="font-semibold">To prevent accidental overwrites or double entries, each sync button greys out after use and becomes inactive, displaying a
-              status like "DuskSync Complete" or showing a checkmark to confirm its been recorded. This ensures your data stays clean and intentional.
+              status like -DuskSync Complete- or showing a checkmark to confirm its been recorded. This ensures your data stays clean and intentional.
             </li>
           </ul>
 
