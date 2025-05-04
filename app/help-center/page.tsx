@@ -36,7 +36,7 @@ export default function HelpPage() {
 
   return (
     <>
-      <div className="flex justify-center pb-3">
+      <div className="flex justify-center backdrop-blur-md pb-3">
         <section className="bg-black/30 rounded-2xl shadow-md p-6">
           <h1 className="text-4xl font-bold text-center mb-6 pulse-glow">
             Welcome to the FuelForm Help Center!

@@ -29,6 +29,7 @@ interface SyncData {
   duskSync?: boolean;
   dawnTimestamp?: any;
   duskTimestamp?: any;
+  timestamp?: any;
 }
 
 interface PrefData {
@@ -87,6 +88,7 @@ const defaultProfile: UserProfile = {
     duskSync: false,
     dawnTimestamp: null,
     duskTimestamp: null,
+    timestamp: null,
   },
   preferences: {
     background: "Neural Link",

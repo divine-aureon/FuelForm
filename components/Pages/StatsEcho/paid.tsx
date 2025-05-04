@@ -1,12 +1,7 @@
 'use client';
 
 import { Sun, Moon, Lock, CircleCheckBig } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
-import NavLoad from "@/components/Loading/NavLoad";
-import TodaysSync from '@/lib/hooks/TodaysSync'
-import Link from 'next/link';
-import useFuelFormData from "@/lib/hooks/CoreData";
 import { useEffect, useState } from 'react';
 import useAuth from '@/lib/useAuth';
 import { db } from '@/lib/firebase';
@@ -164,11 +159,11 @@ export default function PaidStatsEchoPage() {
     .filter(entry => typeof entry.exerciseMinutes === "number")
     .map(entry => entry.exerciseMinutes as number);
 
-  const minMinutes = Math.min(...stepValues);
-  const maxMinutes = Math.max(...stepValues);
+  const minMinutes = Math.min(...MinuteValues);
+  const maxMinutes = Math.max(...MinuteValues);
 
-  const yMinMinutes = Math.floor(minSteps - 1);
-  const yMaxMinutes = Math.ceil(maxSteps + 1);
+  const yMinMinutes = Math.floor(minMinutes - 1);
+  const yMaxMinutes = Math.ceil(maxMinutes + 1);
 
   const filteredMinutesSyncArray = (MinuteSyncArray || []).filter(entry =>
     selectedMinutesMonth === "All" ? true : entry.date.startsWith(selectedMinutesMonth));

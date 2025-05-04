@@ -138,7 +138,7 @@ export default function PaidCommandCenter() {
 
       <div className="pt-2">
         <button onClick={() => setIsModalOpen(true)} className="w-full rounded-lg bg-blue-600 text-white glowing-button">
-          Activate Sync Simulator
+          Open Sync Simulator
         </button>
 
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -147,7 +147,7 @@ export default function PaidCommandCenter() {
         </Modal>
       </div>
 
-      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-lg text-center mt-2">Nutrient Modules
+      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-lg text-center mx-1 my-1">Nutrient Modules
         <div className="grid grid-cols-3 w-full rounded-xl mt-2">
           <button
             className={`p-2 w-full rounded-xl ${getButtonColor("macros")}`}
@@ -166,13 +166,13 @@ export default function PaidCommandCenter() {
           </button>
         </div>
       </div>
-      <div className=" w-full rounded-xl ">
+      <div className="p-2 w-full rounded-xl ">
         <AnimatePresence mode="wait">
 
           {selectedSector === "macros" && (
             <motion.div
               key="macros"
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}>
@@ -182,7 +182,7 @@ export default function PaidCommandCenter() {
           {selectedSector === "vitamins" && (
             <motion.div
               key="vitamins"
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}>
@@ -194,7 +194,7 @@ export default function PaidCommandCenter() {
           {selectedSector === "minerals" && (
             <motion.div
               key="minerals"
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
