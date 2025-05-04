@@ -192,22 +192,22 @@ export default function PaidStatsEchoPage() {
     | "mood"
     | "macroAccuracy";
 
-    const handleSectorClick = (sector: "body" | "mind" | "system") => {
-      if (selectedSector === sector && isDrawerOpen) {
-        // If same sector clicked again, close drawer
-        setIsDrawerOpen(false);
-        setSelectedSector(null);
-        setButtonColor(null);
-      } else {
-        // Open drawer with new content
-        setSelectedSector(sector);
-        setIsDrawerOpen(true);
-        setButtonColor(sector);
-      }
-    };
+  const handleSectorClick = (sector: "body" | "mind" | "system") => {
+    if (selectedSector === sector && isDrawerOpen) {
+      // If same sector clicked again, close drawer
+      setIsDrawerOpen(false);
+      setSelectedSector(null);
+      setButtonColor(null);
+    } else {
+      // Open drawer with new content
+      setSelectedSector(sector);
+      setIsDrawerOpen(true);
+      setButtonColor(sector);
+    }
+  };
 
-    const [selectedSector, setSelectedSector] = useState<"body" | "mind" | "system" | null>(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedSector, setSelectedSector] = useState<"body" | "mind" | "system" | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedView, setSelectedView] = useState<StatView>("steps"); // default stat within selected sector
   const [buttonColor, setButtonColor] = useState<"body" | "mind" | "system" | null>(null);
 
@@ -433,58 +433,62 @@ export default function PaidStatsEchoPage() {
             onClick={() => handleSectorClick("system")}>System</button>
         </div>
 
-        <div className="fixed bottom-40 left-0 w-full flex gap-2 justify-center  z-40">
+        <div className="grid grid-cols-3 gap-2 z-40">
+          <div className="w-full  fixed bottom-28 left-0 mb-2">
+            <AnimatePresence mode="wait">
+              {isDrawerOpen && selectedSector && (
+                <motion.div
+                  key={selectedSector}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 20, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="w-full flex justify-between z-40"
+                >
+                  {selectedSector === "body" && (
+                    <div className="flex justify-center gap-2 w-full">
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("weight"); setIsDrawerOpen(false); }}>Weight</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("steps"); setIsDrawerOpen(false); }}>Steps</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("exercise"); setIsDrawerOpen(false); }}>Exercise</button>
+                    </div>
+                  )}
+                  {selectedSector === "mind" && (
+                    <div className="flex justify-center gap-2 w-full">
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>Sleep</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>Sleep Quality</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>Mood</button>
+                    </div>
+                  )}
 
-          <AnimatePresence mode="wait">
-           {isDrawerOpen && selectedSector && (
-              <motion.div
-                key={selectedSector}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y:20, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="fixed w-full flex gap-2 justify-center"
-              >
-                {selectedSector === "body" && (
-                  <>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("weight");setIsDrawerOpen(false);}}>Weight</button>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("steps");setIsDrawerOpen(false);}}>Steps</button>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("exercise");setIsDrawerOpen(false);}}>Exercise Minutes</button>
-                  </>
-                )}
-                {selectedSector === "mind" && (
-                  <>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("sleepDuration");setIsDrawerOpen(false);}}>Sleep Duration</button>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("sleepQuality");setIsDrawerOpen(false);}}>Sleep Quality</button>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("mood");setIsDrawerOpen(false);}}>Mood</button>
-                  </>
-                )}
-
-                {selectedSector === "system" && (
-                  <>
-                  <div className={`px-4 py-2 rounded-lg w-full hidden"}`}></div>
-                  <div className={`px-4 py-2 rounded-lg w-full hidden"}`}></div>
-                    <button
-                      className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white"}`}
-                      onClick={() => {setSelectedView("macroAccuracy");setIsDrawerOpen(false);}}>Accuracy</button>
-                  
-                  </>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  {selectedSector === "system" && (
+                    <div className="flex justify-center gap-2 w-full">
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full`}>
+                      </button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full`}>
+                      </button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("macroAccuracy"); setIsDrawerOpen(false); }}>Accuracy</button>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
       </div>

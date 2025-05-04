@@ -16,7 +16,7 @@ export default function Home() {
             FuelForm
           </h1>
           <p className="text-lg md:text-2xl text-center max-w-2xl relative z-10 shadow-xl">
-            Adaptive Metabolic Interface v1.1.0
+            Adaptive Metabolic Interface v1.3.0
           </p>
         </div>
         <div className="flex flex-col items-center gap-4 mb-10 z-10">
