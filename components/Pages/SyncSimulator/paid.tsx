@@ -6,7 +6,7 @@ import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/components/NutrientDisplay/MineralBreakdown"
 
-export default function SyncSimulator() {
+export default function PaidSyncSimulator() {
 
     const [weight_lbs, setWeight_lbs] = useState("");
     const [weight_kg, setWeight_kg] = useState("");
@@ -136,23 +136,24 @@ export default function SyncSimulator() {
         setCalculated(true);
     };
 
-
     return (
-        <main className=" rounded-lg bg-white/25 w-full mb-24">
-            <div className=" max-w-md text-center">
-                <div className="bg-blue-500/30 bg p-6 rounded-xl">
-                    <h1 className="text-4xl flex justify-center font-bold pulse-glow">
-                        Sync Simulator</h1>
-                    <h2 className="text-lg flex justify-center p-3">
-                        Sync Simulator lets you test how FuelForms FusionCore calculates your calories
-                        and macros based on your Biometrics, steps, and exercise.
-                    </h2>
+        <main className="rounded-lg mb-12 p-0">
+            <div className="text-center">
+                <div className="bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat bg rounded-xl overflow-hidden">
+                    <div className="inset-0 w-full bg-blue-300/20 rounded-xl p-2">
+                        <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
+                            Sync Simulator</h1>
+                        <h2 className="text-lg flex justify-center p-2">
+                            Sync Simulator lets you test how FuelForms FusionCore calculates your calories
+                            and macros based on your Biometrics, steps, and exercise.
+                        </h2>
+                    </div>
                 </div>
                 {/* Inputs */}
-                <div className="flex flex-col text-black gap-2 mt-4 mb-4 w-full max-w-md">
+                <div className="flex flex-col text-xl text-white gap-2 mt-4 mb-4 w-full">
                     <select value={preferredWeightUnit}
                         onChange={(e) => setpreferredWeightUnit(e.target.value as "lbs" | "kg")}
-                        className="p-2 border rounded">
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30">
                         <option value="lbs">Pounds (lbs)</option>
                         <option value="kg">Kilograms (kg)</option>
 
@@ -164,7 +165,7 @@ export default function SyncSimulator() {
                             placeholder="Weight (lbs)"
                             value={weight_lbs}
                             onChange={(e) => handleWeightChange(e.target.value)}
-                            className="p-2 border rounded"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                         />
                     ) : (
                         <input
@@ -172,12 +173,12 @@ export default function SyncSimulator() {
                             placeholder="Weight (kg)"
                             value={weight_kg}
                             onChange={(e) => handleWeightChange(e.target.value)}
-                            className="p-2 border rounded"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                         />
                     )}
                     <select value={preferredHeightUnit}
                         onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
-                        className="p-2 border rounded">
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30">
                         <option value="cm">Metric (cm)</option>
                         <option value="ft_in">Imperial (ft_in)</option>
 
@@ -189,7 +190,7 @@ export default function SyncSimulator() {
                             placeholder="Height (cm)"
                             value={height_cm}
                             onChange={(e) => setHeight_cm(e.target.value)}
-                            className="p-2 border rounded"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                         />
                     ) : (
 
@@ -202,7 +203,7 @@ export default function SyncSimulator() {
                                     setFeet(e.target.value);
                                     handleFeetInchesChange(e.target.value, feet);
                                 }}
-                                className="p-2 border rounded w-24"
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                             />
                             <input
                                 type="number"
@@ -219,7 +220,7 @@ export default function SyncSimulator() {
                                     const clamped = Math.min(Math.max(num, 0), 11); // clamps to 0–11
                                     setInches(clamped.toString());
                                 }}
-                                className="p-2 border rounded w-24"
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                             />
                         </div>
 
@@ -229,12 +230,12 @@ export default function SyncSimulator() {
                         placeholder="Age"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     />
                     <select
                         value="" disabled hidden
                         onChange={(e) => setGender(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -244,19 +245,19 @@ export default function SyncSimulator() {
                         placeholder="Steps"
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     />
                     <input
                         type="text"
                         placeholder="Exercise Minutes"
                         value={exerciseMinutes}
                         onChange={(e) => setExerciseMinutes(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     />
                     <select
                         value={exerciseIntensity}
                         onChange={(e) => setExerciseIntensity(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     >
                         <option value="low">Low</option>
                         <option value="moderate">Moderate</option>
@@ -265,9 +266,9 @@ export default function SyncSimulator() {
                     <select
                         value={calorieGoal}
                         onChange={(e) => setCalorieGoal(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
                     >
-                        <option value="">+/- Kcal</option>
+                        <option value="">-/+ Calories Adjustment</option>
                         {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (
                             <option key={kcal} value={kcal}>
                                 {kcal} kcal
@@ -277,12 +278,15 @@ export default function SyncSimulator() {
                 </div>
 
                 {/* Button */}
-                <button
-                    onClick={handleCalculate}
-                    className="w-full rounded-lg p-2 bg-blue-500 text-3xl text-white rounded glowing-button"
-                >
-                    Sync Now!
-                </button>
+
+                <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2 z-30">
+                    <button
+                        onClick={handleCalculate}
+                        className="text-2xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
+                    >
+                        Generate Nutrient Blueprint!
+                    </button>
+                </div>
 
                 {/* Outputs */}
 

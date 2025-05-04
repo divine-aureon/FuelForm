@@ -11,8 +11,8 @@ import {
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Modal } from "@/components/SyncSimulator/SyncSimModal"
-import SyncSimulator from "@/components/SyncSimulator/SyncSimulator"
+import { Modal } from "@/components/Archive/SyncSimulator/SyncSimModal"
+import SyncSimulator from "@/components/Archive/SyncSimulator/SyncSimulator"
 import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/components/NutrientDisplay/MineralBreakdown"
@@ -138,23 +138,16 @@ export default function PaidCommandCenter() {
 
 
 
-          <button onClick={() => setIsModalOpen(true)} className="relative glowing-button mt-2 bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
-            <div className="absolute inset-0 w-full rounded-xl text-2xl flex items-center justify-center pb-1 ">
-            Activate Sync Simulator
-            </div>
-          </button>
-
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            {/* Here's where you drop your whole SyncSimulator page */}
-            <SyncSimulator />
-          </Modal>
-
-
+      <button onClick={() => router.push("/sync-simulator")} className="relative glowing-button mt-2 bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
+        <div className="absolute inset-0 w-full rounded-xl text-2xl flex items-center justify-center pb-1 ">
+          Activate Sync Simulator
+        </div>
+      </button>
 
       <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-3xl text-center mt-2">Nutrient Modules
         <div className="grid grid-cols-3 w-full rounded-xl mt-2">
 
-        <button
+          <button
             onClick={() => handleSectorClick("macros")}
             className={`p-2 w-full text-lg rounded-xl shadow ${selectedSector === "macros" ? "bg-indigo-300/50" : "glowing-button"
               }`}
@@ -229,12 +222,12 @@ export default function PaidCommandCenter() {
             Crowns<Crown size={36} className="mt-1 text-white transition cursor-pointer" />
           </button>
           <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
-            onClick={() => router.push("/crowns")}>
+            onClick={() => router.push("/neurosettings")}>
             Calorie Goal<Flame size={36} className="mt-1 text-white transition cursor-pointer" />
           </button>
           <button className="w-full rounded-xl py-4 leading-none flex flex-col items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
             onClick={() => router.push("/help-center")}>
-            Mood Tags<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
+            Help<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
           </button>
 
 
@@ -242,26 +235,24 @@ export default function PaidCommandCenter() {
 
         <div className="flex flex-col mt-3 gap-4">
           {/* Tile 1 */}
-          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
-            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
-              onClick={() => router.push("/strengtharchive")}>
+          <button onClick={() => router.push("/strengtharchive")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
+            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
               StrengthArchive
-            </button>
-          </div>
+            </div>
+          </button>
           {/* Tile 2 */}
-          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
-            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
-              onClick={() => router.push("/macrovault")}>
+          <button onClick={() => router.push("/macrovault")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
+            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
               MacroVault
-            </button>
-          </div>
+            </div>
+          </button>
           {/* Tile 2 */}
-          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
-            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
-              onClick={() => router.push("/primetasks")}>
+          <button onClick={() => router.push("/primetasks")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
+            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
               PrimeTasks
-            </button>
-          </div>
+            </div>
+          </button>
+
 
           {/* Add more tiles here */}
         </div>
