@@ -108,7 +108,7 @@ export default function HelpPage() {
             <p className="text-lg font-semibold">For more detailed guidance, updates, or support, stay tuned to the Command Center!</p>
           </div>
 
-          <div className="mt-10 text-center bg-white/10 p-3 rounded-3xl">
+          <div className="mt-10 text-center bg-white/10 p-3 rounded-3xl glowing-box">
             Need More Help?<br />
             Contact Support<br />
             <br />

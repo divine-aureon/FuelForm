@@ -14,7 +14,7 @@ export default function PaidDawnSyncPage() {
 
   const router = useRouter();
   const [status, setStatus] = useState("");
-  const { profile, latestSync , fitnessGoals } = useFuelFormData();
+  const { profile, latestSync, fitnessGoals } = useFuelFormData();
 
   const [weight_lbs, setWeightLbs] = useState("");
   const [weight_kg, setWeightKg] = useState("");
@@ -109,8 +109,8 @@ export default function PaidDawnSyncPage() {
       <div className="bg-white/20 rounded-xl p-6 shadow-lg">
         <h1 className="text-3xl text-center font-bold mb-3 pulse-glow">Initiate DawnSync Protocol</h1>
         <h1 className="text-md text-center font-bold mb-6">
-        “Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.”
-          </h1>
+          “Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.”
+        </h1>
 
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -161,17 +161,18 @@ export default function PaidDawnSyncPage() {
               required
             />
           </p>
-          <button
-            type="submit"
-            className="text-3xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
-          >
-            Sync Now!
-          </button>
+          <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2 z-30">
+            <button
+              type="submit"
+              className="text-xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
+            >
+              Sync Now!
+            </button>
+          </div>
         </form>
       </div>
-      
       {queryMode !== 'override' && <DawnSyncGuard />}
-      
+
     </>
   );
 

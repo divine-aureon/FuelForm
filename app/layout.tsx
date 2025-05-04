@@ -5,6 +5,8 @@ import { BackgroundMaker } from '@/components/Backgrounds/BackgroundMaker';
 const inter = Inter({ subsets: ['latin'] });
 import Head from 'next/head';
 import ManifestMeta from "@/components/ManifestMeta"
+import ScrollLoad from "@/components/Backgrounds/ScrollLoad"
+import { FadeIn } from "@/components/Loading/FadeIn"
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,8 +20,12 @@ const exo2 = Exo_2({
 
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
 
+
+  
   return (
     <html lang="en">
+      <ScrollLoad />
+      
       <>
       <link rel="manifest" href="/manifest.json" crossOrigin="anonymous" />
       <meta name="theme-color" content="#00ffcc" />

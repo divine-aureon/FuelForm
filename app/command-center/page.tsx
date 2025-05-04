@@ -2,7 +2,12 @@
 'use client';
 
 import useFuelFormData from "@/lib/hooks/CoreData";
-import { Sun, Moon, Lock, CircleCheckBig } from "lucide-react";
+import {
+  Sun, Moon, Lock, CircleCheckBig,
+  ChartSpline, Sparkles,
+  Rotate3d, Home, Activity, Heart, Flame, Crown,
+  SmilePlus
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -21,6 +26,10 @@ import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
+import SineWave from "@/components/Backgrounds/SineWave";
+
+
+
 
 export default function PaidCommandCenter() {
   const { profile, latestSync, preferences, fitnessGoals } = useFuelFormData();
@@ -73,29 +82,11 @@ export default function PaidCommandCenter() {
 
 
   const [selectedSector, setSelectedSector] = useState<"macros" | "vitamins" | "minerals" | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [buttonColor, setButtonColor] = useState<"macros" | "vitamins" | "minerals" | null>(null);
-
 
   const handleSectorClick = (sector: "macros" | "vitamins" | "minerals") => {
-    if (selectedSector === sector && isDrawerOpen) {
-      // If same sector clicked again, close drawer
-      setIsDrawerOpen(false);
-      setSelectedSector(null);
-      setButtonColor(null);
-    } else {
-      // Open drawer with new content
-      setSelectedSector(sector);
-      setIsDrawerOpen(true);
-      setButtonColor(sector);
-    }
+    setSelectedSector(prev => (prev === sector ? null : sector));
   };
 
-  const getButtonColor = (sector: "macros" | "vitamins" | "minerals") => {
-    return isDrawerOpen && selectedSector === sector
-      ? "bg-white/30 text-white"
-      : "glowing-button";
-  };
 
   if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
 
@@ -109,9 +100,12 @@ export default function PaidCommandCenter() {
           “Every sync refines the system. Every action shapes the form.”
         </h2>
         <hr className="my-2 border-t-4 border-white/30" />
-        <div className="w-full flex items-center gap-6 mb-3">
-          <div className="flex-1">
-            <h2 className="text-left text-white ml-4 text-xs">Name: {profile.name}</h2>
+
+        <h2 className="text-left text-white ml-4 text-center text-sm">Signed in as: {profile.name}</h2>
+        <hr className="my-2 border-t-4 border-white/30" />
+        <div className="grid grid-cols-2 flex justify-center items-center gap-2 mb-3">
+          <div className="bg-white/30 h-32 rounded-2xl flex flex-col justify-center pb-2">
+            <h2 className="text-left text-white ml-4 text-md pulse-glow">Biometrics</h2>
             <h2 className="text-left text-white ml-4 text-xs">Age: {profile.age}</h2>
             <h2 className="text-left text-white ml-4 text-xs">Gender: {profile.gender}</h2>
             <h2 className="text-left text-white ml-4 text-xs">Height: {heightDisplay}</h2>
@@ -119,49 +113,67 @@ export default function PaidCommandCenter() {
             <h2 className="text-left text-white ml-4 text-xs">Calorie Goal: {fitnessGoals?.calorieGoal}</h2>
             <h2></h2>
           </div>
-          <Link href="/statsecho" className="flex-1 flex items-center justify-center">
-            <div className="w-40 h-20 bg-[url('/images/sine.gif')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl flex flex-col items-center justify-center text-white text-2xl glowing-button">
-              <div className="">Stats Echo</div>
-              <h2 className="text-xs text-center font-bold text-white">
-                “Log. Reflect. Evolve.”
-              </h2>
-            </div>
+          <div>
+            <Link href="/statsecho" className="">
+              <div className="relative h-32 bg-[url('/images/dna.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                <div className="absolute flex flex-col pb-2 items-center justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                  <div className="flex items-center gap-2">Stats Echo <Rotate3d /></div>
+                  <h2 className="text-xs font-bold text-white">
+                    “Log. Reflect. Evolve.”
+                  </h2>
+                </div>
+              </div>
 
-          </Link>
+            </Link>
+          </div>
+
         </div>
+        <hr className="my-2 border-t-4 border-white/30" />
+
         <div className="bg-black/20 rounded-xl p-2">
           <h2 className="text-center text-green-300 text-lg pulse-glow">Last Synced: {latestSync?.timestamp?.toDate().toLocaleString()}</h2>
         </div>
       </div>
 
 
-      <div className="pt-2">
-        <button onClick={() => setIsModalOpen(true)} className="w-full rounded-lg bg-blue-600 text-white glowing-button">
-          Activate Sync Simulator
-        </button>
 
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          {/* Here's where you drop your whole SyncSimulator page */}
-          <SyncSimulator />
-        </Modal>
-      </div>
+          <button onClick={() => setIsModalOpen(true)} className="relative glowing-button mt-2 bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
+            <div className="absolute inset-0 w-full rounded-xl text-2xl flex items-center justify-center pb-1 ">
+            Activate Sync Simulator
+            </div>
+          </button>
 
-      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-lg text-center mt-2">Nutrient Modules
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {/* Here's where you drop your whole SyncSimulator page */}
+            <SyncSimulator />
+          </Modal>
+
+
+
+      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-3xl text-center mt-2">Nutrient Modules
         <div className="grid grid-cols-3 w-full rounded-xl mt-2">
-          <button
-            className={`p-2 w-full rounded-xl ${getButtonColor("macros")}`}
-            onClick={() => handleSectorClick("macros")}>
+
+        <button
+            onClick={() => handleSectorClick("macros")}
+            className={`p-2 w-full text-lg rounded-xl shadow ${selectedSector === "macros" ? "bg-indigo-300/50" : "glowing-button"
+              }`}
+          >
             Macros
           </button>
+
           <button
-            className={`p-2 w-full rounded-xl ${getButtonColor("vitamins")}`}
-            onClick={() => handleSectorClick("vitamins")}>
+            onClick={() => handleSectorClick("vitamins")}
+            className={`p-2 w-full text-lg rounded-xl shadow ${selectedSector === "vitamins" ? "bg-indigo-300/50" : "glowing-button"
+              }`}
+          >
             Vitamins
           </button>
           <button
-            className={`p-2 w-full rounded-xl ${getButtonColor("minerals")}`}
-            onClick={() => handleSectorClick("minerals")}>
+            onClick={() => handleSectorClick("minerals")}
+            className={`p-2 w-full text-lg rounded-xl shadow ${selectedSector === "minerals" ? "bg-indigo-300/50" : "glowing-button"
+              }`}
+          >
             Minerals
           </button>
         </div>
@@ -175,7 +187,7 @@ export default function PaidCommandCenter() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}>
+              transition={{ duration: 0.2, ease: 'easeOut' }}>
               <EnergyBreakdown data={EnergyData} />
             </motion.div>
           )}
@@ -185,7 +197,7 @@ export default function PaidCommandCenter() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}>
+              transition={{ duration: 0.2 }}>
               <VitaminBreakdown Vitamins={Nutrient_V} />
             </motion.div>
           )}
@@ -197,7 +209,7 @@ export default function PaidCommandCenter() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.2 }}
             >
 
               <MineralBreakdown minerals={Nutrient_M} />
@@ -206,6 +218,56 @@ export default function PaidCommandCenter() {
 
         </AnimatePresence>
       </div>
+      <div className="grid grid-cols-[1fr_3fr] gap-4 h-full">
+        {/* Left Column: Tiles */}
+
+
+        {/* Right Column: FastLinks bar */}
+        <div className="flex flex-col  gap-4 py-3">
+          <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+            onClick={() => router.push("/crowns")}>
+            Crowns<Crown size={36} className="mt-1 text-white transition cursor-pointer" />
+          </button>
+          <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+            onClick={() => router.push("/crowns")}>
+            Calorie Goal<Flame size={36} className="mt-1 text-white transition cursor-pointer" />
+          </button>
+          <button className="w-full rounded-xl py-4 leading-none flex flex-col items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+            onClick={() => router.push("/help-center")}>
+            Mood Tags<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
+          </button>
+
+
+        </div>
+
+        <div className="flex flex-col mt-3 gap-4">
+          {/* Tile 1 */}
+          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
+            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
+              onClick={() => router.push("/strengtharchive")}>
+              StrengthArchive
+            </button>
+          </div>
+          {/* Tile 2 */}
+          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
+            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
+              onClick={() => router.push("/macrovault")}>
+              MacroVault
+            </button>
+          </div>
+          {/* Tile 2 */}
+          <div className="text-center glowing-menu-button backdrop-blur shadow-md">
+            <button className="rounded-xl p-4 h-24 hover:bg-indigo-300/50 text-white"
+              onClick={() => router.push("/primetasks")}>
+              PrimeTasks
+            </button>
+          </div>
+
+          {/* Add more tiles here */}
+        </div>
+
+      </div>
+
 
 
 
@@ -223,7 +285,7 @@ export default function PaidCommandCenter() {
               </button>
             ) : (
               <button
-                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button mr-1 px-4 py-2"
+                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-indigo-300/50 transition glowing-button mr-1 px-4 py-2"
                 onClick={() => router.push("/dawnsync")}
               >
                 <Sun size={20} /> DawnSync
@@ -239,7 +301,7 @@ export default function PaidCommandCenter() {
               </button>
             ) : (
               <button
-                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-gray-300 transition glowing-button ml-1 px-4 py-2"
+                className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-indigo-300/50 transition glowing-button ml-1 px-4 py-2"
                 onClick={() => router.push("/dusksync")}
               >
                 <Moon size={20} /> DuskSync

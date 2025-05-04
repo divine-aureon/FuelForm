@@ -3,6 +3,7 @@
 
 import React from 'react';
 import useFuelFormData from "@/lib/hooks/CoreData";
+import { HeartPlus } from "lucide-react";
 
 type MacroRange = {
   recovery: string;
@@ -28,8 +29,12 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
   return (
     <div className="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg pt-2 w-full max-w-lg mx-auto mt-4 text-black overflow-hidden">
       <h2 className="text-center font-bold text-lg mb-3">Energy Breakdown</h2>
-      <h2 className="text-center text-gray-800 text-3md">All Calculations Include Your Set Calorie Goal</h2>
-      <h2 className="text-center text-gray-800 text-3md mb-3">10% Thermic Effect of Food Applied</h2>
+      <hr className="my-2 border-t-4 border-white/30" />
+
+      <h2 className="pl-8 text-gray-800 text-3md flex items-center gap-3"><HeartPlus />Set Calorie Goal Applied</h2>
+      <hr className="my-2 border-t-4 border-white/30" />
+
+      <h2 className="pl-8 text-gray-800 text-3md mb-3 flex items-center gap-3"><HeartPlus />10% Thermic Effect of Food Applied</h2>
       <table className="w-full text-sm md:text-base text-center overflow-hidden">
         <thead>
           <tr className="bg-white/50 font-semibold">

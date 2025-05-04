@@ -206,14 +206,14 @@ export default function PaidBiometricsPage() {
   }, [status, router]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 0);
+    const timer = setTimeout(() => setDelayDone(true), 800);
     return () => clearTimeout(timer);
   }, []);
 
   if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
 
   return (
-    <div className="bg-white/20 rounded-xl p-3">
+    <div className="bg-white/20 rounded-xl p-3 mb-20">
       <h1 className="text-4xl font-bold p-2 text-center pulse-glow">Modify Biometrics</h1>
       <h1 className="text-md font-bold p-2 text-center">
       “Before you can change, you must know where you are. These are your fundamentals.”
@@ -299,7 +299,7 @@ export default function PaidBiometricsPage() {
           placeholder={`Height (${heightUnit})`}
           value={heightCm}
           onChange={(e) => setHeightCm(e.target.value)}
-          className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
+          className="w-full p-2 rounded bg-gray-800/70 text-white"
           min="30"
           max="280"
         />
@@ -324,15 +324,16 @@ export default function PaidBiometricsPage() {
           />
         </div>
       )}
+          <div className="fixed bottom-14 left-0 w-full flex gap-2 justify-center mb-2 z-30">
 
-      <div className="mt-2"></div>
       <button
         onClick={handleSave}
-        className="w-full bg-white text-black px-4 py-4 rounded-xl font-bold hover:bg-gray-300 transition glowing-button"
+        className="w-full bg-white text-xl text-black px-4 py-4 rounded-xl font-semibold hover:bg-gray-300 transition glowing-button"
         disabled={saving}
       >
-        {saving ? "Saving..." : "Save Changes"}
+        Save Changes
       </button>
+      </div>
       <footer className="pt-4 pb-2">
         {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
       </footer>

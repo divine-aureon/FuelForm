@@ -187,7 +187,7 @@ export default function PaidStatsEchoPage() {
     | "mood"
     | "macroAccuracy";
 
-  const handleSectorClick = (sector: "body" | "mind" | "system") => {
+  const handleSectorClick = (sector: "dawnStats" | "coreStats" | "duskStats") => {
     if (selectedSector === sector && isDrawerOpen) {
       // If same sector clicked again, close drawer
       setIsDrawerOpen(false);
@@ -201,14 +201,14 @@ export default function PaidStatsEchoPage() {
     }
   };
 
-  const [selectedSector, setSelectedSector] = useState<"body" | "mind" | "system" | null>(null);
+  const [selectedSector, setSelectedSector] = useState<"dawnStats" | "coreStats" | "duskStats" | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedView, setSelectedView] = useState<StatView>("steps"); // default stat within selected sector
-  const [buttonColor, setButtonColor] = useState<"body" | "mind" | "system" | null>(null);
+  const [selectedView, setSelectedView] = useState<StatView>("weight"); // default stat within selected sector
+  const [buttonColor, setButtonColor] = useState<"dawnStats" | "coreStats" | "duskStats" | null>(null);
 
-  const getButtonColor = (sector: "body" | "mind" | "system") => {
+  const getButtonColor = (sector: "dawnStats" | "coreStats" | "duskStats") => {
     return isDrawerOpen && selectedSector === sector
-      ? "bg-white/30 text-white"
+      ? "bg-indigo-300/60 text-white"
       : "glowing-button";
   };
 
@@ -227,9 +227,9 @@ export default function PaidStatsEchoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}>
+            transition={{ duration: 0.2 }}>
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-              <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
+              <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-box">
                 <div className="place-self-center text-left text-xl font-semibold">Weight History</div>
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
@@ -293,7 +293,7 @@ export default function PaidStatsEchoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}>
+            transition={{ duration: 0.2 }}>
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
               <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
                 <div className="place-self-center text-left text-xl font-semibold">Step History</div>
@@ -354,7 +354,7 @@ export default function PaidStatsEchoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
           >
 
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
@@ -418,14 +418,14 @@ export default function PaidStatsEchoPage() {
       <div className=" flex justify-between z-40">
         <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2">
           <button
-            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("body")}`}
-            onClick={() => handleSectorClick("body")}>Body</button>
+            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("dawnStats")}`}
+            onClick={() => handleSectorClick("dawnStats")}>DawnStats</button>
           <button
-            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("mind")}`}
-            onClick={() => handleSectorClick("mind")}>Mind</button>
+            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("coreStats")}`}
+            onClick={() => handleSectorClick("coreStats")}>CoreStats</button>
           <button
-            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("system")}`}
-            onClick={() => handleSectorClick("system")}>System</button>
+            className={`px-4 py-2 rounded-lg w-full ${getButtonColor("duskStats")}`}
+            onClick={() => handleSectorClick("duskStats")}>DuskStats</button>
         </div>
 
         <div className="grid grid-cols-3 gap-2 z-40">
@@ -437,47 +437,47 @@ export default function PaidStatsEchoPage() {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 20, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                   className="w-full flex justify-between z-40"
                 >
-                  {selectedSector === "body" && (
+                  {selectedSector === "dawnStats" && (
                     <div className="flex justify-center gap-2 w-full">
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
                         onClick={() => { setSelectedView("weight"); setIsDrawerOpen(false); }}>Weight</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>Sleep</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>Mood</button>
+                    </div>
+                  )}
+                  {selectedSector === "coreStats" && (
+                    <div className="flex justify-center gap-2 w-full">
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>PrimeTasks</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>StrengthArchive</button>
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>MacroVault</button>
+                    </div>
+                  )}
+
+                  {selectedSector === "duskStats" && (
+                    <div className="flex justify-center gap-2 w-full">
+                      <button
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
                         onClick={() => { setSelectedView("steps"); setIsDrawerOpen(false); }}>Steps</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
                         onClick={() => { setSelectedView("exercise"); setIsDrawerOpen(false); }}>Exercise</button>
-                    </div>
-                  )}
-                  {selectedSector === "mind" && (
-                    <div className="flex justify-center gap-2 w-full">
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>Sleep</button>
-                      <button
-                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>Sleep Quality</button>
-                      <button
-                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>Mood</button>
-                    </div>
-                  )}
-
-                  {selectedSector === "system" && (
-                    <div className="flex justify-center gap-2 w-full">
-                      <button
-                        className={`px-4 py-2 rounded-lg w-full`}>
-                      </button>
-                      <button
-                        className={`px-4 py-2 rounded-lg w-full`}>
-                      </button>
-                      <button
-                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("macroAccuracy"); setIsDrawerOpen(false); }}>Accuracy</button>
+                        onClick={() => { setSelectedView("macroAccuracy"); setIsDrawerOpen(false); }}>Energy</button>
                     </div>
                   )}
                 </motion.div>
