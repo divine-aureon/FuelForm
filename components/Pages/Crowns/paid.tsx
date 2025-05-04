@@ -24,7 +24,7 @@ export default function PaidCrownPage() {
 
           Recovery Honors — logging rest days, managing soreness, and staying aligned.
 
-          Crowns are visible proof that you're not just going through the motions — you&apos;re building your form, one intentional day at a time.
+          Crowns are visible proof that you&apos;re not just going through the motions — you&apos;re building your form, one intentional day at a time.
 
           Earn them. Reflect on them. Let them remind you who you are becoming. </p>
       </div>
