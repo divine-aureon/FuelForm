@@ -5,7 +5,7 @@ import useFuelFormData from "@/lib/hooks/CoreData";
 import {
   Sun, Moon, Lock, CircleCheckBig,
   ChartSpline, Sparkles,
-  Rotate3d, Home, Activity, Heart, Flame, Crown,
+  Rotate3d, Home, Activity,
   SmilePlus
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -27,12 +27,37 @@ import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
 import SineWave from "@/components/Backgrounds/SineWave";
+import {
+  Crown,
+  Flame,
+  Zap,
+  Star,
+  Shield,
+  Atom,
+  Heart,
+  Bird
+} from 'lucide-react';
 
 
 
 
 export default function PaidCommandCenter() {
   const { profile, latestSync, preferences, fitnessGoals } = useFuelFormData();
+
+  const LucideIconMap: Record<string, React.ElementType> = {
+    Atom: Atom,
+    Crown: Crown,
+    Flame: Flame,
+    Star: Star,
+    Zap: Zap,
+    Shield: Shield,
+    Heart: Heart,
+    Bird: Bird,
+  };
+
+  const Icon = LucideIconMap[preferences?.navIcon || "Atom"];
+
+
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
@@ -101,7 +126,7 @@ export default function PaidCommandCenter() {
         </h2>
         <hr className="my-2 border-t-4 border-white/30" />
 
-        <h2 className="text-left text-white ml-4 text-center text-sm">Signed in as: {profile.name}</h2>
+        <h2 className="text-left text-white flex justify-left items-center text-md gap-2"><Atom/>Signed in as: {profile.name}</h2>
         <hr className="my-2 border-t-4 border-white/30" />
         <div className="grid grid-cols-2 flex justify-center items-center gap-2 mb-3">
           <div className="bg-white/30 h-32 rounded-2xl flex flex-col justify-center pb-2">
@@ -138,14 +163,14 @@ export default function PaidCommandCenter() {
 
 
 
-      <button onClick={() => router.push("/sync-simulator")} className="relative glowing-button mt-2 bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
+      <button onClick={() => router.push("/sync-simulator")} className="relative glowing-button mt-2 bg-[url('/images/syncsim.webp')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
         <div className="absolute inset-0 w-full rounded-xl text-2xl flex items-center justify-center pb-1 ">
           Activate Sync Simulator
         </div>
       </button>
 
-      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-3xl text-center mt-2">Nutrient Modules
-        <div className="grid grid-cols-3 w-full rounded-xl mt-2">
+      <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-2xl text-center mt-2">Nutrient Blueprint Modules
+        <div className="grid grid-cols-3 gap-1 w-full rounded-xl mt-2">
 
           <button
             onClick={() => handleSectorClick("macros")}

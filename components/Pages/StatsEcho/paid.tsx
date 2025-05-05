@@ -229,7 +229,7 @@ export default function PaidStatsEchoPage() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}>
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-              <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-box">
+              <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
                 <div className="place-self-center text-left text-xl font-semibold">Weight History</div>
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">

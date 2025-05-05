@@ -139,8 +139,8 @@ export default function PaidSyncSimulator() {
     return (
         <main className="rounded-lg mb-12 p-0">
             <div className="text-center">
-                <div className="bg-[url('/images/hologram.gif')] bg-cover bg-center bg-no-repeat bg rounded-xl overflow-hidden">
-                    <div className="inset-0 w-full bg-blue-300/20 rounded-xl p-2">
+                <div className="bg-[url('/images/syncsim.webp')] bg-cover bg-center bg-no-repeat bg rounded-xl overflow-hidden">
+                    <div className="inset-0 w-full bg-blue-300/10 rounded-xl p-2">
                         <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
                             Sync Simulator</h1>
                         <h2 className="text-lg flex justify-center p-2">

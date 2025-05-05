@@ -24,13 +24,17 @@ export function BackgroundMaker({ children }: { children: React.ReactNode }) {
 
 
   const BGdisplay: Record<string, string> = {
+    "homepage": "bg-[url('/images/orb.webp')]",
     "infopage": "bg-[url('/images/info.webp')]",
     "loginpage": "bg-[url('/images/login.webp')]",
     "Neural Link": "bg-[url('/images/bg.webp')]",
-    "Circuit Veins": "bg-[url('/images/info.webp')]",
-    "Data Cloud": "bg-[url('/images/login.webp')]",
-    "Dream Bokeh": "bg-[url('/images/bokehlights.webp')]",
-    "Ether Pulse": "bg-[url('/images/magic.webp')]",
+    "Circuit Core": "bg-[url('/images/backgrounds/circuitcore.jpg')]",
+    "MotherBoard": "bg-[url('/images/backgrounds/motherboard.jpg')]",
+    "Cerebral Matrix": "bg-[url('/images/backgrounds/cerebralmatrix.jpg')]",
+    "Ether Links": "bg-[url('/images/backgrounds/etherlinks.jpg')]",
+    "StarVeil": "bg-[url('/images/backgrounds/starveil.jpg')]",
+    "Quantum Surface": "bg-[url('/images/backgrounds/quantumsurface.jpg')]",
+    "Tesseract Fade": "bg-[url('/images/backgrounds/tesseractfade.jpg')]",
   };
 
   const backgroundClass = BGdisplay[backgroundMode] || BGdisplay["Digital"]

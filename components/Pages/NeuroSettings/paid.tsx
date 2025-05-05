@@ -128,7 +128,16 @@ export default function PaidNeuroSettingsPage() {
                                     className="w-full p-2 rounded bg-gray-800/70 text-white"
                                 >
                                     <option value="">Customize Background</option>
-                                    {["Neural Link", "Dream Bokeh", "Circuit Veins", "Data Cloud", "Ether Pulse"].map((bg) => (
+                                    {[
+                                        "Neural Link",
+                                        "Circuit Core",
+                                        "MotherBoard",
+                                        "Cerebral Matrix",
+                                        "StarVeil",
+                                        "Quantum Surface",
+                                        "Tesseract Fade ",
+                                        "Ether Links"
+                                    ].map((bg) => (
                                         <option key={bg} value={bg}>
                                             {bg}
                                         </option>
