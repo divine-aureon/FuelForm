@@ -21,7 +21,7 @@ export default function PaidMacroVaultPage() {
           MacroVault is your personal nutrition tracker designed to help you master your macros and fuel
           your body effectively. With a simple, user-friendly interface, it lets you log your meals and
           track macronutrients—protein, fats, and carbohydrates—so you can stay on top of your nutritional
-          goals. Whether you're building muscle, losing weight, or simply aiming for a balanced diet,
+          goals. Whether youre building muscle, losing weight, or simply aiming for a balanced diet,
           MacroVault ensures you hit your targets with ease and precision.  </p>
       </div>
     </>
