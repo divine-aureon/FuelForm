@@ -61,14 +61,14 @@ export default function PaidStrengthArchivePage() {
             <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
               <div className="flex items-center gap-2">StrengthArchive</div>
               <h2 className="text-xs font-bold text-white">
-                "Log It. Lift It. Level Up."
+                Log It. Lift It. Level Up.
               </h2>
             </div>
           </div>
         </div>
 
         <div className="p-4 text-center bg-white/30 rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">Activate Strength Archive?</h2>
+          <h2 className="text-2xl font-bold mb-4">Activate Strength Archive</h2>
           <p className="mb-4">First time setup required. Ready to initialize?</p>
           <button
           disabled
@@ -104,7 +104,7 @@ export default function PaidStrengthArchivePage() {
           <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
             <div className="flex items-center gap-2">StrengthArchive</div>
             <h2 className="text-xs font-bold text-white">
-              "Log It. Lift It. Level Up."
+              Log It. Lift It. Level Up.
             </h2>
           </div>
         </div>

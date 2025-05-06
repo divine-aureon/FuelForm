@@ -28,7 +28,7 @@ export default function OverrideComponent ({ onClose, setDawnOpen, setDuskOpen }
                     <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                         <div className="flex items-center gap-2 pulse-glow ">Initating Sync Override Protocol...</div>
                         <h2 className="text-sm font-bold text-white">
-                        "When the system wont bend, override it."                        </h2>
+                        When the system wont bend, override it.                       </h2>
                     </div>
                 </div>
             </div>

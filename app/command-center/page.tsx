@@ -199,7 +199,7 @@ export default function PaidCommandCenter() {
       <div className="bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">
         <h2 className="text-4xl text-center font-bold text-white pulse-glow">Vital Systems Online</h2>
         <h2 className="text-md text-center font-bold text-white">
-          “Every sync refines the system. Every action shapes the form.”
+          Every sync refines the system. Every action shapes the form.
         </h2>
         <hr className="my-2 border-t-4 border-white/30" />
         <h2 className="text-left text-white flex justify-left items-center text-md gap-2"><Atom />Signed in as: {profile.name}</h2>
@@ -225,7 +225,7 @@ export default function PaidCommandCenter() {
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2">Stats Echo <Rotate3d /></div>
                   <h2 className="text-xs font-bold text-white">
-                    “Log. Reflect. Evolve.”
+                    Log. Reflect. Evolve.
                   </h2>
                 </div>
               </div>
@@ -357,7 +357,7 @@ export default function PaidCommandCenter() {
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2"><Dumbbell />StrengthArchive</div>
                   <h2 className="text-xs font-bold text-white">
-                    "Log It. Lift It. Level Up."
+                    Log It. Lift It. Level Up.
                   </h2>
                 </div>
               </div>
@@ -372,7 +372,7 @@ export default function PaidCommandCenter() {
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2"><Utensils />MacroVault</div>
                   <h2 className="text-xs font-bold text-white">
-                    "Nourish. Record. Repeat."
+                  Nourish. Record. Repeat.
                   </h2>
                 </div>
               </div>
@@ -387,7 +387,7 @@ export default function PaidCommandCenter() {
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2"><ListChecks />PrimeTasks</div>
                   <h2 className="text-xs font-bold text-white">
-                    "Define. Align. Execute."
+                    Define. Align. Execute.
                   </h2>
                 </div>
               </div>

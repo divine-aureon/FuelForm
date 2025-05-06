@@ -39,7 +39,7 @@ export default function PaidMacroVaultPage() {
           <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
             <div className="flex items-center gap-2">PrimeTasks Coming Soon!</div>
             <h2 className="text-xs font-bold text-white">
-              "Align. Commit. Evolve."
+              Align. Commit. Evolve.
             </h2>
           </div>
         </div>
@@ -50,9 +50,9 @@ export default function PaidMacroVaultPage() {
 
           PrimeTasks is your personal mission board — a space to set intentions, track meaningful actions, and crystallize your focus into real progress.
 
-          Craft daily or weekly tasks that align with your fitness, nutrition, or life goals. As you complete them, you'll not only build discipline — youll generate Crowns, fueling your transformation across the FuelForm ecosystem.
+          Craft daily or weekly tasks that align with your fitness, nutrition, or life goals. As you complete them, youll not only build discipline — youll generate Crowns, fueling your transformation across the FuelForm ecosystem.
 
-          Whether you're leveling up your routine, integrating a new habit, or pursuing soul-aligned milestones, PrimeTasks keeps your journey visible, actionable, and rewarding.
+          Whether youre leveling up your routine, integrating a new habit, or pursuing soul-aligned milestones, PrimeTasks keeps your journey visible, actionable, and rewarding.
 
           Coming Soon
           Your evolution awaits.

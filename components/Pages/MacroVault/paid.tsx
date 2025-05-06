@@ -10,7 +10,7 @@ export default function PaidMacroVaultPage() {
           <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
             <div className="flex items-center gap-2">MacroVault Coming Soon!</div>
             <h2 className="text-xs font-bold text-white">
-              "Fuel Your Form, Master Your Macros."
+              Fuel Your Form, Master Your Macros.
             </h2>
           </div>
         </div>

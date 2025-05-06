@@ -44,7 +44,7 @@ export default function HelpPage() {
                   FuelForm Help Center!
                 </h1>
                 <p className="text-sm mt-2">
-                "Assistance initiated. Optimization incoming."                </p>
+                Assistance initiated. Optimization incoming.                </p>
               </div>
             </div>
           </div>
