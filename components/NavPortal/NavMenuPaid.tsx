@@ -22,31 +22,25 @@ export default function NavMenuPaid({ onClose }: NavMenuProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2 z-60">
-      <Link href="/command-center" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+    <div className="flex flex-col gap-1 z-60">
+      <Link href="/command-center" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
-      <Link href="/macrovault" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ MacroVault ✦
-      </Link>
-      <Link href="/strengtharchive" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ StrengthArchive ✦
-      </Link>
-      <Link href="/statsecho" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
+      <Link href="/statsecho" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ StatsEcho ✦
       </Link>
-      <Link href="/biometrics" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ Biometrics ✦
+      <Link href="/strengtharchive" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+        ✦ StrengthArchive ✦
       </Link>
-      <Link href="/neurosettings" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ NeuroSettings ✦
+      <Link href="/macrovault" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+        ✦ MacroVault ✦
       </Link>
-      <Link href="/help-center" className="block px-4 py-2 hover:bg-gray-800" onClick={onClose}>
-        ✦ Help Center ✦
+      <Link href="/primetasks" className="block p-3 rounded-xl  hover:bg-indigo-300/20" onClick={onClose}>
+        ✦ PrimeTasks ✦
       </Link>
       <button
         onClick={handleLogout}
-        className="block w-full px-4 py-2 text-red-400 hover:bg-gray-800 hover:text-red-300 transition"
+        className="block w-full p-3 text-red-400 rounded-xl hover:bg-indigo-300/20 hover:text-red-300 transition"
       >✦ Exit Console ✦
       </button>
     </div>

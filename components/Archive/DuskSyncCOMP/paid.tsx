@@ -7,11 +7,11 @@ import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateActiveFuel } from "@/lib/FusionCore";
 import useFuelFormData from "@/lib/hooks/CoreData";
 import { Listbox } from '@headlessui/react'
-import DuskSyncGuard from "@/components/SyncGuards/DuskSyncGuard"
+import DuskSyncGuard from "@/components/Archive/SyncGuards/DuskSyncGuard"
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
-export default function FreeDuskSyncPage() {
+export default function PaidDuskSyncPage() {
 
   const searchParams = useSearchParams();
   const queryMode = searchParams.get('querymode');

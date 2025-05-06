@@ -52,7 +52,7 @@ export default function NavPortalFree() {
           isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         } overflow-hidden`}
       >
-        <div className="bg-gray-900 glowing-button rounded-t-2xl shadow-2xl p-6 w-full max-w-md mx-auto text-center">
+        <div className="glowing-navportal shadow-2xl p-6 w-full max-w-sm mx-auto text-center">
           <h2 className="text-2xl font-semibold text-white mb-4">NavPortal</h2>
           <NavMenuFree onClose={() => setIsOpen(false)} />
         </div>

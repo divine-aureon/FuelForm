@@ -37,7 +37,7 @@ export default function DawnSyncPage() {
     <div className="relative  text-white overflow-hidden">
       <div className="text-white ">
         <div className="flex-grow">
-          {isPaidUser ? <PaidStatsEchoPage /> : <FreeStatsEchoPage />}
+          {isPaidUser ? <PaidStatsEchoPage /> : <PaidStatsEchoPage />}
         </div>
         <footer className="pt-4 pb-2">
           {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}

@@ -7,8 +7,6 @@ import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import type { User } from 'firebase/auth';
 import useProfile from "@/lib/hooks/ProfileData";
-import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
-import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import useFuelFormData from "@/lib/hooks/CoreData";
@@ -21,16 +19,9 @@ function toSafeString(value: any): string {
 }
 
 
-export default function PaidBiometricsPage() {
+export default function BiometricsComponent() {
 
   const { preferences } = useFuelFormData();
-
-  const { setBackgroundMode } = useBackground();
-  useEffect(() => {
-    if (preferences?.background) {
-      setBackgroundMode(preferences.background);
-    }
-  }, [preferences?.background, setBackgroundMode]);
 
   const { profile } = useProfile();
   const isPaidUser = profile?.isPaid ?? false;
@@ -198,146 +189,147 @@ export default function PaidBiometricsPage() {
   useEffect(() => {
     if (status === "success") {
       const timeout = setTimeout(() => {
-        router.push("/command-center");
+        window.location.reload(); // hard refresh
       }, 0); // optional delay (1 second)
 
       return () => clearTimeout(timeout);
     }
   }, [status, router]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
 
   return (
-    <div className="bg-white/20 rounded-xl p-3 mb-20">
-      <h1 className="text-4xl font-bold p-2 text-center pulse-glow">Modify Biometrics</h1>
-      <h1 className="text-md font-bold p-2 text-center">
-      “Before you can change, you must know where you are. These are your fundamentals.”
-      </h1>
-      <p className=" text-lg text-white font-semibold mb-2 mt-4">
-        Designate Your Chosen Identity
-      </p>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
-      />
-      <p className="text-white font-semibold text-lg mb-2 mt-2">
-        Gender
-      </p>
-      <select
-        value={gender}
-        onChange={(e) => setGender(e.target.value)}
-        className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
-      >
-        <option value="">Select Gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
-      <p className="text-white font-semibold text-lg mb-2 mt-2">
-        Incarnation Signature
-      </p>
-      <div className="flex gap-2 mb-4">
-        <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
 
-          <option value="">Month</option>
-          {[...Array(12)].map((_, i) => {
-            const month = (i + 1).toString().padStart(2, "0");
-            return <option key={i} value={month}>{month}</option>;
-          })}
-        </select>
-        <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
-          <option value="">Day</option>
-          {[...Array(31)].map((_, i) => {
-            const day = (i + 1).toString().padStart(2, "0");
-            return <option key={i} value={day}>{day}</option>;
-          })}
-        </select>
-        <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
-          <option value="">Year</option>
-          {[...Array(100)].map((_, i) => {
-            const year = new Date().getFullYear() - i;
-            return <option key={i} value={year}>{year}</option>;
-          })}
-        </select>
-      </div>
-
-
-      <p className="text-white font-semibold text-lg mb-2 mt-2">
-        Calibrate Your Form of Measurement
-      </p>
-      <select
-        value={heightUnit}
-        onChange={(e) => setHeightUnit(e.target.value)}
-        className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
-      >
-        <option value="cm">Centimeters (cm)</option>
-        <option value="ft">Feet & Inches</option>
-      </select>
-
-      <select
-        value={weightUnit}
-        onChange={(e) => setWeightUnit(e.target.value)}
-        className="w-full p-2 mb-4 rounded bg-gray-800/70 text-white"
-      >
-        <option value="lbs">Pounds (lbs)</option>
-        <option value="kg">Kilograms (kg)</option>
-      </select>
-      <p className="text-white font-semibold text-lg mb-2 mt-4">
-        Set Height Parameter ({heightUnit === "cm" ? "cm" : "ft/in"})
-      </p>
-
-      {heightUnit === "cm" ? (
-        <input
-          type="number"
-          placeholder={`Height (${heightUnit})`}
-          value={heightCm}
-          onChange={(e) => setHeightCm(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800/70 text-white"
-          min="30"
-          max="280"
-        />
-      ) : (
-        <div className="flex gap-2 mb-4">
-          <input
-            type="number"
-            placeholder="Feet"
-            value={heightFeet}
-            onChange={(e) => setHeightFeet(e.target.value)}
-            className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
-            min="0"
-          />
-          <input
-            type="number"
-            placeholder="Inches"
-            value={heightInches}
-            onChange={(e) => setHeightInches(e.target.value)}
-            className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
-            min="0"
-            max="11"
-          />
+    <>
+      <div>
+        <div className="relative h-32 bg-[url('/images/menus/biometrics.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2 ">
+          <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+            <div className="flex items-center gap-2 pulse-glow ">Modify Biometrics</div>
+            <h2 className="text-sm font-bold text-white">
+              “Before you can change, you must know where you are. These are your fundamentals.”
+            </h2>
+          </div>
         </div>
-      )}
-          <div className="fixed bottom-14 left-0 w-full flex gap-2 justify-center mb-2 z-30">
-
-      <button
-        onClick={handleSave}
-        className="w-full bg-white text-xl text-black px-4 py-4 rounded-xl font-semibold hover:bg-gray-300 transition glowing-button"
-        disabled={saving}
-      >
-        Save Changes
-      </button>
       </div>
-      <footer className="pt-4 pb-2">
-        {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
-      </footer>
 
-    </div>
+      <div className="bg-white/30 rounded-xl p-3 mb-10">
+        <p className=" text-lg text-white font-semibold">
+          Designate Your Chosen Identity
+        </p>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
+        />
+        <p className="text-white font-semibold text-lg">
+          Gender
+        </p>
+        <select
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
+        >
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+        <p className="text-white font-semibold text-lg">
+          Incarnation Signature
+        </p>
+        <div className="flex gap-2 mb-2">
+          <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
+
+            <option value="">Month</option>
+            {[...Array(12)].map((_, i) => {
+              const month = (i + 1).toString().padStart(2, "0");
+              return <option key={i} value={month}>{month}</option>;
+            })}
+          </select>
+          <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
+            <option value="">Day</option>
+            {[...Array(31)].map((_, i) => {
+              const day = (i + 1).toString().padStart(2, "0");
+              return <option key={i} value={day}>{day}</option>;
+            })}
+          </select>
+          <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
+            <option value="">Year</option>
+            {[...Array(100)].map((_, i) => {
+              const year = new Date().getFullYear() - i;
+              return <option key={i} value={year}>{year}</option>;
+            })}
+          </select>
+        </div>
+
+
+        <p className="text-white font-semibold text-lg ">
+          Calibrate Your Form of Measurement
+        </p>
+        <select
+          value={heightUnit}
+          onChange={(e) => setHeightUnit(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
+        >
+          <option value="cm">Centimeters (cm)</option>
+          <option value="ft">Feet & Inches</option>
+        </select>
+
+        <select
+          value={weightUnit}
+          onChange={(e) => setWeightUnit(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
+        >
+          <option value="lbs">Pounds (lbs)</option>
+          <option value="kg">Kilograms (kg)</option>
+        </select>
+        <p className="text-white font-semibold text-lg">
+          Set Height Parameter ({heightUnit === "cm" ? "cm" : "ft/in"})
+        </p>
+
+        {heightUnit === "cm" ? (
+          <input
+            type="number"
+            placeholder={`Height (${heightUnit})`}
+            value={heightCm}
+            onChange={(e) => setHeightCm(e.target.value)}
+            className="w-full p-2 rounded bg-gray-800/70 text-white"
+            min="30"
+            max="280"
+          />
+        ) : (
+          <div className="flex gap-2">
+            <input
+              type="number"
+              placeholder="Feet"
+              value={heightFeet}
+              onChange={(e) => setHeightFeet(e.target.value)}
+              className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
+              min="0"
+            />
+            <input
+              type="number"
+              placeholder="Inches"
+              value={heightInches}
+              onChange={(e) => setHeightInches(e.target.value)}
+              className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
+              min="0"
+              max="11"
+            />
+          </div>
+        )}
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
+
+          <button
+            onClick={handleSave}
+            className="w-full bg-white text-xl text-black px-4 py-4 rounded-xl font-semibold hover:bg-gray-300 transition glowing-button"
+            disabled={saving}
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

@@ -214,12 +214,18 @@ export default function PaidStatsEchoPage() {
 
   return (
     <>
-      <div className="backdrop-blur-sm bg-white/30 p-4 mt-3 mb-2 rounded-lg text-white">
-        <h2 className="text-4xl font-bold pulse-glow text-center">Stats Echo</h2>
-        <h2 className="text-md font-bold text-white text-center">
-          “The more you know yourself, the clearer your path becomes.”</h2>
 
-      </div>
+<div>
+              <div className="relative h-32 bg-[url('/images/menus/graph2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                  <div className="flex text-4xl items-center gap-2">Stats Echo </div>
+                  <h2 className="text-sm font-bold text-white">
+                  “The more you know yourself, the clearer your path becomes.”
+                  </h2>
+                </div>
+              </div>
+          </div>
       <AnimatePresence mode="wait">
         {selectedView === "weight" && (
           <motion.div
@@ -248,7 +254,7 @@ export default function PaidStatsEchoPage() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-              <div className="text-lg w-full max-w-md text-black">
+              <div className="text-lg 20 w-full max-w-md text-black">
                 <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
                   <div className="flex flex-col place-self-center text-left font-semibold">
                     <p className=" font-semibold">Filter by date</p>
@@ -415,7 +421,7 @@ export default function PaidStatsEchoPage() {
       </AnimatePresence>
 
 
-      <div className=" flex justify-between z-40">
+      <div className="relative flex justify-between z-40">
         <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2">
           <button
             className={`px-4 py-2 rounded-lg w-full ${getButtonColor("dawnStats")}`}
@@ -428,7 +434,7 @@ export default function PaidStatsEchoPage() {
             onClick={() => handleSectorClick("duskStats")}>DuskStats</button>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 z-40">
+        <div className=" relative grid grid-cols-3 gap-2 z-40">
           <div className="w-full  fixed bottom-28 left-0 mb-2">
             <AnimatePresence mode="wait">
               {isDrawerOpen && selectedSector && (

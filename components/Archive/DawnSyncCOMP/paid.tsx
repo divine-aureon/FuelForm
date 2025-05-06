@@ -5,7 +5,7 @@ import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateRecoveryFuel } from "@/lib/FusionCore";
 import useFuelFormData from "@/lib/hooks/CoreData";
-import DawnSyncGuard from "@/components/SyncGuards/DawnSyncGuard"
+import DawnSyncGuard from "@/components/Archive/SyncGuards/DawnSyncGuard"
 
 export default function PaidDawnSyncPage() {
 

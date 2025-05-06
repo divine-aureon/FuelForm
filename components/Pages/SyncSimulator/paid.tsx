@@ -138,9 +138,8 @@ export default function PaidSyncSimulator() {
 
     return (
         <main className="rounded-lg mb-12 p-0">
-            <div className="text-center">
-                <div className="bg-[url('/images/syncsim.webp')] bg-cover bg-center bg-no-repeat bg rounded-xl overflow-hidden">
-                    <div className="inset-0 w-full bg-blue-300/10 rounded-xl p-2">
+            <div className="rounded-xl overflow-hidden mb-2 ">
+                    <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
                         <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
                             Sync Simulator</h1>
                         <h2 className="text-lg flex justify-center p-2">
@@ -149,11 +148,13 @@ export default function PaidSyncSimulator() {
                         </h2>
                     </div>
                 </div>
+            <div className="relative text-center bg-white/30 p-4 rounded-xl">
+                
                 {/* Inputs */}
-                <div className="flex flex-col text-xl text-white gap-2 mt-4 mb-4 w-full">
+                <div className="flex flex-col text-xl text-white gap-2 w-full">
                     <select value={preferredWeightUnit}
                         onChange={(e) => setpreferredWeightUnit(e.target.value as "lbs" | "kg")}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30">
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
                         <option value="lbs">Pounds (lbs)</option>
                         <option value="kg">Kilograms (kg)</option>
 
@@ -165,7 +166,7 @@ export default function PaidSyncSimulator() {
                             placeholder="Weight (lbs)"
                             value={weight_lbs}
                             onChange={(e) => handleWeightChange(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                         />
                     ) : (
                         <input
@@ -173,12 +174,12 @@ export default function PaidSyncSimulator() {
                             placeholder="Weight (kg)"
                             value={weight_kg}
                             onChange={(e) => handleWeightChange(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                         />
                     )}
                     <select value={preferredHeightUnit}
                         onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30">
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
                         <option value="cm">Metric (cm)</option>
                         <option value="ft_in">Imperial (ft_in)</option>
 
@@ -190,7 +191,7 @@ export default function PaidSyncSimulator() {
                             placeholder="Height (cm)"
                             value={height_cm}
                             onChange={(e) => setHeight_cm(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                         />
                     ) : (
 
@@ -203,7 +204,7 @@ export default function PaidSyncSimulator() {
                                     setFeet(e.target.value);
                                     handleFeetInchesChange(e.target.value, feet);
                                 }}
-                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                             />
                             <input
                                 type="number"
@@ -220,7 +221,7 @@ export default function PaidSyncSimulator() {
                                     const clamped = Math.min(Math.max(num, 0), 11); // clamps to 0–11
                                     setInches(clamped.toString());
                                 }}
-                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                             />
                         </div>
 
@@ -230,12 +231,12 @@ export default function PaidSyncSimulator() {
                         placeholder="Age"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     />
                     <select
                         value="" disabled hidden
                         onChange={(e) => setGender(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -245,19 +246,19 @@ export default function PaidSyncSimulator() {
                         placeholder="Steps"
                         value={steps}
                         onChange={(e) => setSteps(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     />
                     <input
                         type="text"
                         placeholder="Exercise Minutes"
                         value={exerciseMinutes}
                         onChange={(e) => setExerciseMinutes(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     />
                     <select
                         value={exerciseIntensity}
                         onChange={(e) => setExerciseIntensity(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     >
                         <option value="low">Low</option>
                         <option value="moderate">Moderate</option>
@@ -266,7 +267,7 @@ export default function PaidSyncSimulator() {
                     <select
                         value={calorieGoal}
                         onChange={(e) => setCalorieGoal(e.target.value)}
-                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-white/30"
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     >
                         <option value="">-/+ Calories Adjustment</option>
                         {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (

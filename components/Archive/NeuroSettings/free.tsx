@@ -1,4 +1,4 @@
-import PaidNeuroSettingsPage from "@/components/Pages/NeuroSettings/paid";
+import PaidNeuroSettingsPage from "@/components/Archive/NeuroSettings/paid";
 
 export default function FreeNeuroSettingsPage() {
   return (

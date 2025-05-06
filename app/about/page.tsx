@@ -10,7 +10,7 @@ export default function AboutPage() {
     const { setBackgroundMode } = useBackground();
   
     useEffect(() => {
-      setBackgroundMode("infopage");
+      setBackgroundMode("loginpage");
     }, [setBackgroundMode]);
 
   return (

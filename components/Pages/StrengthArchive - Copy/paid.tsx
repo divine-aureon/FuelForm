@@ -71,7 +71,6 @@ export default function PaidStrengthArchivePage() {
           <h2 className="text-2xl font-bold mb-4">Activate Strength Archive?</h2>
           <p className="mb-4">First time setup required. Ready to initialize?</p>
           <button
-          disabled
             className="px-4 py-2  text-white rounded glowing-button"
             onClick={async () => {
               if (!user) return;
@@ -89,7 +88,7 @@ export default function PaidStrengthArchivePage() {
               window.location.reload();
             }}
           >
-            Coming Soon!
+            Initialize DataBase
           </button>
         </div>
       </>

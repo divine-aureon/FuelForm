@@ -33,20 +33,25 @@ export default function HelpPage() {
 
 
   if (!delayDone) return <NavLoad />;
-
   return (
     <>
-      <div className="flex justify-center backdrop-blur-md pb-3">
-        <section className="bg-black/30 rounded-2xl shadow-md p-6">
-          <h1 className="text-4xl font-bold text-center mb-6 pulse-glow">
-            Welcome to the FuelForm Help Center!
-          </h1>
+      <div className="backdrop-blur-md pb-3">
+      <div>
+            <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+              <div className="absolute flex flex-col items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                <h1 className="text-3xl font-bold text-center pulse-glow">
+                  FuelForm Help Center!
+                </h1>
+                <p className="text-sm mt-2">
+                "Assistance initiated. Optimization incoming."                </p>
+              </div>
+            </div>
+          </div>
 
-          <p className="mb-4 text-center">
-            Congratulations, Commander. Youve entered the next evolution of vitality tracking — powered by the <span className="font-semibold">FusionCore</span>.
-          </p>
+        <section className="bg-white/30 rounded-2xl shadow-md p-6">
 
-          <h2 className="text-2xl font-bold mt-8 mb-4">How to Use FuelForm</h2>
+          <h2 className="text-2xl font-bold mb-4">How to Use FuelForm</h2>
           <p className="mb-4">
             Each day, you&#39;ll perform two Syncs — <span className="font-semibold">DawnSync</span> and <span className="font-semibold">DuskSync</span> — to keep your Blueprint updated with real-time stats, nutrition, and workout tracking.
           </p>
@@ -67,7 +72,7 @@ export default function HelpPage() {
 
           <h2 className="text-2xl font-bold mt-8 mb-4">DawnSync & DuskSync OVERRIDE</h2>
           <ul className="list-disc list-inside mb-4">
-            <li className="font-semibold"> if you ever make a mistake or need to update your sync, you can go to NeuroSettings and enable 
+            <li className="font-semibold"> if you ever make a mistake or need to update your sync, you can go to NeuroSettings and enable
               override mode for either Dawn or Dusk. Doing this will temporarily reactivate the corresponding sync button, allowing you to resubmit with updated info. Just remember — overrides are there for correction, so use them wisely.</li>
           </ul>
 

@@ -11,7 +11,7 @@ export default function SourcesPage() {
   const { setBackgroundMode } = useBackground();
   
   useEffect(() => {
-    setBackgroundMode("infopage");
+    setBackgroundMode("loginpage");
   }, [setBackgroundMode]);
   
   return (

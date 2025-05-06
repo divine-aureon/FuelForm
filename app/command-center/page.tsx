@@ -6,13 +6,29 @@ import {
   Sun, Moon, Lock, CircleCheckBig,
   ChartSpline, Sparkles,
   Rotate3d, Home, Activity,
-  SmilePlus
+  SmilePlus,
+  Dumbbell,
+  Utensils,
+  ListChecks
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Modal } from "@/components/Archive/SyncSimulator/SyncSimModal"
-import SyncSimulator from "@/components/Archive/SyncSimulator/SyncSimulator"
+
+import { SettingsModal } from "@/components/Modals/SettingsModal"
+import SettingsPageComponent from "@/components/Modals/SettingsPageComponent"
+import { FitnessGoalsModal } from "@/components/Modals/FitnessGoalsModal"
+import FitnessGoalsPageComponent from "@/components/Modals/FitnessGoalsComponent"
+import { OverrideModal } from "@/components/Modals/OverrideModal"
+import OverrideComponent from "@/components/Modals/OverrideComponent"
+import { BioModal } from "@/components/Modals/BiometricsModal"
+import BiometricsComponent from "@/components/Modals/BiometricsComponent"
+import { DawnSyncModal } from "@/components/Modals/DawnSyncModal"
+import { DuskSyncModal } from "@/components/Modals/DuskSyncModal"
+import DawnSyncComponent from "@/components/Modals/DawnSyncComponent"
+import DuskSyncComponent from "@/components/Modals/DuskSyncComponent"
+
+
 import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/components/NutrientDisplay/MineralBreakdown"
@@ -35,7 +51,11 @@ import {
   Shield,
   Atom,
   Heart,
-  Bird
+  Bird,
+  Dna,
+  KeyRound,
+  Settings,
+  Fingerprint
 } from 'lucide-react';
 
 
@@ -76,8 +96,64 @@ export default function PaidCommandCenter() {
     ? `${latestSync?.weight_lbs} lbs`
     : `${latestSync?.weight_kg}'"`;
 
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isFitnessOpen, setFitnessOpen] = useState(false);
+  const [isOverrideOpen, setOverrideOpen] = useState(false);
+  const [isBioOpen, setBioOpen] = useState(false);
+  const [isDawnOpen, setDawnOpen] = useState(false);
+  const [isDuskOpen, setDuskOpen] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (isSettingsOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isSettingsOpen]);
+
+  useEffect(() => {
+    if (isBioOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isBioOpen]);
+
+
+  useEffect(() => {
+    if (isFitnessOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isFitnessOpen]);
+
+
+  useEffect(() => {
+    if (isOverrideOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isOverrideOpen]);
+
+
+  useEffect(() => {
+    if (isDawnOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isDawnOpen]);
+
+  useEffect(() => {
+    if (isDuskOpen) {
+      document.body.classList.add("scroll-lock");
+    } else {
+      document.body.classList.remove("scroll-lock");
+    }
+  }, [isDuskOpen]);
+
 
   const mergedMacros = (latestSync?.recoveryMacros || []).map((recoveryMacro) => {
     const matchingActive = (latestSync?.activeMacros || []).find(
@@ -106,11 +182,12 @@ export default function PaidCommandCenter() {
   }, []);
 
 
-  const [selectedSector, setSelectedSector] = useState<"macros" | "vitamins" | "minerals" | null>(null);
+  const [selectedSector, setSelectedSector] = useState<"macros" | "vitamins" | "minerals">("macros");
 
   const handleSectorClick = (sector: "macros" | "vitamins" | "minerals") => {
-    setSelectedSector(prev => (prev === sector ? null : sector));
+    setSelectedSector(sector); // No toggling, just always set the new one
   };
+
 
 
   if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
@@ -125,10 +202,13 @@ export default function PaidCommandCenter() {
           “Every sync refines the system. Every action shapes the form.”
         </h2>
         <hr className="my-2 border-t-4 border-white/30" />
-
-        <h2 className="text-left text-white flex justify-left items-center text-md gap-2"><Atom/>Signed in as: {profile.name}</h2>
+        <h2 className="text-left text-white flex justify-left items-center text-md gap-2"><Atom />Signed in as: {profile.name}</h2>
+        <h2 className="text-left text-lg pulse-glow">Last Synced: {latestSync?.timestamp?.toDate().toLocaleString()}</h2>
         <hr className="my-2 border-t-4 border-white/30" />
-        <div className="grid grid-cols-2 flex justify-center items-center gap-2 mb-3">
+      </div>
+
+      <div className="bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md mt-3 ">
+        <div className="grid grid-cols-2 flex justify-center items-center gap-2 ">
           <div className="bg-white/30 h-32 rounded-2xl flex flex-col justify-center pb-2">
             <h2 className="text-left text-white ml-4 text-md pulse-glow">Biometrics</h2>
             <h2 className="text-left text-white ml-4 text-xs">Age: {profile.age}</h2>
@@ -140,34 +220,63 @@ export default function PaidCommandCenter() {
           </div>
           <div>
             <Link href="/statsecho" className="">
-              <div className="relative h-32 bg-[url('/images/dna.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+              <div className="relative h-32 bg-[url('/images/menus/graph2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
-                <div className="absolute flex flex-col pb-2 items-center justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2">Stats Echo <Rotate3d /></div>
                   <h2 className="text-xs font-bold text-white">
                     “Log. Reflect. Evolve.”
                   </h2>
                 </div>
               </div>
-
             </Link>
           </div>
-
-        </div>
-        <hr className="my-2 border-t-4 border-white/30" />
-
-        <div className="bg-black/20 rounded-xl p-2">
-          <h2 className="text-center text-green-300 text-lg pulse-glow">Last Synced: {latestSync?.timestamp?.toDate().toLocaleString()}</h2>
         </div>
       </div>
 
+      {/* Right Column: FastLinks bar */}
+      <div className="flex grid grid-cols-3 flex-col gap-4 py-3">
+        <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+          onClick={() => router.push("/sync-simulator")}>
+          Free SyncSim<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
+        </button>
 
 
-      <button onClick={() => router.push("/sync-simulator")} className="relative glowing-button mt-2 bg-[url('/images/syncsim.webp')] bg-cover bg-center bg-no-repeat h-14 w-full rounded-xl overflow-hidden hover:bg-indigo-300/50 text-white ">
-        <div className="absolute inset-0 w-full rounded-xl text-2xl flex items-center justify-center pb-1 ">
-          Activate Sync Simulator
-        </div>
-      </button>
+        {isPaidUser ? (
+          <>
+
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+              Neuro Settings<Settings size={36} className=" mt-1 text-white transition cursor-pointer" />
+            </button>
+            {isSettingsOpen && (
+              <SettingsModal onClose={() => setSettingsOpen(false)}>
+                < SettingsPageComponent />
+              </SettingsModal>)}
+
+
+          </>
+        ) : (
+          <>
+            <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur justify-center hover:bg-indigo-300/50 text-white shadow-md"
+              onClick={() => router.push("https://buy.stripe.com/3cs6rl8wZ0tL2is144")}>
+              Unlock<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
+            </button>
+          </>
+        )}
+
+        <button
+          onClick={() => setBioOpen(true)}
+          className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+          Biometrics<Fingerprint size={36} className=" mt-1 text-white transition cursor-pointer" />
+        </button>
+        {isBioOpen && (
+          <BioModal onClose={() => setBioOpen(false)}>
+            < BiometricsComponent />
+          </BioModal>)}
+
+      </div>
 
       <div className="bg-white/30 text-white pulse-glow rounded-lg p-2 text-2xl text-center mt-2">Nutrient Blueprint Modules
         <div className="grid grid-cols-3 gap-1 w-full rounded-xl mt-2">
@@ -236,21 +345,139 @@ export default function PaidCommandCenter() {
 
         </AnimatePresence>
       </div>
-      <div className="grid grid-cols-[1fr_3fr] gap-4 h-full">
-        {/* Left Column: Tiles */}
+      <div className="grid grid-cols-[3fr_1fr] gap-4 h-full">
 
+        {/* Left Column: Tiles */}
+        <div className="flex flex-col mt-3 gap-4">
+          {/* Tile 1 */}
+          <div>
+            <Link href="/strengtharchive" className="">
+              <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                  <div className="flex items-center gap-2"><Dumbbell />StrengthArchive</div>
+                  <h2 className="text-xs font-bold text-white">
+                    "Log It. Lift It. Level Up."
+                  </h2>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Tile 2 */}
+          <div>
+            <Link href="/macrovault" className="">
+              <div className="relative h-32 bg-[url('/images/menus/meals3.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                  <div className="flex items-center gap-2"><Utensils />MacroVault</div>
+                  <h2 className="text-xs font-bold text-white">
+                    "Nourish. Record. Repeat."
+                  </h2>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Tile 2 */}
+          <div>
+            <Link href="/primetasks" className="">
+              <div className="relative h-32 bg-[url('/images/menus/tasks.jpeg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                  <div className="flex items-center gap-2"><ListChecks />PrimeTasks</div>
+                  <h2 className="text-xs font-bold text-white">
+                    "Define. Align. Execute."
+                  </h2>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Add more tiles here */}
+        </div>
 
         {/* Right Column: FastLinks bar */}
         <div className="flex flex-col  gap-4 py-3">
-          <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+          <button className="w-full rounded-xl py-4 leading-none bg-white/10 justify-center flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
             onClick={() => router.push("/crowns")}>
             Crowns<Crown size={36} className="mt-1 text-white transition cursor-pointer" />
           </button>
-          <button className="w-full rounded-xl py-4 leading-none bg-white/10 flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
-            onClick={() => router.push("/neurosettings")}>
-            Calorie Goal<Flame size={36} className="mt-1 text-white transition cursor-pointer" />
-          </button>
-          <button className="w-full rounded-xl py-4 leading-none flex flex-col items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+
+          {isPaidUser ? (
+            <>
+              <button
+                onClick={() => setFitnessOpen(true)}
+                className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+                Fitness Goals<Flame size={36} className=" mt-1 text-white transition cursor-pointer" />
+              </button>
+              {isFitnessOpen && (
+                <FitnessGoalsModal onClose={() => setFitnessOpen(false)}>
+                  < FitnessGoalsPageComponent />
+                </FitnessGoalsModal>)}
+
+            </>
+          ) : (
+            <>
+
+
+              <button
+                disabled
+                className=" cursor-default w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+                Fitness Goals<Lock size={36} className=" mt-1 text-white transition cursor-pointer" />
+              </button>
+
+            </>
+          )}
+
+
+
+
+          {isPaidUser ? (
+            <>
+              <button
+                onClick={() => setOverrideOpen(true)}
+                className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+              >
+                Sync Override
+                <Atom size={36} className="mt-1 text-white transition cursor-pointer" />
+              </button>
+
+              {isOverrideOpen && (
+                <OverrideModal
+                onClose={() => setOverrideOpen(false)}
+                onOverrideDawn={() => {
+                  setOverrideOpen(false);
+                  setDawnOpen(true);
+                }}
+                onOverrideDusk={() => {
+                  setOverrideOpen(false);
+                  setDuskOpen(true);
+                }}
+              >
+                <OverrideComponent
+                  onClose={() => setOverrideOpen(false)}
+                  setDawnOpen={setDawnOpen}
+                  setDuskOpen={setDuskOpen}
+                />
+              </OverrideModal>
+              )}
+            </>
+
+          ) : (
+            <>
+
+
+              <button
+                disabled
+                className=" cursor-default w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/10 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+                Sync Override<Lock size={36} className=" mt-1 text-white transition cursor-pointer" />
+              </button>
+
+            </>
+          )}
+
+          <button className="w-full rounded-xl py-4 leading-none flex flex-col items-center bg-white/10 backdrop-blur justify-center hover:bg-indigo-300/50 text-white shadow-md"
             onClick={() => router.push("/help-center")}>
             Help<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
           </button>
@@ -258,33 +485,19 @@ export default function PaidCommandCenter() {
 
         </div>
 
-        <div className="flex flex-col mt-3 gap-4">
-          {/* Tile 1 */}
-          <button onClick={() => router.push("/strengtharchive")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
-            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
-              StrengthArchive
-            </div>
-          </button>
-          {/* Tile 2 */}
-          <button onClick={() => router.push("/macrovault")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
-            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
-              MacroVault
-            </div>
-          </button>
-          {/* Tile 2 */}
-          <button onClick={() => router.push("/primetasks")} className="relative h-24 glowing-menu-button mt-2  w-full rounded-xl overflow-hidden text-white ">
-            <div className="absolute inset-0 w-full rounded-xl bg-white/10 hover:bg-indigo-300/30 text-2xl flex items-center justify-center pb-1 ">
-              PrimeTasks
-            </div>
-          </button>
-
-
-          {/* Add more tiles here */}
-        </div>
-
       </div>
 
 
+      {isDawnOpen && (
+        <DawnSyncModal onClose={() => setDawnOpen(false)}>
+          < DawnSyncComponent />
+        </DawnSyncModal>)}
+
+
+      {isDuskOpen && (
+        <DuskSyncModal onClose={() => setDuskOpen(false)}>
+          < DuskSyncComponent />
+        </DuskSyncModal>)}
 
 
 
@@ -293,19 +506,27 @@ export default function PaidCommandCenter() {
         {isPaidUser ? (
           <>
             {hasDawnSyncedToday ? (
+
               <button
                 disabled
                 className="flex items-center justify-center gap-2 w-full bg-gray-500/80 text-white rounded-lg mr-1 cursor-default px-4 py-2"
               >
                 <Sun size={20} /> DawnSynced <CircleCheckBig size={20} />
               </button>
+
+
+
             ) : (
+
               <button
                 className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-indigo-300/50 transition glowing-button mr-1 px-4 py-2"
-                onClick={() => router.push("/dawnsync")}
+                onClick={() => setDawnOpen(true)}
               >
                 <Sun size={20} /> DawnSync
               </button>
+
+
+
             )}
 
             {hasDuskSyncedToday ? (
@@ -318,7 +539,7 @@ export default function PaidCommandCenter() {
             ) : (
               <button
                 className="flex items-center justify-center gap-2 w-full bg-white text-black rounded-lg hover:bg-indigo-300/50 transition glowing-button ml-1 px-4 py-2"
-                onClick={() => router.push("/dusksync")}
+                onClick={() => setDuskOpen(true)}
               >
                 <Moon size={20} /> DuskSync
               </button>
@@ -353,6 +574,6 @@ export default function PaidCommandCenter() {
         )}
       </div>
 
-    </div>
+    </div >
   );
 }
