@@ -216,7 +216,7 @@ export default function PaidStatsEchoPage() {
     <>
 
 <div>
-              <div className="relative h-32 bg-[url('/images/menus/graph2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+              <div className="relative h-32 bg-[url('/images/menus/stats2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                   <div className="flex text-4xl items-center gap-2">Stats Echo </div>

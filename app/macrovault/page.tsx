@@ -8,20 +8,20 @@ import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import { useState, useEffect } from 'react';
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 
 
 
 export default function MacroVaultPage() {
 
-    const { preferences } = useFuelFormData();
+    const { settings } = useCoreData();
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    if (preferences?.background) {
-      setBackgroundMode(preferences.background);
+    if (settings?.background) {
+      setBackgroundMode(settings.background);
     }
-  }, [preferences?.background, setBackgroundMode]);
+  }, [settings?.background, setBackgroundMode]);
 
   const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;

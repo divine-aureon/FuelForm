@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, collection, serverTimestamp } from "firebase/firestore";
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 import useAuth from "@/lib/useAuth";
 import { CircleAlert, CircleOff } from "lucide-react";
 import TodaysSync from '@/lib/hooks/TodaysSync'
@@ -25,7 +25,7 @@ export default function FitnessGoalsPageComponent() {
 
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const { profile, latestSync, preferences, fitnessGoals } = useFuelFormData();
+    const { settings, fitnessSettings } = useCoreData();
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -33,56 +33,27 @@ export default function FitnessGoalsPageComponent() {
     const dd = String(today.getDate()).padStart(2, "0");
     const dateString = `${yyyy}-${mm}-${dd}`;
 
-    const [background, setBackground] = useState("");
-    const [navIcon, setNavIcon] = useState("");
     const [calorieGoal, setCalorieGoal] = useState("");
-    const { user } = useAuth();
-
-    const { hasDuskSyncedToday, hasDawnSyncedToday } = TodaysSync();
 
     useEffect(() => {
-        const fetchNeuroSettings = async () => {
-            if (!user?.uid) return;
+        if (!fitnessSettings) return;
+        setCalorieGoal(fitnessSettings.calorieGoal?.toString() || "");
 
-            const preferencesRef = doc(db, "users", user.uid, "neuro", "preferences");
-            const fitnessGoalsRef = doc(db, "users", user.uid, "neuro", "fitnessGoals");
-
-            const [preferencesSnap, fitnessGoalsSnap] = await Promise.all([
-                getDoc(preferencesRef),
-                getDoc(fitnessGoalsRef),
-            ]);
-
-            if (preferencesSnap.exists()) {
-                const data = preferencesSnap.data();
-                setBackground(data.background || 0);
-                setNavIcon(data.navIcon || 0);
-            }
-
-            if (fitnessGoalsSnap.exists()) {
-                const goals = fitnessGoalsSnap.data();
-                setCalorieGoal(goals.calorieGoal || 0); // 👈 assumes you’ve declared this state
-            }
-        };
-
-        fetchNeuroSettings(); // ✅ call only once user is defined
-    }, [user]);
+    }, [fitnessSettings]);
 
 
     const handleSubmit = async (e: React.FormEvent) => {
 
         e.preventDefault();
 
-        const user = auth.currentUser;
         const userId = auth.currentUser!.uid;
-        const syncRef = collection(db, "users", userId, "syncs");
-        const syncDocRef = doc(syncRef, dateString);
-        const preferencesRef = doc(db, "users", userId, "neuro", "preferences");
-        const fitnessGoalsRef = doc(db, "users", userId, "neuro", "fitnessGoals");
-        const trendSettingsRef = doc(db, "users", userId, "neuro", "trendSettings");
+        const userRef = doc(db, "users", userId,);
 
         try {
-            await setDoc(fitnessGoalsRef, {
-                calorieGoal: Number(calorieGoal), // or however you're tracking this
+            await setDoc(userRef, {
+                fitnessSettings: {
+                    calorieGoal: Number(calorieGoal),
+                }
             }, { merge: true });
 
 
@@ -111,7 +82,7 @@ export default function FitnessGoalsPageComponent() {
                     <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                         <div className="flex items-center gap-2 pulse-glow ">Accessing Fitness Goals</div>
                         <h2 className="text-sm font-bold text-white">
-                            “Optimize the interface to align with your rhythm, pace, and focus.”
+                            Optimize the interface to align with your rhythm, pace, and focus.
                         </h2>
                     </div>
                 </div>
@@ -120,25 +91,25 @@ export default function FitnessGoalsPageComponent() {
 
             <div className="bg-white/30 rounded-xl p-3 shadow-lg mb-[110px]">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                        <p className="text-lg text-white font-semibold mb-1">
-                            Calorie Goals
-                            <div className="flex mb-4">
+                    <p className="text-lg text-white font-semibold mb-1">
+                        Calorie Goals
+                        <div className="flex mb-4">
 
-                                <select
-                                    value={calorieGoal}
-                                    onChange={(e) => setCalorieGoal(e.target.value)}
-                                    className="w-full p-2 rounded bg-gray-800/70 text-white"
-                                >
-                                    <option value="">+/- Kcal</option>
-                                    {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (
-                                        <option key={kcal} value={kcal}>
-                                            {kcal} kcal
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </p>
-                   
+                            <select
+                                value={calorieGoal}
+                                onChange={(e) => setCalorieGoal(e.target.value)}
+                                className="w-full p-2 rounded bg-gray-800/70 text-white"
+                            >
+                                <option value="">+/- Kcal</option>
+                                {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (
+                                    <option key={kcal} value={kcal}>
+                                        {kcal} kcal
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </p>
+
 
                     <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
                         <button

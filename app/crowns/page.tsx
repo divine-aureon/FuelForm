@@ -1,7 +1,7 @@
 'use client';
 
 
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
@@ -11,14 +11,14 @@ import { useState, useEffect } from "react";
 export default function CrownPage() {
 
 
-  const { profile, latestSync, preferences } = useFuelFormData();
+  const { profile, latestSync, settings } = useCoreData();
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    if (preferences?.background) {
-      setBackgroundMode(preferences.background);
+    if (settings?.background) {
+      setBackgroundMode(settings.background);
     }
-  }, [preferences?.background, setBackgroundMode]);
+  }, [settings?.background, setBackgroundMode]);
 
   const isPaidUser = profile?.isPaid ?? null;
   const [delayDone, setDelayDone] = useState(false);

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db, } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateActiveFuel } from "@/lib/FusionCore";
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 import { Listbox } from '@headlessui/react'
 
 const intensityOptions = ["None", "Light", "Moderate", "High"]
@@ -16,7 +16,7 @@ export default function DuskSyncComponent() {
 
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const { profile, latestSync, fitnessGoals } = useFuelFormData();
+    const { profile, latestSync, fitnessSettings } = useCoreData();
 
     const [steps, setSteps] = useState(latestSync?.steps?.toString() || "");
     const [exerciseMinutes, setExerciseMinutes] = useState(latestSync?.exerciseMinutes?.toString() || "");
@@ -46,7 +46,7 @@ export default function DuskSyncComponent() {
                     height_cm: profile.height_cm,
                     gender: profile.gender,
                     age: profile.age,
-                    calorieGoal: fitnessGoals?.calorieGoal
+                    calorieGoal: fitnessSettings?.calorieGoal
                 });
 
             const userId = auth.currentUser!.uid;
@@ -91,7 +91,7 @@ export default function DuskSyncComponent() {
                     <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                         <div className="flex items-center gap-2">Initiate DuskSync Protocol</div>
                         <h2 className="text-xs font-bold text-white">
-                            “The day is done. Sync the work and restore your baseline.” </h2>
+                            The day is done. Sync the work and restore your baseline. </h2>
                     </div>
                 </div>
             </div>

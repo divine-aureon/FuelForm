@@ -9,7 +9,7 @@ import type { User } from 'firebase/auth';
 import useProfile from "@/lib/hooks/ProfileData";
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 
 
 function toSafeString(value: any): string {
@@ -21,7 +21,7 @@ function toSafeString(value: any): string {
 
 export default function BiometricsComponent() {
 
-  const { preferences } = useFuelFormData();
+  const { settings } = useCoreData();
 
   const { profile } = useProfile();
   const isPaidUser = profile?.isPaid ?? false;
@@ -206,7 +206,7 @@ export default function BiometricsComponent() {
           <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
             <div className="flex items-center gap-2 pulse-glow ">Modify Biometrics</div>
             <h2 className="text-sm font-bold text-white">
-              “Before you can change, you must know where you are. These are your fundamentals.”
+              Before you can change, you must know where you are. These are your fundamentals.
             </h2>
           </div>
         </div>

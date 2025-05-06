@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 import { HeartPlus } from "lucide-react";
 
 type MacroRange = {
@@ -24,7 +24,7 @@ interface EnergyBreakdownProps {
 
 export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
 
-    const { fitnessGoals } = useFuelFormData();
+
 
   return (
     <div className="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg pt-2 w-full max-w-lg mx-auto mt-4 text-black overflow-hidden">

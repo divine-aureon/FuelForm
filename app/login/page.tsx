@@ -149,12 +149,15 @@ export default function LoginPage() {
           height_ft_in: { feet: finalFeet, inches: finalInches },
           age,
           isPaid: false,
+          isFitnessActive: false,
+          isMacroActive: false,
+          isTasksActive: false,
           createdAt: serverTimestamp(),
-          neurosettings: {
+          settings: {
             background: "NeuralLink",
             navIcon: "Atom"
           },
-          fitnessGoals: {
+          fitnessSettings: {
             calorieGoal: 0,
           }
         });

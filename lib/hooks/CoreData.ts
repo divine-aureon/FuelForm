@@ -32,7 +32,7 @@ interface SyncData {
   timestamp?: any;
 }
 
-interface PrefData {
+interface SettingsData {
   background: string;
   navIcon: string;
 }
@@ -57,8 +57,8 @@ interface UserProfile {
   age: number;
   email: string; // ✅ Add email here
   latestSync?: SyncData;
-  preferences?: PrefData;
-  fitnessGoals?: FitData;
+  settings?: SettingsData;
+  fitnessSettings?: FitData;
   isPaid: boolean;
 }
 
@@ -90,17 +90,17 @@ const defaultProfile: UserProfile = {
     duskTimestamp: null,
     timestamp: null,
   },
-  preferences: {
-    background: "Neural Link",
+  settings: {
+    background: "NeuralLink",
     navIcon: "Atom",
   },
-  fitnessGoals: {
+  fitnessSettings: {
     calorieGoal: 0,
   },
 
 };
 
-export default function useFuelFormData() {
+export default function useCoreData() {
   const [profile, setProfile] = useState<UserProfile>(defaultProfile);
 
   useEffect(() => {
@@ -108,14 +108,10 @@ export default function useFuelFormData() {
       if (user) {
         const userRef = doc(db, "users", user.uid);
         const syncRef = collection(db, "users", user.uid, "syncs");
-        const prefRef = doc(db, "users", user.uid, "neuro", "preferences");
-        const fitRef = doc(db, "users", user.uid, "neuro", "fitnessGoals");
 
-        const [profileSnap, syncSnap, prefSnap, fitSnap] = await Promise.all([
+        const [profileSnap, syncSnap] = await Promise.all([
           getDoc(userRef),
           getDocs(query(syncRef, orderBy("timestamp", "desc"), limit(1))),
-          getDoc(prefRef), // preferences
-          getDoc(fitRef), // fitnessgoals
         ]);
 
         const profileData = profileSnap.exists()
@@ -126,15 +122,11 @@ export default function useFuelFormData() {
           ? (syncSnap.docs[0].data() as SyncData)
           : defaultProfile.latestSync;
 
-        const preferences = prefSnap.exists()
-          ? (prefSnap.data() as PrefData)
-          : defaultProfile.preferences
+        const settings = profileData.settings ?? defaultProfile.settings;
 
-        const fitnessGoals = fitSnap.exists()
-          ? (fitSnap.data() as FitData)
-          : defaultProfile.fitnessGoals
+        const fitnessSettings = profileData.fitnessSettings ?? defaultProfile.fitnessSettings;
 
-        setProfile({ ...profileData, latestSync, preferences, fitnessGoals });
+        setProfile({ ...profileData, latestSync, settings, fitnessSettings });
       }
     });
 
@@ -144,7 +136,7 @@ export default function useFuelFormData() {
   return {
     profile,
     latestSync: profile.latestSync,
-    preferences: profile.preferences,
-    fitnessGoals: profile.fitnessGoals,
+    settings: profile.settings,
+    fitnessSettings: profile.fitnessSettings,
   };
 }

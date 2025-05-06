@@ -1,9 +1,5 @@
 "use client";
 
-
-
-
-
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import {
@@ -19,12 +15,16 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
+import { AddSplitModal } from "@/components/StrengthArchiveModals/AddSplitModal"; // You can create this next
+import AddSplitComponent from "@/components/StrengthArchiveModals/AddSplitComponent"; // You can create this next
 
 export default function PaidStrengthArchivePage() {
 
+//inialization steps
+
   const [isInitialized, setIsInitialized] = useState(true); // default true
   const [checkedInit, setCheckedInit] = useState(false); // to avoid flicker
-
+  
   const { user } = useAuth();
   const [activeSplit, setActiveSplit] = useState(null);
   const [allSplits, setAllSplits] = useState([]);
@@ -36,10 +36,10 @@ export default function PaidStrengthArchivePage() {
       const uid = user?.uid;
       if (!uid) return;
 
-      const statRef = doc(db, "users", uid, "strengthArchive", "stats");
-      const metaSnap = await getDoc(statRef);
+      const statRef = doc(db, "users", uid, "strength", "stats");
+      const statSnap = await getDoc(statRef);
 
-      if (!metaSnap.exists()) {
+      if (!statSnap.exists()) {
         setIsInitialized(false);
       }
 
@@ -49,6 +49,35 @@ export default function PaidStrengthArchivePage() {
     checkInitialization();
   }, [user]);
 
+  //check split steps
+
+  type Split = {
+    id: string;
+    name: string;
+  };
+  
+  const [splits, setSplits] = useState<Split[]>([]);
+  const [isAddSplitModalOpen, setAddSplitModalOpen] = useState(false);
+  
+  useEffect(() => {
+    const fetchSplits = async () => {
+      const uid = user?.uid;
+      if (!uid) return;
+  
+      const splitsRef = collection(db, "users", uid, "strength", "stats", "storedSplits");
+      const splitsSnap = await getDocs(splitsRef);
+  
+      const splits: Split[] = splitsSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Split, "id">), // tells TypeScript "trust me, this has a `name`"
+      }));
+  
+      setSplits(splits);
+    };
+  
+    fetchSplits();
+  }, []);
+  
 
   if (!checkedInit) return null; // or a loading spinner
 
@@ -71,12 +100,12 @@ export default function PaidStrengthArchivePage() {
           <h2 className="text-2xl font-bold mb-4">Activate Strength Archive</h2>
           <p className="mb-4">First time setup required. Ready to initialize?</p>
           <button
-          disabled
+          //disabled
             className="px-4 py-2  text-white rounded glowing-button"
             onClick={async () => {
               if (!user) return;
 
-              const statRef = doc(db, "users", user.uid, "strengthArchive", "stats");
+              const statRef = doc(db, "users", user.uid, "strength", "stats");
 
               // Set meta initialized
               await setDoc(statRef, {
@@ -109,10 +138,33 @@ export default function PaidStrengthArchivePage() {
           </div>
         </div>
       </div>
-      <div className="p-4 bg-white/30 rounded-lg">
-        <p className="mt-2">Thankyou for registering for the StrengthArchive. Page still under construction. Checkback soon for update. Thankyou</p>
-        {/* Add your split loader, add split button, etc. here */}
+      <div className="space-y-4">
+  {splits.length > 0 ? (
+    splits.map((split) => (
+      <div key={split.id} className="text-white bg-white/10 rounded-lg p-3 shadow">
+        {split.name}
       </div>
+    ))
+  ) : (
+    <div className="text-white text-center italic opacity-70">
+      No splits found. Add one below to get started.
+    </div>
+  )}
+
+  <button
+    className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg w-full"
+    onClick={() => setAddSplitModalOpen(true)}
+  >
+    Add Split
+  </button>
+     {isAddSplitModalOpen && (
+          <AddSplitModal onClose={() => setAddSplitModalOpen(false)}>
+            < AddSplitComponent />
+          </AddSplitModal>)}
+</div>
+
+
+
     </>
   );
 }

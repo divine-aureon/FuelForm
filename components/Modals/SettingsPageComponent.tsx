@@ -5,8 +5,15 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
+import useCoreData from "@/lib/hooks/CoreData";
+
+
+
+
 
 export default function SettingsPageComponent() {
+
+    const { settings } = useCoreData();
 
     const router = useRouter();
     const [status, setStatus] = useState("");
@@ -16,38 +23,24 @@ export default function SettingsPageComponent() {
     const [navIcon, setNavIcon] = useState("");
     const { user } = useAuth();
 
-
     useEffect(() => {
-        const fetchNeuroSettings = async () => {
-            if (!user?.uid) return;
-
-            const preferencesRef = doc(db, "users", user.uid, "neuro", "preferences");
-
-            const [preferencesSnap,] = await Promise.all([
-                getDoc(preferencesRef),
-            ]);
-
-            if (preferencesSnap.exists()) {
-                const data = preferencesSnap.data();
-                setBackground(data.background || 0);
-                setNavIcon(data.navIcon || 0);
-            }
-
-        };
-
-        fetchNeuroSettings(); // ✅ call only once user is defined
-    }, [user]);
+        if (!settings) return;
+        setBackground(settings.background);
+        setNavIcon(settings.navIcon);
+      }, [settings]);
 
     const handleSubmit = async (e: React.FormEvent) => {
 
         e.preventDefault();
 
         const userId = auth.currentUser!.uid;
-        const preferencesRef = doc(db, "users", userId, "neuro", "preferences");
+        const userRef = doc(db, "users", userId, );
         try {
-            await setDoc(preferencesRef, {
-                background,
-                navIcon
+            await setDoc(userRef, {
+                settings: {
+                    background,
+                    navIcon,
+                  }
             }, { merge: true });
 
             setStatus("success");
@@ -76,7 +69,7 @@ export default function SettingsPageComponent() {
                     <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                         <div className="flex items-center gap-2 pulse-glow mb-2">Neuro Settings..</div>
                         <h2 className="text-sm font-bold text-white">
-                            “Optimize the interface to align with your rhythm, pace, and focus.”
+                            Optimize the interface to align with your rhythm, pace, and focus.
                         </h2>
                     </div>
                 </div>
@@ -117,9 +110,9 @@ export default function SettingsPageComponent() {
                                                 >
                                                     {/* Replace these with actual image paths */}
                                                     <img
-                                                        src={bg === "NeuralLink" ? "/images/backgrounds/neurallink.webp" :
-                                                            bg === "StarVeil" ? "/images/backgrounds/starveil.jpg" :
-                                                                bg === "QuantumFade" ? "/images/backgrounds/quantumfade.jpg" :
+                                                        src={bg === "NeuralLink" ? "/images/dropdownmenu/neurallink.webp" :
+                                                            bg === "StarVeil" ? "/images/dropdownmenu/starveil.jpg" :
+                                                                bg === "QuantumFade" ? "/images/dropdownmenu/quantumfade.jpg" :
                                                                     "/images/default-image.jpg"}
                                                         alt={bg}
                                                         width="70"

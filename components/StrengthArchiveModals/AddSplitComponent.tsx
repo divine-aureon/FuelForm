@@ -6,12 +6,12 @@ import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateRecoveryFuel } from "@/lib/FusionCore";
 import useCoreData from "@/lib/hooks/CoreData";
 
-export default function DawnSyncComponent() {
+export default function AddSplitComponent() {
 
 
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const { profile, latestSync, fitnessSettings } = useCoreData();
+    const { profile, latestSync, fitnessGoals } = useCoreData();
 
     const [weight_lbs, setWeightLbs] = useState("");
     const [weight_kg, setWeightKg] = useState("");
@@ -61,7 +61,7 @@ export default function DawnSyncComponent() {
                 height_cm: profile.height_cm,
                 gender: profile.gender,
                 age: profile.age,
-                calorieGoal: fitnessSettings?.calorieGoal
+                calorieGoal: fitnessGoals?.calorieGoal
             });
 
             const userId = auth.currentUser!.uid;
@@ -110,7 +110,7 @@ export default function DawnSyncComponent() {
                     <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                         <div className="flex items-center gap-2">Initiate DawnSync Protocol</div>
                         <h2 className="text-xs font-bold text-white">
-                        Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.
+                        “Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.”
                         </h2>
                     </div>
                 </div>

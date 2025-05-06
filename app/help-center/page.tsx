@@ -6,19 +6,19 @@ import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import { useState, useEffect } from 'react';
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 
 
 export default function HelpPage() {
 
-  const { preferences } = useFuelFormData();
+  const { settings } = useCoreData();
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
-    if (preferences?.background) {
-      setBackgroundMode(preferences.background);
+    if (settings?.background) {
+      setBackgroundMode(settings.background);
     }
-  }, [preferences?.background, setBackgroundMode]);
+  }, [settings?.background, setBackgroundMode]);
 
   const { profile } = useProfile();
   const isPaidUser = profile?.isPaid ?? false;
@@ -84,7 +84,7 @@ export default function HelpPage() {
             <li><span className="font-semibold">Stats Echo:</span> Full breakdown of calories, macros, and nutrient targets.</li>
             <li><span className="font-semibold">Strength Archive:</span> Log workouts, track personal records, and push limits.</li>
             <li><span className="font-semibold">Macro Vault:</span> Meal tracker for mastering your fuel intake.</li>
-            <li><span className="font-semibold">Neuro Settings:</span> Update your Fitness Goals & App Preferences</li>
+            <li><span className="font-semibold">Neuro Settings:</span> Update your Fitness Goals & App settings</li>
             <li><span className="font-semibold">Biometrics:</span> Update your core data like height, weight unit, or birthday.</li>
           </ul>
 

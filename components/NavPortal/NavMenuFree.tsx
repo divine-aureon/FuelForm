@@ -1,9 +1,14 @@
 // NavMenu.tsx
-"use client";
+
 import Link from 'next/link';
 import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 import { Unlock } from 'lucide-react';
+import { UnlockModal } from "@/components/Modals/UnlockModal"
+import UnlockComponent from "@/components/Modals/UnlockComponent"
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { useState, useEffect } from "react";
 
 type NavMenuProps = {
   onClose: () => void;
@@ -22,14 +27,33 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
     }
   };
 
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+    const [isUnlockOpen, setUnlockOpen] = useState(false);
+
+
+      useEffect(() => {
+        if (isUnlockOpen) {
+          document.body.classList.add("scroll-lock");
+        } else {
+          document.body.classList.remove("scroll-lock");
+        }
+      }, [isUnlockOpen]);
+
+
+    
+
   return (
     <div className="flex flex-col gap-2 z-60 ">
-      <div className="text-center">
-      <Link href="https://buy.stripe.com/3cs6rl8wZ0tL2is144" className="text-green-200 block p-3 rounded-xl hover:bg-indigo-300/20 animate-pulse pulse-glow" onClick={onClose}>
-        ✦ Unlock ✦
-      <p className="text-s text-white pb-2">1-Month Free Trial</p>
+      <Link href="" className="block p-3 rounded-xl hover:bg-indigo-300/20 pulse-glow text-green-200"  onClick={() => setUnlockOpen(true)}>
+        ✦ Unlock 1-Month Free ✦
       </Link>
-      </div>
+      {isUnlockOpen && (
+              <Elements stripe={stripePromise}>
+                <UnlockModal onClose={() => setUnlockOpen(false)}>
+                  <UnlockComponent />
+                </UnlockModal>
+              </Elements>
+            )}
       <Link href="/command-center" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>

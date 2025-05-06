@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import NavMenuPaid from './NavMenuPaid';
-import useFuelFormData from "@/lib/hooks/CoreData";
+import useCoreData from "@/lib/hooks/CoreData";
 import {
   Crown,
   Flame,
@@ -19,7 +19,7 @@ export default function NavPortalPaid() {
   const toggleMenu = () => setIsOpen(!isOpen);
   
 
-  const { preferences } = useFuelFormData();
+  const { settings } = useCoreData();
 
   const LucideIconMap: Record<string, React.ElementType> = {
     Atom: Atom,
@@ -32,7 +32,7 @@ export default function NavPortalPaid() {
     Bird: Bird,
   };
   
-  const Icon = LucideIconMap[preferences?.navIcon || "Atom"];
+  const Icon = LucideIconMap[settings?.navIcon || "Atom"];
   
 
   return (
@@ -48,15 +48,24 @@ export default function NavPortalPaid() {
       </nav>
 
       {/* Expanding drawer from bottom */}
-      <div
-        className={`fixed bottom-[64px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
-          } overflow-hidden`}
-      >
-        <div className="glowing-navportal shadow-2xl p-6 w-full max-w-sm mx-auto text-center">
-          <h2 className="text-2xl font-semibold text-white mb-4 pulse-glow">NavPortal</h2>
-          <NavMenuPaid onClose={() => setIsOpen(false)} />
-        </div>
-      </div>
+      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'rounded-3xl max-h-0 opacity-0 pointer-events-none'
+             } overflow-hidden`}>
+             <div className="glowing-navportal shadow-2xl w-full max-w-xs mx-auto text-center">
+     
+               <div className="h-[80px] bg-[url('/images/menus/navportal.jpg')] bg-cover bg-center bg-no-repeat border 
+             border-white/30 shadow-xl text-white text-2xl glowing-nav-photo">
+     
+                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center">
+     
+                   <div className="flex items-center gap-2">NavPortal</div>
+                   <h2 className="text-xs font-bold text-white">
+                     Command your journey. Instantly.
+                   </h2>
+                 </div>
+               </div>
+               <NavMenuPaid onClose={() => setIsOpen(false)} />
+             </div>
+           </div>
     </>
   );
 }

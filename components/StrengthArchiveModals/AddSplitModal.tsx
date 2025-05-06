@@ -1,15 +1,15 @@
-
-interface BioModalProps {
+// 🟢 Remove isOpen from props
+interface AddSplitModalProps {
   onClose: () => void;
   children: React.ReactNode;
 }
 
-export function BioModal({ onClose, children }: BioModalProps) {
+export function AddSplitModal({ onClose, children }: AddSplitModalProps) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 backdrop-blur-sm z-0"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"
         onClick={onClose}
       />
       {/* Modal */}

@@ -1,5 +1,5 @@
 // NavMenu.tsx
-"use client";
+
 import Link from 'next/link';
 import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
