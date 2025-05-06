@@ -11,7 +11,7 @@ export default function AddSplitComponent() {
 
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const { profile, latestSync, fitnessGoals } = useCoreData();
+    const { profile, latestSync, fitnessSettings } = useCoreData();
 
     const [weight_lbs, setWeightLbs] = useState("");
     const [weight_kg, setWeightKg] = useState("");
@@ -61,7 +61,7 @@ export default function AddSplitComponent() {
                 height_cm: profile.height_cm,
                 gender: profile.gender,
                 age: profile.age,
-                calorieGoal: fitnessGoals?.calorieGoal
+                calorieGoal: fitnessSettings?.calorieGoal
             });
 
             const userId = auth.currentUser!.uid;
