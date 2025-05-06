@@ -228,13 +228,13 @@ export default function PaidCommandCenter() {
         <div className="grid grid-cols-2 flex justify-center items-center gap-2 ">
           <div className=" bg-white/50 h-32 rounded-2xl flex flex-col justify-center p-1">
             <div className="bg-[url('/images/menus/cardbio.jpg')] rounded-xl bg-cover border border-indigo-300 bg-center bg-no-repeat">
-              <div className="relative bg-indigo-200/40 rounded-xl pb-2 flex flex-col justify-center">
+              <div className="relative bg-indigo-200/40 rounded-xl pb-5 flex flex-col justify-center">
 
-                <h2 className="text-left text-white ml-3 text-lg pulse-glow flex items-center mt-1">Biometrics{profile.gender === 'male' ? (<Mars size={24}  />) : (<Venus size={24}  />)}</h2>
-                <h2 className="text-left text-white ml-3 text-sm">Age: {profile.age}</h2>
-                <h2 className="text-left text-white ml-3 text-sm">Height: {heightDisplay}</h2>
-                <h2 className="text-left text-white ml-3 text-sm">Current Weight: {weightDisplay}</h2>
-                <h2 className="text-left text-white ml-3 text-sm">Calorie Goal: {fitnessSettings?.calorieGoal}</h2>
+                <h2 className="text-left text-white ml-2 text-xl pulse-glow flex items-center mt-1">Biometrics{profile.gender === 'male' ? (<Mars size={24}  />) : (<Venus size={24}  />)}</h2>
+                <h2 className="text-left text-white ml-2 text-xs">Age: {profile.age}</h2>
+                <h2 className="text-left text-white ml-2 text-xs">Height: {heightDisplay}</h2>
+                <h2 className="text-left text-white ml-2 text-xs">Current Weight: {weightDisplay}</h2>
+                <h2 className="text-left text-white ml-2 text-xs">Calorie Goal: {fitnessSettings?.calorieGoal}</h2>
                 <h2></h2>
               </div>
             </div>
