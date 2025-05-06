@@ -1,20 +1,17 @@
 'use client';
 
-import useProfile from "@/lib/hooks/ProfileData";
-import PaidCrownPage from "@/components/Pages/Crowns/paid";
-import FreeCrownPage from "@/components/Pages/Crowns/free";
+
+import useFuelFormData from "@/lib/hooks/CoreData";
+import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
-import { useState, useEffect } from 'react';
 import NavLoad from "@/components/Loading/NavLoad";
-import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
-import useFuelFormData from "@/lib/hooks/CoreData";
-
-
+import { useState, useEffect } from "react";
 
 export default function CrownPage() {
 
-    const { preferences } = useFuelFormData();
+
+  const { profile, latestSync, preferences } = useFuelFormData();
 
   const { setBackgroundMode } = useBackground();
   useEffect(() => {
@@ -23,9 +20,7 @@ export default function CrownPage() {
     }
   }, [preferences?.background, setBackgroundMode]);
 
-  const { profile, loading } = useProfile();
   const isPaidUser = profile?.isPaid ?? null;
-
   const [delayDone, setDelayDone] = useState(false);
 
   useEffect(() => {
@@ -33,18 +28,49 @@ export default function CrownPage() {
     return () => clearTimeout(timer);
   }, []);
 
+
   if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
-  
+
   return (
-    <div className="relative  text-white overflow-hidden">
-      <div className="text-white ">
-        <div className="flex-grow">
-          {isPaidUser ? <PaidCrownPage /> : <FreeCrownPage />}
+    <>
+      <div>
+        <div className="relative h-32 bg-[url('/images/menus/crown2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">
+          <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+            <div className="flex items-center gap-2">Crown Achievements Coming Soon!</div>
+            <h2 className="text-xs font-bold text-white">
+            Progress isn&apos;t just tracked. It&apos;s honored.
+            </h2>
+          </div>
         </div>
-        <footer className="pt-4 pb-2">
-          {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
-        </footer>
       </div>
-    </div>
+
+      <div className="bg-white/30 text-white rounded-xl p-4 flex flex-col items-center justify-center text-center">
+        <p className="text-lg max-w-md">
+        Crown Achievements mark your defining moments — the milestones where discipline, intention,
+           and mastery align. Every crown earned represents a personal victory: syncing daily, hitting 
+           PRs, mastering your meals, or staying consistent through resistance.
+          This isn&apos;t about flashy badges or empty rewards. Crowns are earned through real effort,
+           and each one reflects your evolving commitment to your form — physical, mental, and energetic.
+          Crown types include:
+          Sync Streaks — for showing up daily, even when it&apos;s hard.
+          Strength Milestones — PRs, total rep records, volume surges.
+          Nutrient Mastery — logging complete meals with accurate macros & micros.
+          Consistency Crowns — staying within your calorie zone for a full week.
+          Recovery Honors — logging rest days, managing soreness, and staying aligned.
+          Crowns are visible proof that you&apos;re not just going through the motions — 
+          you&apos;re building your form, one intentional day at a time.
+          Earn them. Reflect on them. Let them remind you who you are becoming.
+        </p>
+      </div>
+            <footer className="pt-4 pb-2">
+              {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
+            </footer>
+    </>
   );
 }
+
+
+
+
+
