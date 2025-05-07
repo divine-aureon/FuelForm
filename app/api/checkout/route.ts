@@ -24,15 +24,15 @@ export async function POST(request: NextRequest) {
     const userId = decoded.uid;
 
     const session = await stripe.checkout.sessions.create({
-      mode: 'payment', // or 'subscription'
+      mode: 'subscription', // or 'subscription'
       line_items: [
         {
           price: 'price_1RLunrLzxfsrCsGVpVgn7Lik', // replace this with your actual Price ID
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/upgrading-access-codes`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/command-center`,
+      success_url: 'https://www.fuelform.online/upgrading-access-codes',
+      cancel_url: 'https://www.fuelform.online/command-center',
       metadata: {
         userId: userId,
       },
