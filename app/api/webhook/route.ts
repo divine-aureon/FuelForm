@@ -1,7 +1,6 @@
 // route.ts (app/api/webhook/route.ts)
-export const config = {
-  runtime: 'nodejs',
-};
+export const runtime = 'nodejs';
+
 
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
@@ -11,7 +10,6 @@ const admin = getAdminApp();
 
 export async function POST(request: NextRequest) {
 
-  
   const payload = await request.text();
   const signature = request.headers.get('stripe-signature');
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
