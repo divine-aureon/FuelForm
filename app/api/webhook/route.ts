@@ -5,6 +5,10 @@ import { getAdminApp } from '@/lib/firebase-admin';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const admin = getAdminApp();
 
+export const config = {
+  runtime: 'nodejs',
+};
+
 export async function POST(request: NextRequest) {
 
   
@@ -39,10 +43,14 @@ export async function POST(request: NextRequest) {
 }
 
 async function markUserPaidInFirestore(userId: string) {
-  const db = admin.firestore();
-
-  await db.collection('users').doc(userId).update({
-    isPaid: true,
-    paidAt: new Date(),
-  });
+  try {
+    const db = admin.firestore();
+    await db.collection('users').doc(userId).update({
+      isPaid: true,
+      paidAt: new Date(),
+    });
+    console.log(`✅ User ${userId} marked as paid`);
+  } catch (err) {
+    console.error(`❌ Failed to update user ${userId}:`, err);
+  }
 }
