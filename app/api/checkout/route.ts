@@ -36,8 +36,16 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ sessionId: session.id });
+    
   } catch (error: any) {
-    console.error('Error creating checkout session:', error.message);
-    return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });
+    console.error('🔥 Checkout error:', error);
+
+    return NextResponse.json(
+      {
+        error: error?.message || 'Unknown error',
+        full: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+      },
+      { status: 500 }
+    );
   }
 }

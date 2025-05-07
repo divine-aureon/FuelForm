@@ -307,6 +307,7 @@ export default function PaidCommandCenter() {
           </>
         ) : (
           <>
+
             <button
               onClick={() => setUnlockOpen(true)}
               className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
@@ -319,6 +320,8 @@ export default function PaidCommandCenter() {
                   <UnlockComponent />
                 </UnlockModal>
               </Elements>
+
+        
             )}
           </>
         )}
