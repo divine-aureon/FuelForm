@@ -39,14 +39,16 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ sessionId: session.id });
-    
-  } catch (error: any) {
-    console.error('🔥 Checkout error:', error);
 
+  } catch (error: any) {
+    console.error('🔥 Stripe Checkout Session Error');
+    console.error('🧠 Message:', error?.message);
+    console.error('📦 Full Error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+  
     return NextResponse.json(
       {
         error: error?.message || 'Unknown error',
-        full: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+        details: JSON.stringify(error, Object.getOwnPropertyNames(error)),
       },
       { status: 500 }
     );
