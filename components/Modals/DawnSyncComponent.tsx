@@ -107,7 +107,7 @@ export default function DawnSyncComponent() {
             <div>
                 <div className="relative mb-2 h-32 bg-[url('/images/menus/dawn.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                         <div className="flex items-center gap-2">Initiate DawnSync Protocol</div>
                         <h2 className="text-xs font-bold text-white">
                         Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.

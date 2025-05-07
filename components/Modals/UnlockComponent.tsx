@@ -1,114 +1,118 @@
 'use client';
 
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import CheckoutForm from "@/components/CheckoutForm"
 import useAuth from '@/lib/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useState, useEffect } from "react";
 import SuccessLoad from "@/components/Loading/SuccessLoad";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import Link from 'next/link';
 
-
-
-const CARD_OPTIONS = {
-  style: {
-    base: {
-      iconColor: '#ffffff',
-      color: '#ffffff',
-      fontWeight: '500',
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      fontSize: '16px',
-      fontSmoothing: 'antialiased',
-      '::placeholder': {
-        color: '#a0aec0',
-      },
-    },
-    invalid: {
-      iconColor: '#ff0000',
-      color: '#ff0000',
-    },
-  },
-};
 
 const UnlockComponent = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { user } = useAuth();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleSubscribe = async () => {
-
-    setIsLoading(true);  //🟡 Start loading state
-    setShowSuccess(true);//  🔥 show the loading component
-
-
-    const card = elements?.getElement(CardElement);
-    if (!stripe || !card || !user?.uid) return;
-
-    const res = await fetch('/api/create-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid: user.uid }),
-    });
-
-    const { clientSecret } = await res.json();
-
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card },
-    });
-
-    const userRef = doc(db, 'users', user?.uid!);  // <-- Now 100% safe
-
-
-    if (result.paymentIntent?.status === 'succeeded') {
-
-    console.log('🔥 Subscribed!');
-    await updateDoc(userRef, { isPaid: true });
-
-    await new Promise((r) => setTimeout(r, 1000));
-    window.location.reload();  //hard refresh
-
-    } else {
-      console.error(result.error?.message);
-      router.push('/command-center');
-    }
-  };
 
   return (
     <>
-      <div className="bg-white/30 rounded-lg p-3">
+      <>
+        <div className="bg-white/30 rounded-lg p-3">
 
+          <div className="grid grid-cols-2 gap-3">
 
-        {showSuccess ? (
-          <SuccessLoad />
-        ) : (
-          <>
-            <div>
-              <div className="relative h-32 bg-[url('/images/menus/unlock.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-      border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
-                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                  <div className="flex items-center gap-2 pulse-glow ">Upgrade Access Codes</div>
-                  <h2 className="text-sm font-bold text-white">
-                    Before you can change, you must know where you are. These are your fundamentals.
-                  </h2>
-                </div>
+            <div className="relative flex justify-center h-32 bg-[url('/images/menus/unlock.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+      border-white/30 shadow-xl text-white text-3xl glowing-button mb-2 p-3">
+
+              <div className="absolute inset-0 flex items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                <div className="flex items-center pulse-glow rounded-xl">Upgrade Access Codes</div>
               </div>
-            </div>
-            <div className="bg-black/30 rounded-lg flex flex-col gap-4 mb-3 p-4">
-              <CardElement options={CARD_OPTIONS} />
-            </div>
-            <button
-              onClick={handleSubscribe}
-              className="w-full glowing-button bg-indigo-600 text-white rounded-xl px-4 py-2 font-bold"
-            >
-              Confirm Subscription
-            </button>
-          </>
-        )}
 
-      </div>
+            </div>
+            <div className="relative flex justify-center h-32 bg-[url('/images/menus/price.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+      border-white/30 shadow-xl text-white text-3xl glowing-button mb-2 p-3">
+
+              <div className="absolute inset-0 flex items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                <div className=" bg-cover bg-center bg-no-repeat text-4xl h-32 w-32 flex justify-center rounded-lg font-bold text-white"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <a
+            href="https://buy.stripe.com/5kA2b500t3FXg9i3cf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center"
+          >
+            <h2 className="text-lg font-bold text-center mb-2 text-white w-full glowing-button">
+              Click to Upgrade Your Access Codes...
+            </h2>
+          </a>
+
+          <h2 className="text-xl p-1 px-1 bg-white/30 rounded-lg font-bold text-white text-center">
+            Unlock full access to FuelForm and gain:
+            <h2 className="text-sm font-bold pb-2 text-white">
+              Before you can change, you must know where you are. These are your fundamentals.
+            </h2>
+          </h2>
+          <div className="text-xs grid-cols-[1fr_3fr] gap-3 flex justify-center py-3 rounded-lg font-bold text-white ">
+            <div className="grid gap-3 ">
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                DawnSync & DuskSync:
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                StatsEcho:
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Customization Options:
+              </h2>
+              <h2 className="text-xs h-24 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                StrengthArchive (..in progress)
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Calorie Goal:
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                MacroVault (coming soon)
+              </h2>
+
+            </div>
+            <div className="grid gap-3">
+            <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+            Sync your daily weight, sleep, steps, exercise & Discover your recovery/active TDEE as well as Vitamin & Mineral Requirements.
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                View statistics from DawnSync & DuskSync, StrengthArchive, MacroVault & Completed PrimeTasks.
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Choose your own, Background, NavPortal Icon, Light or Dark mode (coming soon) & Change Order of FastLinks. (coming soon)
+              </h2>
+              <h2 className="text-xs h-24 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Set your workout split, and add movements to your workouts. Track PRs, and compare your current session with past workouts to track progress.
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Choose a Calorie Adjustment based on yoru fitness goals. Whether that is a kcal Surplus, Deficit or Maintenence. We got you.
+              </h2>
+              <h2 className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+                Log meals & count your calories. Using your RecoveryTDEE & ActiveTDEE
+              </h2>
+            </div>
+          </div>
+          <a
+            href="https://buy.stripe.com/5kA2b500t3FXg9i3cf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center"
+          >
+            <h2 className="text-lg font-bold w-full text-center text-white glowing-button">
+              Click to Upgrade Your Access Codes...
+            </h2>
+          </a>
+        </div>
+      </>
+
     </>
 
   );

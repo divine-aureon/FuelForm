@@ -2,52 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import {
-  collection,
-  getDocs,
-  getDoc,
-  addDoc,
-  setDoc,
-  updateDoc,
-  doc,
-  query,
-  where,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
 import { AddSplitModal } from "@/components/StrengthArchiveModals/AddSplitModal"; // You can create this next
 import AddSplitComponent from "@/components/StrengthArchiveModals/AddSplitComponent"; // You can create this next
+import useCoreData from "@/lib/hooks/CoreData";
 
 export default function PaidStrengthArchivePage() {
 
-//inialization steps
+  //inialization steps
 
-  const [isInitialized, setIsInitialized] = useState(true); // default true
-  const [checkedInit, setCheckedInit] = useState(false); // to avoid flicker
-  
   const { user } = useAuth();
+  const { profile } = useCoreData();
+
   const [activeSplit, setActiveSplit] = useState(null);
   const [allSplits, setAllSplits] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newSplitName, setNewSplitName] = useState("Full Body");
 
-  useEffect(() => {
-    const checkInitialization = async () => {
-      const uid = user?.uid;
-      if (!uid) return;
-
-      const statRef = doc(db, "users", uid, "strength", "stats");
-      const statSnap = await getDoc(statRef);
-
-      if (!statSnap.exists()) {
-        setIsInitialized(false);
-      }
-
-      setCheckedInit(true);
-    };
-
-    checkInitialization();
-  }, [user]);
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const dateString = `${yyyy}-${mm}-${dd}`;
 
   //check split steps
 
@@ -55,33 +32,31 @@ export default function PaidStrengthArchivePage() {
     id: string;
     name: string;
   };
-  
+
   const [splits, setSplits] = useState<Split[]>([]);
   const [isAddSplitModalOpen, setAddSplitModalOpen] = useState(false);
-  
+
   useEffect(() => {
     const fetchSplits = async () => {
       const uid = user?.uid;
       if (!uid) return;
-  
+
       const splitsRef = collection(db, "users", uid, "strength", "stats", "storedSplits");
       const splitsSnap = await getDocs(splitsRef);
-  
+
       const splits: Split[] = splitsSnap.docs.map((doc) => ({
         id: doc.id,
         ...(doc.data() as Omit<Split, "id">), // tells TypeScript "trust me, this has a `name`"
       }));
-  
+
       setSplits(splits);
     };
-  
+
     fetchSplits();
   }, []);
-  
 
-  if (!checkedInit) return null; // or a loading spinner
 
-  if (!isInitialized) {
+  if (!profile?.isFitnessActive) {
     return (
       <>
         <div>
@@ -100,23 +75,36 @@ export default function PaidStrengthArchivePage() {
           <h2 className="text-2xl font-bold mb-4">Activate Strength Archive</h2>
           <p className="mb-4">First time setup required. Ready to initialize?</p>
           <button
-          disabled
+            disabled
             className="px-4 py-2  text-white rounded glowing-button"
             onClick={async () => {
               if (!user) return;
 
-              const statRef = doc(db, "users", user.uid, "strength", "stats");
+              const userRef = doc(db, "users", user.uid);
 
               // Set meta initialized
-              await setDoc(statRef, {
-                initialized: true,
+              await setDoc(userRef, {
+                isFitnessActive: true,
+                fitnessSettings: {
+                  totalWorkouts: 0,
+                totalPR: 0,
+                },
+              }, { merge: true });
+
+              const strengthRef = collection(db, "users", user.uid, "strength");
+              const strengthDocRef = doc(strengthRef, dateString);
+
+              // Set meta initialized
+              await setDoc(strengthDocRef, {
                 currentSplitName: "",
-                totalWorkouts: 0,
+                lastWorkout: "",
+                todaysWorkout: "",
+                movements: [],
                 prCount: 0,
-                lastWorkout: null,
-              });
+              }, { merge: true });
               window.location.reload();
             }}
+
           >
             Coming Soon!
           </button>
@@ -126,6 +114,7 @@ export default function PaidStrengthArchivePage() {
   }
   // Main Strength Archive UI
   return (
+
     <>
       <div>
         <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
@@ -139,29 +128,29 @@ export default function PaidStrengthArchivePage() {
         </div>
       </div>
       <div className="space-y-4">
-  {splits.length > 0 ? (
-    splits.map((split) => (
-      <div key={split.id} className="text-white bg-white/10 rounded-lg p-3 shadow">
-        {split.name}
-      </div>
-    ))
-  ) : (
-    <div className="text-white text-center italic opacity-70">
-      No splits found. Add one below to get started.
-    </div>
-  )}
+        {splits.length > 0 ? (
+          splits.map((split) => (
+            <div key={split.id} className="text-white bg-white/10 rounded-lg p-3 shadow">
+              {split.name}
+            </div>
+          ))
+        ) : (
+          <div className="text-white text-center italic opacity-70">
+            No splits found. Add one below to get started.
+          </div>
+        )}
 
-  <button
-    className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg w-full"
-    onClick={() => setAddSplitModalOpen(true)}
-  >
-    Add Split
-  </button>
-     {isAddSplitModalOpen && (
+        <button
+          className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg w-full"
+          onClick={() => setAddSplitModalOpen(true)}
+        >
+          Add Split
+        </button>
+        {isAddSplitModalOpen && (
           <AddSplitModal onClose={() => setAddSplitModalOpen(false)}>
             < AddSplitComponent />
           </AddSplitModal>)}
-</div>
+      </div>
 
 
 

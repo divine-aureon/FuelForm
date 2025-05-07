@@ -59,6 +59,9 @@ interface UserProfile {
   latestSync?: SyncData;
   settings?: SettingsData;
   fitnessSettings?: FitData;
+  isFitnessActive: boolean,
+  isMacroActive: boolean,
+  isTasksActive: boolean,
   isPaid: boolean;
 }
 
@@ -77,7 +80,11 @@ const defaultProfile: UserProfile = {
   preferredWeightUnit: "",
   age: 0,
   email: "", // ✅ Add email here
+  isFitnessActive: false,
+  isMacroActive: false,
+  isTasksActive: false,
   isPaid: false,
+
   latestSync: {
     weight_lbs: 0,
     weight_kg: 0,
@@ -90,10 +97,12 @@ const defaultProfile: UserProfile = {
     duskTimestamp: null,
     timestamp: null,
   },
+
   settings: {
     background: "NeuralLink",
     navIcon: "Atom",
   },
+  
   fitnessSettings: {
     calorieGoal: 0,
   },

@@ -1,29 +1,43 @@
-// File: /app/api/checkout/route.ts  (or /pages/api/checkout.ts)
-import { NextResponse } from 'next/server'; // or `NextApiResponse` for Pages Router
+// app/api/checkout/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { getAuth } from 'firebase-admin/auth';
+import admin from '@/lib/firebase-admin';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-04-30.basil', 
+});
 
-
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.split('Bearer ')[1];
+
+    if (!token) {
+      return NextResponse.json({ error: 'Missing token' }, { status: 401 });
+    }
+
+    const decoded = await admin.auth().verifyIdToken(token);
+    const userId = decoded.uid;
+
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
+      mode: 'payment', // or 'subscription'
       line_items: [
         {
-          price: 'price_1RLkK2LzxfsrCsGVej5sR1HB', // your Stripe price ID (with or without trial)
+          price: 'price_1RLunrLzxfsrCsGVpVgn7Lik', // replace this with your actual Price ID
           quantity: 1,
         },
       ],
-      success_url: 'https://www.fuelform.online/FF418VX?status=success',
-      cancel_url: 'https://www.fuelform.online/command-center',
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/upgrading-access-codes`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/command-center`,
       metadata: {
-        userId: 'xyz', // optional, we can pass in Firestore UID
+        userId: userId,
       },
     });
 
-    return NextResponse.json({ url: session.url });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ sessionId: session.id });
+  } catch (error: any) {
+    console.error('Error creating checkout session:', error.message);
+    return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });
   }
 }

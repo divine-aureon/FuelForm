@@ -23,18 +23,10 @@ export default function HelpPage() {
   const { profile } = useProfile();
   const isPaidUser = profile?.isPaid ?? false;
 
-  const [delayDone, setDelayDone] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-
-  if (!delayDone) return <NavLoad />;
   return (
     <>
+    <NavLoad />
       <div className="backdrop-blur-md pb-3">
       <div>
             <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 

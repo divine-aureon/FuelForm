@@ -1,4 +1,5 @@
 // 🟢 Remove isOpen from props
+
 interface UnlockModalProps {
     onClose: () => void;
     children: React.ReactNode;
@@ -6,7 +7,7 @@ interface UnlockModalProps {
   
   export function UnlockModal({ onClose, children }: UnlockModalProps) {
     return (
-      <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto">
+      <div className="fixed inset-0 z-40 flex items-center justify-center pt-16 overflow-y-auto">
         {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"
@@ -20,7 +21,9 @@ interface UnlockModalProps {
           >
             ✕
           </button>
+       
           {children}
+     
         </div>
       </div>
     );
