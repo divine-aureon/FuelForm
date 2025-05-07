@@ -89,7 +89,7 @@ const UnlockComponent = () => {
                 Choose a Calorie Adjustment based on yoru fitness goals. Whether that is a kcal Surplus, Deficit or Maintenence. We got you.
               </div>
               <div className="text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
-                Log meals & count your calories. Using your RecoveryTDEE & ActiveTDEE.
+                Log meals & count your calories. Using your RecoveryTDEE & ActiveTDEE
               </div>
             </div>
           </div>
