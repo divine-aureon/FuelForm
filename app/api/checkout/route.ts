@@ -7,11 +7,11 @@ import { getAdminApp } from '@/lib/firebase-admin';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-04-30.basil', 
 });
-
+const admin = getAdminApp();
 export async function POST(request: NextRequest) {
 
-  const admin = getAdminApp();
-  
+
+
   try {
     const authHeader = request.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
