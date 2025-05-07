@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getAuth } from 'firebase-admin/auth';
 import { getAdminApp } from '@/lib/firebase-admin';
+import useAuth from '@/lib/useAuth'; // or similar
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-04-30.basil', 
@@ -10,18 +12,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const admin = getAdminApp();
 export async function POST(request: NextRequest) {
 
-
+  const { user } = useAuth();
 
   try {
     const authHeader = request.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
 
+    if (!user) return null;
+
     if (!token) {
       return NextResponse.json({ error: 'Missing token' }, { status: 401 });
     }
 
-    const decoded = await admin.auth().verifyIdToken(token);
-    const userId = decoded.uid;
+    const userId = user.uid;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription', // or 'subscription'
@@ -34,7 +37,7 @@ export async function POST(request: NextRequest) {
       success_url: 'https://www.fuelform.online/upgrading-access-codes',
       cancel_url: 'https://www.fuelform.online/command-center',
       metadata: {
-        userId: userId,
+        userId,
       },
     });
 
