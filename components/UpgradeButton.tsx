@@ -35,7 +35,7 @@ export default function UpgradeButton() {
 
   return (
     <button onClick={handleUpgrade} className="text-lg font-bold text-center mb-2 text-white w-full glowing-button">
-      Click to Upgrade Your Access Codes
+      Click to Upgrade Your Access Codes...
     </button>
   );
 }
