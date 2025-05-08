@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-     event = stripe.webhooks.constructEvent(
+    event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
       webhookSecret);
@@ -54,15 +54,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-  async function markUserPaidInFirestore(userId: string) {
-    try {
-      const db = admin.firestore();
-      await db.collection('users').doc(userId).update({
+async function markUserPaidInFirestore(userId: string) {
+  try {
+    const db = admin.firestore();
+
+    await db.collection('users').doc(userId).set(
+      {
         isPaid: true,
         paidAt: new Date(),
-      });
-      console.log(`✅ User ${userId} marked as paid`);
-    } catch (err) {
-      console.error(`❌ Failed to update user ${userId}:`, err);
-    }
+      },
+      { merge: true }
+    );
+    console.log(`✅ User ${userId} marked as paid`);
+  } catch (err) {
+    console.error(`❌ Failed to update user ${userId}:`, err);
   }
+}

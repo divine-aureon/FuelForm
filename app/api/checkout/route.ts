@@ -5,7 +5,7 @@ import { getAdminApp } from '@/lib/firebase-admin';
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil', 
+  apiVersion: '2025-04-30.basil',
 });
 const admin = getAdminApp();
 export async function POST(request: NextRequest) {
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId: uid
       },
+
     });
 
     return NextResponse.json({ sessionId: session.id });
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     console.error('🔥 Stripe Checkout Session Error');
     console.error('🧠 Message:', error?.message);
     console.error('📦 Full Error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
-  
+
     return NextResponse.json(
       {
         error: error?.message || 'Unknown error',
