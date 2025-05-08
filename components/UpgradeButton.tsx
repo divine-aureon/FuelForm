@@ -20,6 +20,7 @@ export default function UpgradeButton() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({ uid: user.uid }),
     });
 
     const data = await res.json();
