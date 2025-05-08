@@ -1,22 +1,17 @@
+// lib/firebase-admin.ts
 import * as admin from 'firebase-admin';
 
 export function getAdminApp() {
   if (!admin.apps.length) {
-    let serviceAccount;
-
-    // ✅ Use new full JSON env var if available
-    if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-      try {
-        serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-        console.log('✅ Using full service account JSON from FIREBASE_SERVICE_ACCOUNT_KEY');
-      } catch (error) {
-        console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY:', error);
-        throw error;
-      }
-    }
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    console.log('🔥 Preview of privateKey:', privateKey?.slice(0, 50)); // THIS WILL NOW WORK
 
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey,
+      }),
     });
   }
 
