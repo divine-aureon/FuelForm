@@ -188,7 +188,7 @@ export default function PaidSyncSimulator() {
                         onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
                         className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
                         <option value="cm">Height Unit(cm)</option>
-                        <option value="ft_in">Height Unit(ft'in")</option>
+                        <option value="ft_in">Height Unit(ft/in)</option>
 
                     </select>
 
