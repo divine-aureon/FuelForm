@@ -1,6 +1,6 @@
 "use client"; // if needed depending on your Next.js version
 
-import { useState , useRef} from "react";
+import { useState, useRef } from "react";
 import { calculateRecoveryFuel, calculateActiveFuel } from "@/lib/FusionCore";
 import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
@@ -14,7 +14,7 @@ export default function PaidSyncSimulator() {
     const [weight_kg, setWeight_kg] = useState("");
     const [height_cm, setHeight_cm] = useState("");
     const [age, setAge] = useState("");
-    const [gender, setGender] = useState("male"); // default male, or you could leave it blank
+    const [gender, setGender] = useState(""); // default male, or you could leave it blank
     const [steps, setSteps] = useState("");
     const [exerciseMinutes, setExerciseMinutes] = useState("");
     const [exerciseIntensity, setExerciseIntensity] = useState("low");
@@ -79,7 +79,7 @@ export default function PaidSyncSimulator() {
         console.log("🧠 recovery.vitamins", recovery.vitamins);
         console.log("🧠 active.vitamins", active.vitamins);
 
-     
+
 
         const activeMap = active.activeMacros?.reduce((acc: Record<string, string>, item: any) => {
             acc[item.name] = item.value;
@@ -140,23 +140,23 @@ export default function PaidSyncSimulator() {
 
         setTimeout(() => {
             resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
+        }, 100);
     };
 
     return (
         <main className="rounded-lg mb-12 p-0">
             <div className="rounded-xl overflow-hidden mb-2 ">
-                    <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
-                        <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
-                            Sync Simulator</h1>
-                        <h2 className="text-lg flex justify-center p-2">
-                            Sync Simulator lets you test how FuelForms FusionCore calculates your calories
-                            and macros based on your Biometrics, steps, and exercise.
-                        </h2>
-                    </div>
+                <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
+                    <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
+                        Sync Simulator</h1>
+                    <h2 className="text-lg flex justify-center p-2">
+                        Sync Simulator lets you test how FuelForms FusionCore calculates your calories
+                        and macros based on your Biometrics, steps, and exercise.
+                    </h2>
                 </div>
+            </div>
             <div className="relative text-center bg-white/30 p-4 rounded-xl">
-                
+
                 {/* Inputs */}
                 <div className="flex flex-col text-xl text-white gap-2 w-full">
                     <select value={preferredWeightUnit}
@@ -241,10 +241,11 @@ export default function PaidSyncSimulator() {
                         className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     />
                     <select
-                        value="" disabled hidden
+                        value={gender}
                         onChange={(e) => setGender(e.target.value)}
                         className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                     >
+                        <option value="">Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
