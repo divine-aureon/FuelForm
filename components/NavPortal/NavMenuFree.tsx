@@ -43,35 +43,28 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
     
 
   return (
-    <div className="flex flex-col gap-2 z-60 ">
-      <Link href="" className="block p-3 rounded-xl hover:bg-indigo-300/20 pulse-glow text-green-200"  onClick={() => setUnlockOpen(true)}>
-        ✦ Unlock 1-Month Free ✦
+    <div className="flex flex-col gap-1 z-60 mb-4 mt-3 ">
+      <Link href="/unlock" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 pulse-glow text-green-200"  onClick={onClose}>
+        ✦ Unlock 1 Month Free ✦
       </Link>
-      {isUnlockOpen && (
-              <Elements stripe={stripePromise}>
-                <UnlockModal onClose={() => setUnlockOpen(false)}>
-                  <UnlockComponent />
-                </UnlockModal>
-              </Elements>
-            )}
-      <Link href="/command-center" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+      <Link href="/command-center" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
-      <Link href="/statsecho" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+      <Link href="/statsecho" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ StatsEcho ✦
       </Link>
-      <Link href="/strengtharchive" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+      <Link href="/strengtharchive" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ StrengthArchive ✦
       </Link>
-      <Link href="/macrovault" className="block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
+      <Link href="/macrovault" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ MacroVault ✦
       </Link>
-      <Link href="/primetasks" className="block p-3 rounded-xl  hover:bg-indigo-300/20" onClick={onClose}>
+      <Link href="/primetasks" className="z-20 block p-3 rounded-xl  hover:bg-indigo-300/20" onClick={onClose}>
         ✦ PrimeTasks ✦
       </Link>
       <button
         onClick={handleLogout}
-        className="block w-full p-3 text-red-400 rounded-xl hover:bg-indigo-300/20 hover:text-red-300 transition"
+        className="z-20 block w-full p-3 text-red-400 rounded-xl hover:bg-indigo-300/20 hover:text-red-300 transition"
       >✦ Exit Console ✦
       </button>
     </div>

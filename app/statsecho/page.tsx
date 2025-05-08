@@ -25,15 +25,11 @@ export default function DawnSyncPage() {
   const isPaidUser = profile?.isPaid ?? null;
 
   const [delayDone, setDelayDone] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
   
-  if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
+  if (typeof isPaidUser !== 'boolean') return ;
 
   return (
+    <><NavLoad />
     <div className="relative  text-white overflow-hidden">
       <div className="text-white ">
         <div className="flex-grow">
@@ -44,5 +40,6 @@ export default function DawnSyncPage() {
         </footer>
       </div>
     </div>
+    </>
   );
 }

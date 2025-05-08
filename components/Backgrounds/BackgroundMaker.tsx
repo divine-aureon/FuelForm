@@ -20,12 +20,15 @@ export function useBackground() {
 
 export function BackgroundMaker({ children }: { children: React.ReactNode }) {
 
-  const [backgroundMode, setBackgroundMode] = useState("Default"); 
+  const [backgroundMode, setBackgroundMode] = useState("None"); 
 
 
   const BGdisplay: Record<string, string> = {
+    "None": "",
+
     "homepage": "bg-[url('/images/home.webp')]",
-    "loginpage": "bg-[url('/images/login.webp')]",
+    "loginpage": "bg-[url('/images/login.jpg')]",
+    "homepage2": "bg-[url('/images/home2.jpg')]",
 
     "NeuralLink": "bg-[url('/images/backgrounds/neurallink.webp')]",
     "StarVeil": "bg-[url('/images/backgrounds/starveil.jpg')]",

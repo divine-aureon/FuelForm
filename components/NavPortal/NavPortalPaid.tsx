@@ -17,7 +17,7 @@ import {
 export default function NavPortalPaid() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
-  
+
 
   const { settings } = useCoreData();
 
@@ -31,9 +31,9 @@ export default function NavPortalPaid() {
     Heart: Heart,
     Bird: Bird,
   };
-  
+
   const Icon = LucideIconMap[settings?.navIcon || "Atom"];
-  
+
 
   return (
     <>
@@ -48,24 +48,25 @@ export default function NavPortalPaid() {
       </nav>
 
       {/* Expanding drawer from bottom */}
-      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'rounded-3xl max-h-0 opacity-0 pointer-events-none'
-             } overflow-hidden`}>
-             <div className="glowing-navportal shadow-2xl w-full max-w-xs mx-auto text-center">
-     
-               <div className="h-[80px] bg-[url('/images/menus/navportal.jpg')] bg-cover bg-center bg-no-repeat border 
-             border-white/30 shadow-xl text-white text-2xl glowing-nav-photo">
-     
-                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center">
-     
-                   <div className="flex items-center gap-2">NavPortal</div>
-                   <h2 className="text-xs font-bold text-white">
-                     Command your journey. Instantly.
-                   </h2>
-                 </div>
-               </div>
-               <NavMenuPaid onClose={() => setIsOpen(false)} />
-             </div>
-           </div>
+      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+        } overflow-hidden`}>
+        <div className="glowing-bg border border-indigo-400 rounded-3xl relative shadow-2xl w-full max-w-xs mx-auto overflow-hidden text-center"
+          style={{ backgroundColor: '#0f172a' }}>
+
+          <div className="h-[80px] bg-[url('/images/menus/navportal.jpg')] relative glowing-bg border border-indigo-400 bg-cover bg-center bg-no-repeat border 
+             border-white/30 shadow-xl text-white text-2xl">
+
+            <div className="flex flex-col h-full pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center">
+
+              <div className="z-20 flex items-center gap-2 font-semibold pulse-glow">NavPortal</div>
+              <h2 className="z-20 text-xs font-bold text-white">
+                Command your journey. Instantly.
+              </h2>
+            </div>
+          </div>
+          <NavMenuPaid onClose={() => setIsOpen(false)} />
+        </div>
+      </div>
     </>
   );
 }

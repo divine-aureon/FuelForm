@@ -422,7 +422,7 @@ export default function PaidStatsEchoPage() {
 
 
       <div className="relative flex justify-between z-40">
-        <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2">
+        <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center">
           <button
             className={`px-4 py-2 rounded-lg w-full ${getButtonColor("dawnStats")}`}
             onClick={() => handleSectorClick("dawnStats")}>DawnStats</button>
@@ -435,7 +435,7 @@ export default function PaidStatsEchoPage() {
         </div>
 
         <div className=" relative grid grid-cols-3 gap-2 z-40">
-          <div className="w-full  fixed bottom-28 left-0 mb-2">
+          <div className="w-full  fixed bottom-28 left-0">
             <AnimatePresence mode="wait">
               {isDrawerOpen && selectedSector && (
                 <motion.div

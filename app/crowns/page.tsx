@@ -21,18 +21,12 @@ export default function CrownPage() {
   }, [settings?.background, setBackgroundMode]);
 
   const isPaidUser = profile?.isPaid ?? null;
-  const [delayDone, setDelayDone] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-  if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
+  if (typeof isPaidUser !== 'boolean') return ;
 
   return (
     <>
+    <NavLoad />
       <div>
         <div className="relative h-32 bg-[url('/images/menus/crown2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">

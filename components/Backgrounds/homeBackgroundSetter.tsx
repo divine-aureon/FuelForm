@@ -7,7 +7,7 @@ const HomeBackgroundSetter = () => {
   const { setBackgroundMode } = useBackground();
 
   useEffect(() => {
-    setBackgroundMode("homepage");
+    setBackgroundMode("homepage2");
   }, [setBackgroundMode]);
 
   return null; // No visual output

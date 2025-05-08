@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import NavMenuFree from './NavMenuFree';
+import NavMenuPublic from './NavMenuPublic';
 import useCoreData from "@/lib/hooks/CoreData";
 import {
   Crown,
@@ -14,9 +14,10 @@ import {
   Bird
 } from 'lucide-react';
 
-export default function NavPortalFree() {
+export default function NavPortalPublic() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+
 
   const { settings } = useCoreData();
 
@@ -37,7 +38,7 @@ export default function NavPortalFree() {
   return (
     <>
       {/* Fixed bottom bar */}
-      <nav className="fixed bottom-0 left-0 right-0 backdrop-blur-lg bg-black/80 text-white px-6 py-4 flex items-center justify-center shadow-inner z-50">
+      <nav className="fixed bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white px-6 py-4 flex items-center justify-center shadow-inner z-50">
         <button
           onClick={toggleMenu}
           className="text-xl font-bold tracking-wide transition-all hover:scale-105 pulse-glow"
@@ -47,7 +48,7 @@ export default function NavPortalFree() {
       </nav>
 
       {/* Expanding drawer from bottom */}
-      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'rounded-3xl max-h-0 opacity-0 pointer-events-none'
+      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         } overflow-hidden`}>
         <div className="glowing-bg border border-indigo-400 rounded-3xl relative shadow-2xl w-full max-w-xs mx-auto overflow-hidden text-center"
           style={{ backgroundColor: '#0f172a' }}>
@@ -63,7 +64,7 @@ export default function NavPortalFree() {
               </h2>
             </div>
           </div>
-          <NavMenuFree onClose={() => setIsOpen(false)} />
+          <NavMenuPublic onClose={() => setIsOpen(false)} />
         </div>
       </div>
     </>

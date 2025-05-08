@@ -3,43 +3,99 @@
 import useProfile from "@/lib/hooks/ProfileData";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
+import NavPortalPublic from "@/components/NavPortal/NavPortalPublic";
 import { useState, useEffect } from 'react';
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import { getAuth } from "firebase/auth";
+import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import useCoreData from "@/lib/hooks/CoreData";
+
+
+
 
 
 export default function HelpPage() {
 
-  const { settings } = useCoreData();
-
+  const { settings, profile } = useCoreData();
+  const auth = getAuth();
+  const user = auth.currentUser;
   const { setBackgroundMode } = useBackground();
+  const [hasFuelFormAccount, setHasFuelFormAccount] = useState<boolean | null>(null);
+
   useEffect(() => {
-    if (settings?.background) {
+    const checkAccount = async () => {
+      if (!user?.uid) {
+        setHasFuelFormAccount(false);
+        return;
+      }
+
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      setHasFuelFormAccount(userSnap.exists());
+    };
+
+    checkAccount();
+  }, [user]);
+
+  const isPaidUser = profile?.isPaid ?? false;
+  
+  // Set background
+  useEffect(() => {
+    if (hasFuelFormAccount === false) {
+      setBackgroundMode("loginpage");
+    } else if (hasFuelFormAccount === true && settings?.background) {
       setBackgroundMode(settings.background);
     }
-  }, [settings?.background, setBackgroundMode]);
+  }, [hasFuelFormAccount, settings?.background, setBackgroundMode]);
+  
 
-  const { profile } = useProfile();
-  const isPaidUser = profile?.isPaid ?? false;
+// --- Side effect: set background based on account tier
+useEffect(() => {
+  if (hasFuelFormAccount === false) {
+    setBackgroundMode("loginpage");
+  } else if (hasFuelFormAccount === true && settings?.background) {
+    setBackgroundMode(settings.background);
+  }
+}, [hasFuelFormAccount, settings?.background, setBackgroundMode]);
+
+// --- Logic tier flags (used to conditionally render later)
+const showPublic = hasFuelFormAccount === false;
+const showFree = hasFuelFormAccount === true && !isPaidUser;
+const showPremium = hasFuelFormAccount === true && isPaidUser;
+
+
+
+
+  // Set background based on account
+  useEffect(() => {
+    if (hasFuelFormAccount === false) {
+      setBackgroundMode("NeuralLink"); // default public background
+    } else if (settings?.background) {
+      setBackgroundMode(settings.background); // user's background
+    }
+  }, [hasFuelFormAccount, settings?.background, setBackgroundMode]);
+
+
 
 
   return (
     <>
-    <NavLoad />
+      <NavLoad />
       <div className="backdrop-blur-md pb-3">
-      <div>
-            <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        <div>
+          <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
-              <div className="absolute flex flex-col items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                <h1 className="text-3xl font-bold text-center pulse-glow">
-                  FuelForm Help Center!
-                </h1>
-                <p className="text-sm mt-2">
+            <div className="absolute flex flex-col items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+              <h1 className="text-3xl font-bold text-center pulse-glow">
+                FuelForm Help Center!
+              </h1>
+              <p className="text-sm mt-2">
                 Assistance initiated. Optimization incoming.                </p>
-              </div>
             </div>
           </div>
+        </div>
 
         <section className="bg-white/30 rounded-2xl shadow-md p-6">
 
@@ -118,8 +174,11 @@ export default function HelpPage() {
           </div>
         </section>
       </div>
-      {/* 🔀 Conditionally render the appropriate NavPortal */}
-      {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
+      <footer>
+      {showPublic && <NavPortalPublic />}
+      {showFree && <NavPortalFree />}
+      {showPremium && <NavPortalPaid />}
+    </footer>
     </>
   );
 }

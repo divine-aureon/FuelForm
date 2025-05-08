@@ -6,7 +6,7 @@ export default function NavLoad() {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setShow(false), 2000); // Duration of your loading
+    const timeout = setTimeout(() => setShow(false), 800); // Duration of your loading
     return () => clearTimeout(timeout);
   }, []);
 

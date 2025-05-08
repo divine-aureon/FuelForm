@@ -7,6 +7,9 @@ import { db } from '../../lib/firebase';
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import Link from "next/link";
+import NavPortalPublic from "@/components/NavPortal/NavPortalPublic"
+import NavLoad from "@/components/Loading/NavLoad";
+
 
 declare global {
   interface Window {
@@ -93,6 +96,8 @@ export default function LoginPage() {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
+          setLoading(true);
+
           router.push('/command-center');  // Regular login access for everyone
         }
       } else {
@@ -161,245 +166,274 @@ export default function LoginPage() {
             calorieGoal: 0,
           }
         });
-      router.push('/command-center');
-    }
+
+        setLoading(true);
+          router.push('/command-center');
+      }
 
     } catch (err: any) {
-    setError(err.message || 'Authentication failed.');
-  } finally {
-    setLoading(false);
-  }
-};
+      setError(err.message || 'Authentication failed.');
+    } 
+  };
 
-return (
-  <>
-    <script
-      src="https://www.google.com/recaptcha/api.js"
-      async
-      defer
-    ></script>
-
-    <div>
-      <div className="mb-20">
-        <div className="p-8 rounded-2xl shadow-xl bg-white/20">
-          <h1 className="text-4xl font-bold mb-6 pulse-glow">
-            {mode === 'login' ? 'Enter Command Console' : 'Establishing Nueral Link...'}
-          </h1>
+  return (
+    <>
+        <NavLoad />
+      <script
+        src="https://www.google.com/recaptcha/api.js"
+        async
+        defer
+      ></script>
 
 
+      <div>
+        <div className="mb-10">
 
-          <form onSubmit={handleSubmit} className="space-y-1">
-            <label htmlFor="email" className="block text-sm text-white  mb-1">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              placeholder=""
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
+          {mode === 'login' ?
 
-            <label htmlFor="password" className="block text-sm text-gray-300 mb-1">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder=""
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-
-            {mode === 'register' && (
-              <>
-                <label htmlFor="name" className="block text-sm text-gray-300 mb-1">Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder=""
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  required
-                />
-
-                <fieldset className="mb-4">
-                  <legend className="block text-sm text-gray-300 mb-1">Date of Birth</legend>
-
-                  <div className="flex gap-2">
-                    <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
-                      <option value="">Month</option>
-                      {Array.from({ length: 12 }, (_, i) => {
-                        const val = String(i + 1).padStart(2, '0');
-                        return <option key={val} value={val}>{val}</option>;
-                      })}
-                    </select>
-
-                    <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
-                      <option value="">Day</option>
-                      {Array.from({ length: 31 }, (_, i) => {
-                        const val = String(i + 1).padStart(2, '0');
-                        return <option key={val} value={val}>{val}</option>;
-                      })}
-                    </select>
-
-                    <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="p-3 rounded bg-gray-800 text-white w-1/3" required>
-                      <option value="">Year</option>
-                      {Array.from({ length: 100 }, (_, i) => {
-                        const year = String(new Date().getFullYear() - i);
-                        return <option key={year} value={year}>{year}</option>;
-                      })}
-                    </select>
-                  </div>
-                </fieldset>
-
-
-                <label htmlFor="gender" className="block text-sm text-gray-300 mb-1">Gender</label>
-                <select
-                  id="gender"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-
-                <fieldset className="mb-4">
-                  <legend className="block text-sm text-gray-300 mb-1">Enter Height</legend>
-
-                  {preferredHeightUnit === "ft" ? (
-                    <div className="flex space-x-2">
-                      <div className="w-1/2">
-                        <label htmlFor="heightFeet" className="block text-xs text-gray-400 mb-1">Feet</label>
-                        <input
-                          id="heightFeet"
-                          type="number"
-                          placeholder="Feet"
-                          value={heightFeet}
-                          onChange={(e) => setHeightFeet(e.target.value)}
-                          className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          required
-                        />
-                      </div>
-
-                      <div className="w-1/2">
-                        <label htmlFor="heightInches" className="block text-xs text-gray-400 mb-1">Inches</label>
-                        <input
-                          id="heightInches"
-                          type="number"
-                          placeholder="Inches"
-                          value={heightInches}
-                          onChange={(e) => setHeightInches(e.target.value)}
-                          className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          required
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <label htmlFor="heightCm" className="block text-xs text-gray-400 mb-1">Height (cm)</label>
-                      <input
-                        id="heightCm"
-                        type="number"
-                        placeholder="Centimeters"
-                        value={height_cm}
-                        onChange={(e) => setHeightcm(e.target.value)}
-                        className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        required
-                      />
-                    </div>
-                  )}
-                </fieldset>
-
-
-                <div className="flex gap-4">
-                  <div className="w-1/2">
-                    <label className="text-sm block mb-1">Prefered Height Unit</label>
-                    <select
-                      value={preferredHeightUnit}
-                      onChange={(e) => setPreferredHeightUnit(e.target.value)}
-                      className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <option value="cm">Centimeters</option>
-                      <option value="ft">Feet/Inches</option>
-                    </select>
-                  </div>
-
-                  <div className="w-1/2">
-                    <label className="text-sm block mb-1">Prefered Weight Unit</label>
-                    <select
-                      value={preferredWeightUnit}
-                      onChange={(e) => setPreferredWeightUnit(e.target.value)}
-                      className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <option value="lbs">Pounds</option>
-                      <option value="kg">Kilograms</option>
-                    </select>
-
-                  </div>
-
+            <div>
+              <div className="relative h-32 bg-[url('/images/menus/loginimage.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-4xl glowing-button mb-2">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                  <div className="flex items-center gap-2 pulse-glow">Enter Command Console</div>
+                  <h2 className="text-sm font-bold text-white">
+                    Progress isn&apos;t just tracked. It&apos;s honored.
+                  </h2>
                 </div>
+              </div>
+            </div>
 
-              </>
+            :
 
-            )}
-            {/* Optional: Future CAPTCHA container */}
-            <div id="recaptcha-container" className="flex justify-center my-4 p-4"></div>
+            <div>
+              <div className="relative h-32 bg-[url('/images/menus/register.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-4xl glowing-button mb-2">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                  <div className="flex items-center gap-2 pulse-glow">Establishing Nueral Link...</div>
+                  <h2 className="text-sm font-bold text-white">
+                    Progress isn&apos;t just tracked. It&apos;s honored.
+                  </h2>
+                </div>
+              </div>
+            </div>
 
-            {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
 
-            <p className="text-white"></p>
 
-            <button
-              type="submit"
-              disabled={loading}
+          }
 
-              className="w-full mt-6 py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 
+          <div className="p-3 rounded-2xl mb-16 shadow-xl bg-white/30">
+            <form onSubmit={handleSubmit} className="space-y-1">
+              <label htmlFor="email" className="block text-lg text-white  mb-1">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                placeholder=""
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-800/70 text-lg rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+
+              <label htmlFor="password" className="block text-lg text-white mb-1">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder=""
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 rounded bg-gray-800/70 text-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+
+              {mode === 'register' && (
+                <>
+                  <label htmlFor="name" className="block text-lg text-white mb-1">Name</label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder=""
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2 rounded bg-gray-800/70 text-lg text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
+
+                  <fieldset className="mb-4">
+                    <legend className="block text-lg text-white mb-1">Date of Birth</legend>
+
+                    <div className="flex gap-2">
+                      <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="p-3 rounded focus:ring-2 focus:ring-indigo-500 text-lg bg-gray-800/70 text-white w-1/3" required>
+                        <option value="">Month</option>
+                        {Array.from({ length: 12 }, (_, i) => {
+                          const val = String(i + 1).padStart(2, '0');
+                          return <option key={val} value={val}>{val}</option>;
+                        })}
+                      </select>
+
+                      <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className="p-3 rounded focus:ring-2 focus:ring-indigo-500 text-lg bg-gray-800/70 text-white w-1/3" required>
+                        <option value="">Day</option>
+                        {Array.from({ length: 31 }, (_, i) => {
+                          const val = String(i + 1).padStart(2, '0');
+                          return <option key={val} value={val}>{val}</option>;
+                        })}
+                      </select>
+
+                      <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className="p-3 rounded focus:ring-2 focus:ring-indigo-500 text-lg bg-gray-800/70 text-white w-1/3" required>
+                        <option value="">Year</option>
+                        {Array.from({ length: 100 }, (_, i) => {
+                          const year = String(new Date().getFullYear() - i);
+                          return <option key={year} value={year}>{year}</option>;
+                        })}
+                      </select>
+                    </div>
+                  </fieldset>
+
+
+                  <label htmlFor="gender" className="block text-lg text-white mb-1">Gender</label>
+                  <select
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-full px-4 py-2 rounded bg-gray-800/70 text-lg text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+
+                  <div className="flex gap-4 pt-3">
+                    <div className="w-1/2">
+                      <label className="text-sm block mb-1">Prefered Height Unit</label>
+                      <select
+                        value={preferredHeightUnit}
+                        onChange={(e) => setPreferredHeightUnit(e.target.value)}
+                        className="w-full px-3 py-2 text-lg rounded bg-gray-800/70 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      >
+                        <option value="cm">Centimeters</option>
+                        <option value="ft">Feet/Inches</option>
+                      </select>
+                    </div>
+
+                    <div className="w-1/2">
+                      <label className="text-sm block mb-1">Prefered Weight Unit</label>
+                      <select
+                        value={preferredWeightUnit}
+                        onChange={(e) => setPreferredWeightUnit(e.target.value)}
+                        className="w-full px-3 py-2 rounded text-lg bg-gray-800/70 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      >
+                        <option value="lbs">Pounds</option>
+                        <option value="kg">Kilograms</option>
+                      </select>
+
+                    </div>
+
+                  </div>
+
+
+
+
+                  <fieldset className="mb-4 pt-1">
+
+                    {preferredHeightUnit === "ft" ? (
+                      <div className="flex space-x-2">
+                        <div className="w-1/2">
+                          <label htmlFor="heightFeet" className="block text-lg mb-1">Feet</label>
+                          <input
+                            id="heightFeet"
+                            type="number"
+                            value={heightFeet}
+                            onChange={(e) => setHeightFeet(e.target.value)}
+                            className="w-full px-4 py-2 text-lg rounded bg-gray-800/70 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            required
+                          />
+                        </div>
+
+                        <div className="w-1/2">
+                          <label htmlFor="heightInches" className="block text-lg text-white mb-1">Inches</label>
+                          <input
+                            id="heightInches"
+                            type="number"
+                            value={heightInches}
+                            onChange={(e) => setHeightInches(e.target.value)}
+                            className="w-full px-4 py-2 text-lg rounded bg-gray-800/70 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            required
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label htmlFor="heightCm" className="block text-lg text-white mb-1">Height (cm)</label>
+                        <input
+                          id="heightCm"
+                          type="number"
+                          value={height_cm}
+                          onChange={(e) => setHeightcm(e.target.value)}
+                          className="w-full px-4 py-2 text-lg rounded bg-gray-800/70 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          required
+                        />
+                      </div>
+                    )}
+                  </fieldset>
+
+
+
+                </>
+
+              )}
+              {/* Optional: Future CAPTCHA container */}
+              <div id="recaptcha-container" className="flex justify-center my-4 p-4"></div>
+
+              {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+
+              <p className="text-white"></p>
+
+              <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center z-30">
+
+                <button
+                  type="submit"
+                  disabled={loading}
+
+                  className="w-full mt-6 py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-300/50 
               transition text-white font-semibold shadow glowing-button"
-            >
-              {loading ? 'Engaging...' : mode === 'login' ? 'Login' : 'Register'}
-            </button>
-
-          </form>
-
-          <div className="text-sm text-center mt-6">
-            {mode === 'login' ? (
-              <p>
-                Dont Have an Account?{' '}
-                <span
-                  className=" text-indigo-400 hover:underline cursor-pointer"
-                  onClick={() => setMode('register')}
                 >
-                  Register
-                </span>
-              </p>
-            ) : (
-              <p>
-                Already Have an Account?{' '}
-                <span
-                  className="text-indigo-400 hover:underline cursor-pointer"
-                  onClick={() => setMode('login')}
-                >
-                  Login
-                </span>
-              </p>
-            )}
-          </div>
-          <div className="all-[unset]">
-            <div className="fixed bottom-0 left-0 w-full bg-black text-white text-center py-5 border-t border-white/20 z-50">
-              <Link href="/" className="text-base text-[32px] hover:underline">
-                Home
-              </Link>
+                  {loading ? 'Engaging...' : mode === 'login' ? 'Login' : 'Register'}
+                </button>
+              </div>
+            </form>
+
+            <div className="text-xl text-center mb-5">
+              {mode === 'login' ? (
+                <p>
+                  Dont Have an Account?{' '}
+                  <span
+                    className="text-indigo-500 pulse-glow hover:underline cursor-pointer"
+                    onClick={() => setMode('register')}
+                  >
+                    Register
+                  </span>
+                </p>
+              ) : (
+                <p>
+                  Already Have an Account?{' '}
+                  <span
+                    className="text-indigo-500 pulse-glow hover:underline cursor-pointer"
+                    onClick={() => setMode('login')}
+                  >
+                    Login
+                  </span>
+                </p>
+              )}
+            </div>
+            <div className="all-[unset]">
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </>
+      <footer className="pt-4 pb-2">
+         <NavPortalPublic />
+      </footer>
+    </>
 
-);
+  );
 }

@@ -39,6 +39,7 @@ import { BuildMineralData } from "@/components/NutrientDisplay/BuildMineralData"
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import NavLoad from "@/components/Loading/NavLoad";
+import InitLoad from "@/components/Loading/InitLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
@@ -186,13 +187,6 @@ export default function PaidCommandCenter() {
   const Nutrient_M = BuildMineralData(latestSync);
 
   const isPaidUser = profile?.isPaid ?? null;
-  const [delayDone, setDelayDone] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDelayDone(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
 
   const [selectedSector, setSelectedSector] = useState<"macros" | "vitamins" | "minerals">("macros");
 
@@ -200,12 +194,12 @@ export default function PaidCommandCenter() {
     setSelectedSector(sector); // No toggling, just always set the new one
   };
 
-
-
-  if (typeof isPaidUser !== 'boolean' || !delayDone) return <NavLoad />;
+  if (typeof isPaidUser !== 'boolean') return;
 
 
   return (
+    <>
+        <NavLoad/>
     <div className="relative z-0 pb-10">
 
       <div className=" bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">
@@ -230,7 +224,7 @@ export default function PaidCommandCenter() {
             <div className="bg-[url('/images/menus/cardbio.jpg')] rounded-xl bg-cover border border-indigo-300 bg-center bg-no-repeat">
               <div className="relative bg-indigo-200/40 rounded-xl pb-5 flex flex-col justify-center">
 
-                <h2 className="text-left text-white ml-2 text-xl pulse-glow flex items-center mt-1">Biometrics{profile.gender === 'male' ? (<Mars size={24}  />) : (<Venus size={24}  />)}</h2>
+                <h2 className="text-left text-white ml-2 text-xl pulse-glow flex items-center mt-1">Biometrics{profile.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
                 <h2 className="text-left text-white ml-2 text-xs">Age: {profile.age}</h2>
                 <h2 className="text-left text-white ml-2 text-xs">Height: {heightDisplay}</h2>
                 <h2 className="text-left text-white ml-2 text-xs">Current Weight: {weightDisplay}</h2>
@@ -281,13 +275,35 @@ export default function PaidCommandCenter() {
       </div>
 
 
-
-      {/* Right Column: FastLinks bar */}
       <div className="flex grid grid-cols-3 flex-col gap-4 py-3">
-        <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
-          onClick={() => router.push("/sync-simulator")}>
-          Free SyncSim<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
-        </button>
+        {/* Right Column: FastLinks bar */}
+
+
+
+        {isPaidUser ? (
+          <>
+
+            <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+              onClick={() => router.push("/sync-simulator")}>
+              Sync Simulator<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
+            </button>
+
+
+
+          </>
+        ) : (
+          <>
+
+            <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+              onClick={() => router.push("/sync-simulator")}>
+              Free Sync Simulator<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
+            </button>
+
+          </>
+        )}
+
+
+
 
 
         {isPaidUser ? (
@@ -296,7 +312,7 @@ export default function PaidCommandCenter() {
             <button
               onClick={() => setSettingsOpen(true)}
               className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
-              Neuro Settings<Settings size={36} className=" mt-1 text-white transition cursor-pointer" />
+              Neuro <br />Settings<Settings size={36} className=" mt-1 text-white transition cursor-pointer" />
             </button>
             {isSettingsOpen && (
               <SettingsModal onClose={() => setSettingsOpen(false)}>
@@ -311,7 +327,7 @@ export default function PaidCommandCenter() {
             <button
               onClick={() => setUnlockOpen(true)}
               className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
-              1-Month Free<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
+              Unlock<br/>1 Month Free<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
             </button>
 
             {isUnlockOpen && (
@@ -321,7 +337,7 @@ export default function PaidCommandCenter() {
                 </UnlockModal>
               </Elements>
 
-        
+
             )}
           </>
         )}
@@ -329,7 +345,7 @@ export default function PaidCommandCenter() {
         <button
           onClick={() => setBioOpen(true)}
           className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
-          Biometrics<Fingerprint size={36} className=" mt-1 text-white transition cursor-pointer" />
+          Modify Biometrics<Fingerprint size={36} className=" mt-1 text-white transition cursor-pointer" />
         </button>
         {isBioOpen && (
           <BioModal onClose={() => setBioOpen(false)}>
@@ -530,8 +546,8 @@ export default function PaidCommandCenter() {
           </button>
 
           <button className="w-full rounded-xl py-4 leading-none flex flex-col items-center bg-white/10 backdrop-blur justify-center hover:bg-indigo-300/50 text-white shadow-md"
-            onClick={() => router.push("/help-center")}>
-            Help<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
+            onClick={() => router.push("/infodex")}>
+            InfoDex<SmilePlus size={36} className=" mt-1 text-white transition cursor-pointer" />
           </button>
 
           {isPaidUser ? (
@@ -539,7 +555,7 @@ export default function PaidCommandCenter() {
               <button
                 onClick={() => setFitnessOpen(true)}
                 className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
-                Fitness Goals<Flame size={36} className=" mt-1 text-white transition cursor-pointer" />
+                Fitness Settings<Flame size={36} className=" mt-1 text-white transition cursor-pointer" />
               </button>
               {isFitnessOpen && (
                 <FitnessGoalsModal onClose={() => setFitnessOpen(false)}>
@@ -697,5 +713,6 @@ export default function PaidCommandCenter() {
       </div>
 
     </div >
+    </>
   );
 }

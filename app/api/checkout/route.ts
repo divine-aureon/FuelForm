@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
+      allow_promotion_codes: true,
       success_url: 'https://www.fuelform.online/upgrading-access-codes',
       cancel_url: 'https://www.fuelform.online/command-center',
       metadata: {

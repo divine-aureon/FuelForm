@@ -1,12 +1,14 @@
 "use client"; // if needed depending on your Next.js version
 
-import { useState } from "react";
+import { useState , useRef} from "react";
 import { calculateRecoveryFuel, calculateActiveFuel } from "@/lib/FusionCore";
 import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/components/NutrientDisplay/MineralBreakdown"
 
 export default function PaidSyncSimulator() {
+
+    const resultRef = useRef<HTMLDivElement>(null);
 
     const [weight_lbs, setWeight_lbs] = useState("");
     const [weight_kg, setWeight_kg] = useState("");
@@ -77,6 +79,7 @@ export default function PaidSyncSimulator() {
         console.log("🧠 recovery.vitamins", recovery.vitamins);
         console.log("🧠 active.vitamins", active.vitamins);
 
+     
 
         const activeMap = active.activeMacros?.reduce((acc: Record<string, string>, item: any) => {
             acc[item.name] = item.value;
@@ -134,6 +137,10 @@ export default function PaidSyncSimulator() {
         setEnergyData(EnergyData);
 
         setCalculated(true);
+
+        setTimeout(() => {
+            resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
     };
 
     return (
@@ -155,15 +162,15 @@ export default function PaidSyncSimulator() {
                     <select value={preferredWeightUnit}
                         onChange={(e) => setpreferredWeightUnit(e.target.value as "lbs" | "kg")}
                         className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
-                        <option value="lbs">Pounds (lbs)</option>
-                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lbs">Weight Unit(lbs)</option>
+                        <option value="kg">Weight Unit(kg)</option>
 
                     </select>
 
                     {preferredWeightUnit === "lbs" ? (
                         <input
                             type="text"
-                            placeholder="Weight (lbs)"
+                            placeholder="(lbs)"
                             value={weight_lbs}
                             onChange={(e) => handleWeightChange(e.target.value)}
                             className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
@@ -171,7 +178,7 @@ export default function PaidSyncSimulator() {
                     ) : (
                         <input
                             type="text"
-                            placeholder="Weight (kg)"
+                            placeholder="(kg)"
                             value={weight_kg}
                             onChange={(e) => handleWeightChange(e.target.value)}
                             className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
@@ -180,15 +187,15 @@ export default function PaidSyncSimulator() {
                     <select value={preferredHeightUnit}
                         onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
                         className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
-                        <option value="cm">Metric (cm)</option>
-                        <option value="ft_in">Imperial (ft_in)</option>
+                        <option value="cm">Height Unit(cm)</option>
+                        <option value="ft_in">Height Unit(ft'in")</option>
 
                     </select>
 
                     {preferredHeightUnit === "cm" ? (
                         <input
                             type="text"
-                            placeholder="Height (cm)"
+                            placeholder="(cm)"
                             value={height_cm}
                             onChange={(e) => setHeight_cm(e.target.value)}
                             className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
@@ -198,7 +205,7 @@ export default function PaidSyncSimulator() {
                         <div className="flex space-x-2">
                             <input
                                 type="number"
-                                placeholder="Feet"
+                                placeholder="(Feet)"
                                 value={feet}
                                 onChange={(e) => {
                                     setFeet(e.target.value);
@@ -208,7 +215,7 @@ export default function PaidSyncSimulator() {
                             />
                             <input
                                 type="number"
-                                placeholder="Inches"
+                                placeholder="(Inches)"
                                 value={inches}
                                 onChange={(e) => {
                                     setInches(e.target.value);
@@ -280,7 +287,7 @@ export default function PaidSyncSimulator() {
 
                 {/* Button */}
 
-                <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2 z-30">
+                <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center z-30">
                     <button
                         onClick={handleCalculate}
                         className="text-2xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
@@ -292,11 +299,11 @@ export default function PaidSyncSimulator() {
                 {/* Outputs */}
 
                 {calculated && (
-                    <>
+                    <div ref={resultRef}>
                         <EnergyBreakdown data={EnergyData} />
                         <VitaminBreakdown Vitamins={Nutrient_V} />
                         <MineralBreakdown minerals={Nutrient_M} />
-                    </>
+                    </div>
                 )}
             </div>
         </main >
