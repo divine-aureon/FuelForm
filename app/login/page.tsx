@@ -19,10 +19,14 @@ declare global {
 }
 
 export default function LoginPage() {
+  const [pageReady, setPageReady] = useState(false);
 
-    const { profile } = useCoreData();
-    const token = profile?.token ?? null;
+
+
+  const { profile } = useCoreData();
+  const token = profile?.token ?? null;
   const { setBackgroundMode } = useBackground();
+
 
   useEffect(() => {
     setBackgroundMode("loginpage");
@@ -55,35 +59,32 @@ export default function LoginPage() {
     }
   }, [queryMode]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.grecaptcha) {
+useEffect(() => {
+  const renderCaptcha = () => {
+    if (
+      typeof window !== 'undefined' &&
+      window.grecaptcha &&
+      document.getElementById('recaptcha-container') &&
+      !document.querySelector('#recaptcha-container iframe')
+    ) {
       window.grecaptcha.ready(() => {
-        if (!document.querySelector("#recaptcha-container iframe")) {
-          window.grecaptcha.render("recaptcha-container", {
-            sitekey: "6Lfbtx4rAAAAACkf2TYkidh9FTFU0g_Ni6_FUeVj",
-          });
-        } else {
-        }
+        window.grecaptcha.render('recaptcha-container', {
+          sitekey: '6Lfbtx4rAAAAACkf2TYkidh9FTFU0g_Ni6_FUeVj',
+        });
       });
-    } else {
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    if (typeof token !== 'boolean') return;
-  
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-  
-    return () => {
-      document.body.removeChild(script); // clean up when unmounting
-    };
-  }, [token]);
+  const checkInterval = setInterval(() => {
+    if (window.grecaptcha && document.getElementById('recaptcha-container')) {
+      clearInterval(checkInterval);
+      renderCaptcha();
+    }
+  }, 200);
 
-  
+  return () => clearInterval(checkInterval);
+}, []);
+
 
   function convertCmToFeetInches(cm: number) {
     const totalInches = cm / 2.54;
@@ -183,19 +184,31 @@ export default function LoginPage() {
         });
 
         setLoading(true);
-          router.push('/command-center');
+        router.push('/command-center');
       }
 
     } catch (err: any) {
       setError(err.message || 'Authentication failed.');
-    } 
+    }
   };
 
+    useEffect(() => {
+    const timeout = setTimeout(() => setPageReady(true), 800); // match NavLoad
+    return () => clearTimeout(timeout);
+  }, []);
 
 
   return (
-      <>
+    <>
       <NavLoad />
+       {pageReady && (
+        <>
+        <script
+    src="https://www.google.com/recaptcha/api.js"
+    async
+    defer
+  ></script>
+   
         <div className="mb-10">
 
           {mode === 'login' ?
@@ -444,7 +457,8 @@ export default function LoginPage() {
       <footer className="pt-4 pb-2">
          <NavPortalPublic />
       </footer>
-    </>
-
-  );
+      </>
+    )}
+  </>
+);
 }
