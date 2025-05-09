@@ -43,7 +43,7 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
     
 
   return (
-    <div className="flex flex-col gap-1 z-60 mb-4 mt-3 ">
+    <div className="flex flex-col gap-1 z-20 mb-4 mt-3">
       <Link href="/unlock" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 pulse-glow text-green-200"  onClick={onClose}>
         ✦ Unlock 1 Month Free ✦
       </Link>
