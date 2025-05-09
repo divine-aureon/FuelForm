@@ -489,15 +489,19 @@ export default function PaidCommandCenter() {
             </>
           ) : (
             <>
+            <div> 
+            <Link href="/strengtharchive" className="">
               <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
-                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                   <div className="flex items-center gap-2"><Lock />StrengthArchive</div>
                   <h2 className="text-xs font-bold text-white">
                     Access Restricted.
                   </h2>
                 </div>
               </div>
+              </Link>
+              </div> 
             </>
           )}
 
@@ -522,15 +526,17 @@ export default function PaidCommandCenter() {
           ) : (
             <>
               <div>
+                <Link href="/macrovault" className="">
                 <div className="relative h-32 bg-[url('/images/menus/meals3.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
-                  <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
+                  <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
                     <div className="flex items-center gap-2"><Lock />MacroVault</div>
                     <h2 className="text-xs font-bold text-white">
                       Access Restricted.
                     </h2>
                   </div>
                 </div>
+                </Link>
               </div>
             </>
           )}
