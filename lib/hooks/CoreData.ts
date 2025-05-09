@@ -44,6 +44,7 @@ interface FitData {
 interface UserProfile {
   name: string;
   birthday: string;
+  birthdayPopUp: string;
   gender: string;
   heightCm: number;
   heightUnit: string;
@@ -69,6 +70,7 @@ interface UserProfile {
 const defaultProfile: UserProfile = {
   name: "",
   birthday: "",
+  birthdayPopUp: "",
   gender: "",
   heightCm: 0,
   heightUnit: "",

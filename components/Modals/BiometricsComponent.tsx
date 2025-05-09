@@ -135,6 +135,24 @@ export default function BiometricsComponent() {
       if (birthYear !== originalBirthYear || birthMonth !== originalBirthMonth || birthDay !== originalBirthDay) {
         updates.birthday = `${birthYear}-${birthMonth.padStart(2, "0")}-${birthDay.padStart(2, "0")}`;
       }
+
+        // 🧠 Calculate age directly from birth values
+        const birthY = Number(birthYear);
+        const birthM = Number(birthMonth);
+        const birthD = Number(birthDay);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthY;
+        const monthDiff = today.getMonth() + 1 - birthM;
+        const dayDiff = today.getDate() - birthD;
+
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          age--;
+        }
+        
+      updates.age = age
+
+
       if (gender !== originalGender) updates.gender = gender;
 
       if (heightUnit !== originalHeightUnit) updates.preferredHeightUnit = heightUnit;
@@ -258,7 +276,7 @@ export default function BiometricsComponent() {
             <option value="">Year</option>
             {[...Array(100)].map((_, i) => {
               const year = new Date().getFullYear() - i;
-              return <option key={i} value={year}>{year}</option>;
+              return <option key={i} value={year.toString()}>{year}</option>;
             })}
           </select>
         </div>

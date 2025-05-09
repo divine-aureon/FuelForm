@@ -62,6 +62,7 @@ import {
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import Overlay from "@/components/Overlay";
 
 export default function PaidCommandCenter() {
 
@@ -198,6 +199,7 @@ export default function PaidCommandCenter() {
   return (
     <>
       <NavLoad/>
+      <Overlay/>
     <div className="relative z-0 pb-10">
 
       <div className=" bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">
