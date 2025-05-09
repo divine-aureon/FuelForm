@@ -18,8 +18,6 @@ import { db } from "@/lib/firebase"; // adjust path as needed
 import { getAuth } from "firebase/auth";
 import NavLoad from "@/components/Loading/NavLoad";
 
-
-
 export default function UnlockPage() {
   const auth = getAuth();
 const user = auth.currentUser;

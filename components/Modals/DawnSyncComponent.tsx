@@ -6,6 +6,7 @@ import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateRecoveryFuel } from "@/lib/FusionCore";
 import useCoreData from "@/lib/hooks/CoreData";
 
+
 export default function DawnSyncComponent() {
 
 
@@ -92,9 +93,9 @@ export default function DawnSyncComponent() {
 
     useEffect(() => {
         if (status === "success") {
+           
             const timeout = setTimeout(() => {
-
-                window.location.reload(); // hard refresh
+               window.location.reload(); // hard refresh
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);

@@ -9,6 +9,7 @@ import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import Link from "next/link";
 import NavPortalPublic from "@/components/NavPortal/NavPortalPublic"
 import NavLoad from "@/components/Loading/NavLoad";
+import useCoreData from "@/lib/hooks/CoreData";
 
 
 declare global {
@@ -19,12 +20,13 @@ declare global {
 
 export default function LoginPage() {
 
+    const { profile } = useCoreData();
+    const token = profile?.token ?? null;
   const { setBackgroundMode } = useBackground();
 
   useEffect(() => {
     setBackgroundMode("loginpage");
   }, [setBackgroundMode]);
-
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,7 +69,21 @@ export default function LoginPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof token !== 'boolean') return;
+  
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  
+    return () => {
+      document.body.removeChild(script); // clean up when unmounting
+    };
+  }, [token]);
 
+  
 
   function convertCmToFeetInches(cm: number) {
     const totalInches = cm / 2.54;
@@ -96,9 +112,8 @@ export default function LoginPage() {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
-          setLoading(true);
-
-          router.push('/command-center');  // Regular login access for everyone
+          setLoading(true); // 🧠 Start the NavLoad
+          router.push('/command-center');
         }
       } else {
         // Registration logic
@@ -176,22 +191,17 @@ export default function LoginPage() {
     } 
   };
 
+
+
   return (
-    <>
-        <NavLoad />
-      <script
-        src="https://www.google.com/recaptcha/api.js"
-        async
-        defer
-      ></script>
-
-
-      <div>
+      <>
+      <NavLoad />
         <div className="mb-10">
 
           {mode === 'login' ?
 
             <div>
+               
               <div className="relative h-32 bg-[url('/images/menus/loginimage.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-4xl glowing-button mb-2">
                 <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
@@ -246,7 +256,9 @@ export default function LoginPage() {
               />
 
               {mode === 'register' && (
+                
                 <>
+             
                   <label htmlFor="name" className="block text-lg text-white mb-1">Name</label>
                   <input
                     id="name"
@@ -429,7 +441,6 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </div>
       <footer className="pt-4 pb-2">
          <NavPortalPublic />
       </footer>

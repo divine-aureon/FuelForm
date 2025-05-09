@@ -39,7 +39,6 @@ import { BuildMineralData } from "@/components/NutrientDisplay/BuildMineralData"
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 import NavLoad from "@/components/Loading/NavLoad";
-import InitLoad from "@/components/Loading/InitLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
@@ -196,10 +195,9 @@ export default function PaidCommandCenter() {
 
   if (typeof isPaidUser !== 'boolean') return;
 
-
   return (
     <>
-        <NavLoad/>
+      <NavLoad/>
     <div className="relative z-0 pb-10">
 
       <div className=" bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">

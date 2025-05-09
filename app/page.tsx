@@ -4,11 +4,12 @@ import HomeBackgroundSetter from '@/components/Backgrounds/homeBackgroundSetter'
 import VHFixer from '@/components/VHFixer';
 import { Fingerprint } from 'lucide-react';
 import NavPortalPublic from "@/components/NavPortal/NavPortalPublic"
-
+import HomeLoad from "@/components/Loading/HomeLoad";
 
 export default function Home() {
     return (
         <>
+        <HomeLoad/>
             <HomeBackgroundSetter />
 
             <div className="">
@@ -29,7 +30,7 @@ export default function Home() {
 
                 <div className="fixed inset-0 flex items-center justify-center z-10">
                     <div className="w-40 h-40 bg-white/10 rounded-full flex flex-col items-center justify-center animate-pulse shadow-xl">
-                        <span className="text-2xl font-semibold text-white">Initializing..</span>
+                        <span className="text-center text-2xl font-semibold text-white">Decrypting</span>
                         <Fingerprint size={64} className="mt-2 text-white cursor-pointer" />
                     </div>
                 </div>

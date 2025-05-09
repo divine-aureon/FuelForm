@@ -47,7 +47,6 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
       <Link href="/unlock" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 text-green-200" onClick={onClose}>
         ✦ Unlock 1 Month Free ✦
       </Link>
-
       <Link href="/command-center" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>

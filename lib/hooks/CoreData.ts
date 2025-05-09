@@ -63,6 +63,7 @@ interface UserProfile {
   isMacroActive: boolean,
   isTasksActive: boolean,
   isPaid: boolean;
+  token: boolean;
 }
 
 const defaultProfile: UserProfile = {
@@ -84,6 +85,7 @@ const defaultProfile: UserProfile = {
   isMacroActive: false,
   isTasksActive: false,
   isPaid: false,
+  token: true,
 
   latestSync: {
     weight_lbs: 0,

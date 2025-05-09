@@ -82,14 +82,14 @@ const showPremium = hasFuelFormAccount === true && isPaidUser;
 
   return (
     <>
-      <NavLoad />
+    <NavLoad/>
       <div className="backdrop-blur-md pb-3">
         <div>
           <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
             <div className="absolute flex flex-col items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
               <h1 className="text-3xl font-bold text-center pulse-glow">
-                FuelForm Help Center!
+                Booting InfoDex...
               </h1>
               <p className="text-sm mt-2">
                 Assistance initiated. Optimization incoming.                </p>
