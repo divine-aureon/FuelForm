@@ -47,7 +47,7 @@ export default function NavPortalFree() {
       </nav>
 
       {/* Expanding drawer from bottom */}
-      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'rounded-3xl max-h-0 opacity-0 pointer-events-none'
+      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
         } overflow-hidden`}>
         <div className="glowing-bg border border-indigo-400 rounded-3xl relative shadow-2xl w-full max-w-xs mx-auto overflow-hidden text-center"
           style={{ backgroundColor: '#0f172a' }}>

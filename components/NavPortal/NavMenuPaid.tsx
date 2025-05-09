@@ -22,7 +22,7 @@ export default function NavMenuPaid({ onClose }: NavMenuProps) {
   };
 
   return (
-    <div className="z-20 flex flex-col gap-1 z-60 mb-4 mt-3">
+    <div className=" flex flex-col gap-1 z-60 mb-4 mt-3">
       <Link href="/command-center" className="block p-3 z-20 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
         ✦ Command Centre ✦
       </Link>
