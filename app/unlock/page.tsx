@@ -89,7 +89,7 @@ const user = auth.currentUser;
               <div className="bg-[url('/images/menus/settings.jpg')] bg-cover bg-center bg-no-repeat text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
                 Customization Options:
               </div>
-              <div className="bg-[url('/images/menus/Strength2.jpg')] bg-cover bg-center bg-no-repeat text-xs h-24 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
+              <div className="bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat text-xs h-24 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
                 StrengthArchive (Development in progress...)
               </div>
               <div className="bg-[url('/images/menus/goals.jpg')] bg-cover bg-center bg-no-repeat text-xs h-20 text-center p-2 bg-white/10 rounded-lg font-bold text-white ">
