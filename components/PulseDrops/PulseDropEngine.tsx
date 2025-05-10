@@ -24,11 +24,3 @@ export default function PulseDropEngine() {
     </>
   );
 }
-
-
-//TEST ACTIVE DROPS
-   // {activeDrops.length > 0 && (
-  //<div className="fixed top-4 right-4 z-[9999] bg-black text-white text-sm px-4 py-2 rounded-xl shadow-xl">
-  //  Active Drops: {activeDrops.map(d => d.id).join(", ")}
- /// </div>
-//)}
