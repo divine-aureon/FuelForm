@@ -5,9 +5,10 @@ import { updateDoc, doc, setDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import useAuth from '@/lib/useAuth'
 import useCoreData from "@/lib/hooks/CoreData";
+import { BellRing ,Rocket} from 'lucide-react';
 
 
-export default function Overlay() {
+export default function BirthdayDrop() {
 
 
     const [HappyBirthday, setHappyBirthday] = useState(false)
@@ -54,10 +55,12 @@ export default function Overlay() {
     if (HappyBirthdayMessage)
 
         return (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center backdrop-blur-md">
-                <div className="p-6 bg-[#0f172a] text-white rounded-2xl shadow-xl border border-indigo-500 max-w-sm w-full space-y-4 text-center">
-                    <h2 className="text-3xl font-bold animate-pulse">🎉 Happy Birthday, {profile.name} </h2>
-                    <p className="text-sm text-indigo-300">The system has detected a resonance in your core frequency.
+            <>
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center backdrop-blur-md overflow-hidden">
+                <div className=" pb-6 pt-4 bg-[#0f172a] text-white rounded-2xl shadow-xl border border-indigo-500 max-w-sm w-full space-y-4 text-center">
+                    <div className="text-left text-lg text-gray-300 bg-black/30 pb-2 pt-1 pl-3 gap-3 items-center">Incoming PulseDrop...</div>
+                    <h2 className="text-3xl px-3 font-bold pulse-glow ">🎉 Happy Birthday, {profile.name} </h2>
+                    <p className="text-sm px-3 text-indigo-300">The system has detected a resonance in your core frequency.
 
                         Today marks the anniversary of your arrival in this world.
 
@@ -73,5 +76,6 @@ export default function Overlay() {
                     </button>
                 </div>
             </div>
+            </>
         )
 }

@@ -3,15 +3,8 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import {
-  doc,
-  getDoc,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-} from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, orderBy, limit, } from "firebase/firestore";
+import { ensureDefaultsExist } from "@/lib/UpdateDatabase/ensureDefaultsExist";
 
 interface SyncData {
   weight_lbs: number;
@@ -41,13 +34,21 @@ interface FitData {
   calorieGoal: number;
 }
 
+interface PulseMemoryData {
+  welcomeDrop: boolean;
+}
+
+interface PulseData {
+  pulseMemory: PulseMemoryData
+  receivePulseDrops: boolean,
+  receiveTutorials: boolean,
+  dailyMotivation: boolean,
+}
+
 interface UserProfile {
   name: string;
   birthday: string;
-  birthdayPopUp: string;
   gender: string;
-  heightCm: number;
-  heightUnit: string;
   height_cm: number;
   height_ft_in: {
     feet: number;
@@ -60,6 +61,7 @@ interface UserProfile {
   latestSync?: SyncData;
   settings?: SettingsData;
   fitnessSettings?: FitData;
+  pulseSettings?: PulseData;
   isFitnessActive: boolean,
   isMacroActive: boolean,
   isTasksActive: boolean,
@@ -70,10 +72,7 @@ interface UserProfile {
 const defaultProfile: UserProfile = {
   name: "",
   birthday: "",
-  birthdayPopUp: "",
   gender: "",
-  heightCm: 0,
-  heightUnit: "",
   height_cm: 0,
   height_ft_in: {
     feet: 0,
@@ -106,10 +105,18 @@ const defaultProfile: UserProfile = {
     background: "NeuralLink",
     navIcon: "Atom",
   },
-  
+
   fitnessSettings: {
     calorieGoal: 0,
   },
+  pulseSettings: {
+    pulseMemory: {
+      welcomeDrop: false,
+    },
+    receivePulseDrops: true,
+    receiveTutorials: true,
+    dailyMotivation: true,
+  }
 
 };
 
@@ -119,6 +126,7 @@ export default function useCoreData() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+
         const userRef = doc(db, "users", user.uid);
         const syncRef = collection(db, "users", user.uid, "syncs");
 
@@ -131,6 +139,8 @@ export default function useCoreData() {
           ? (profileSnap.data() as UserProfile)
           : defaultProfile;
 
+        await ensureDefaultsExist(user.uid, profileData); //check UpdateDatbase to match fields. 
+
         const latestSync = syncSnap.docs.length > 0
           ? (syncSnap.docs[0].data() as SyncData)
           : defaultProfile.latestSync;
@@ -139,7 +149,11 @@ export default function useCoreData() {
 
         const fitnessSettings = profileData.fitnessSettings ?? defaultProfile.fitnessSettings;
 
-        setProfile({ ...profileData, latestSync, settings, fitnessSettings });
+        const pulseSettings = profileData.pulseSettings ?? defaultProfile.pulseSettings;
+
+        const isPaid = profileData.isPaid ?? defaultProfile.isPaid;
+
+        setProfile({ ...profileData, latestSync, settings, fitnessSettings, pulseSettings, isPaid });
       }
     });
 
@@ -151,5 +165,7 @@ export default function useCoreData() {
     latestSync: profile.latestSync,
     settings: profile.settings,
     fitnessSettings: profile.fitnessSettings,
+    pulseSettings: profile.pulseSettings,
+    isPaid: profile.isPaid,
   };
 }
