@@ -1,7 +1,5 @@
 import { PulseDropDefinition } from "@/components/PulseDrops/Data/pulseTypes";
 import { PULSE_DROP_IDS } from "@/components/PulseDrops/Data/pulseDropIds";
-
-import CopyThisImportAndRename from "@/components/PulseDrops/TemplateDrop";
 import WelcomeDrop from "@/components/PulseDrops/WelcomeDrop";
 
 //"system" | "update" | "birthday" | "tutorial";
@@ -14,7 +12,7 @@ export const pulseDropRegistry: PulseDropDefinition[] = [
     type: "system",
     condition: (profile, pulseSettings) => (
       pulseSettings.receivePulseDrops &&
-      !pulseSettings.pulseMemory?.welcomeDrop2
+      !pulseSettings.pulseMemory?.welcomeDrop
     )
   },
   
