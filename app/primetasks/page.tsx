@@ -169,9 +169,9 @@ export default function PrimeTasks() {
 
                     <div className="text-white text-md text-center p-3">
                       This is where youll keep track of your larger goals — the ones that unfold over weeks or months, not just a single day.
-                      Whether you're working toward building a new system, transforming your body, launching a project, or creating lasting
+                      Whether youre working toward building a new system, transforming your body, launching a project, or creating lasting
                       habits, your long-term tasks live here. These are the missions that require consistency, vision, and patience. You
-                      can update them as you evolve, mark milestones along the way, and stay grounded in what you're truly working toward.
+                      can update them as you evolve, mark milestones along the way, and stay grounded in what youre truly working toward.
                       Let this section be your reminder of the bigger picture — the reason behind your daily efforts.
                     </div>
 

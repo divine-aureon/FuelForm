@@ -79,25 +79,6 @@ export default function StrengthArchive() {
   const [splits, setSplits] = useState<Split[]>([]);
   const [isAddSplitModalOpen, setAddSplitModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchSplits = async () => {
-      const uid = user?.uid;
-      if (!uid) return;
-
-      const splitsRef = collection(db, "users", uid, "strength", "stats", "storedSplits");
-      const splitsSnap = await getDocs(splitsRef);
-
-      const splits: Split[] = splitsSnap.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<Split, "id">), // tells TypeScript "trust me, this has a `name`"
-      }));
-
-      setSplits(splits);
-    };
-
-    fetchSplits();
-  }, []);
-
 
   { /SELECTED VIEW BAR/ }
 
@@ -347,7 +328,7 @@ export default function StrengthArchive() {
                               <div className="text-white mb-2 justify-center flex">
 
                                 <button className="w-full h-16 glowing-green-button rounded-xl">
-                                  Movement Profile "Pull1" Selected
+                                  Movement Profile -Pull1- Selected
                                 </button>
                               </div>
 
