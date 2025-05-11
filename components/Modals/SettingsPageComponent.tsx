@@ -62,20 +62,20 @@ export default function SettingsPageComponent() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     return (
 
-        <>
-            <div>
-                <div className="relative h-32 bg-[url('/images/menus/settings.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                        <div className="flex items-center gap-2 pulse-glow mb-2">Neuro Settings..</div>
+        <div className="flex items-center justify-center min-h-screen flex-col">
+        
+                <div className="h-32 relative w-full bg-[url('/images/menus/settings.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
+         text-white text-3xl glowing-button mb-2">
+                    <div className="absolute inset-0 pt-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                        <div className="text-center gap-2 pulse-glow mb-2">Neuro Settings..</div>
                         <h2 className="text-sm font-bold text-white">
                             Optimize the interface to align with your rhythm, pace, and focus.
                         </h2>
                     </div>
                 </div>
-            </div>
+            
 
-            <div className="bg-white/30 rounded-xl p-3 shadow-lg mb-[110px]">
+            <div className="bg-white/30 w-full rounded-xl p-3 shadow-lg mb-[110px]">
                 <form onSubmit={handleSubmit} className="">
                     <p className="text-lg text-white font-semibold mb-1">
                         Customize Background
@@ -189,7 +189,7 @@ export default function SettingsPageComponent() {
                     </div>
                 </form>
             </div>
-        </>
+        </div>
 
     );
 

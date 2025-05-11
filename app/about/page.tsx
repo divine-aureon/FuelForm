@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from 'react';
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function AboutPage() {
 
@@ -15,6 +16,7 @@ export default function AboutPage() {
 
   return (
     <>
+    <PageFadeWrapper>
       <div className="rounded-3xl bg-black/40 rounded-2xl p-6 text-gray-300 shadow-2xl border border-white/10">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white text-center">
           <span className="text-white pulse-glow">About FuelForm</span>
@@ -53,6 +55,7 @@ export default function AboutPage() {
           </Link>
         </div>
       </div>
+      </PageFadeWrapper>
     </>
   );
 }

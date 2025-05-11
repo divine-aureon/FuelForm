@@ -6,17 +6,17 @@ interface SettingsModalProps {
 
 export function SettingsModal({ onClose, children }: SettingsModalProps) {
   return (
-    <div className="fixed inset-0 backdrop-blur-sm z-40 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 backdrop-blur-md z-40 flex items-center justify-center overflow-hidden">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"
+        className="absolute inset-0 z-0"
         onClick={onClose}
       />
       {/* Modal */}
-      <div className="relative z-60 w-full max-w-lg rounded-xl shadow-lg max-h-screen scrollbar-hide overflow-y-auto p-4 pb-20">
+      <div className="relative z-60 w-full max-w-lg rounded-xl shadow-lg max-h-screen scrollbar-hide overflow-hidden p-4 pb-20">
         <button
           onClick={onClose}
-          className="absolute z-30 top-3 right-5 text-white text-3xl hover:text-indigo-300"
+          className="absolute z-30 top-12 right-8 text-white text-3xl hover:text-indigo-300"
         >
           ✕
         </button>

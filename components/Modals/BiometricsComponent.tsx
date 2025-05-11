@@ -136,20 +136,20 @@ export default function BiometricsComponent() {
         updates.birthday = `${birthYear}-${birthMonth.padStart(2, "0")}-${birthDay.padStart(2, "0")}`;
       }
 
-        // 🧠 Calculate age directly from birth values
-        const birthY = Number(birthYear);
-        const birthM = Number(birthMonth);
-        const birthD = Number(birthDay);
-        const today = new Date();
+      // 🧠 Calculate age directly from birth values
+      const birthY = Number(birthYear);
+      const birthM = Number(birthMonth);
+      const birthD = Number(birthDay);
+      const today = new Date();
 
-        let age = today.getFullYear() - birthY;
-        const monthDiff = today.getMonth() + 1 - birthM;
-        const dayDiff = today.getDate() - birthD;
+      let age = today.getFullYear() - birthY;
+      const monthDiff = today.getMonth() + 1 - birthM;
+      const dayDiff = today.getDate() - birthD;
 
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-          age--;
-        }
-        
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+
       updates.age = age
 
 
@@ -217,20 +217,20 @@ export default function BiometricsComponent() {
 
   return (
 
-    <>
-      <div>
-        <div className="relative h-32 bg-[url('/images/menus/biometrics.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2 ">
-          <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-            <div className="flex items-center gap-2 pulse-glow ">Modify Biometrics</div>
-            <h2 className="text-sm font-bold text-white">
-              Before you can change, you must know where you are. These are your fundamentals.
-            </h2>
-          </div>
+    <div className="flex items-center justify-center min-h-[80px] flex-col">
+
+      <div className="h-32 relative w-full bg-[url('/images/menus/biometrics.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
+        <div className="absolute inset-0 pt-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+          <div className="text-center gap-2 pulse-glow">Modify Biometrics</div>
+          <h2 className="text-sm font-bold text-white">
+            Before you can change, you must know where you are. These are your fundamentals.
+          </h2>
         </div>
       </div>
 
-      <div className="bg-white/30 rounded-xl p-3 mb-10">
+
+      <div className="bg-white/30 w-full rounded-xl p-3 mb-10">
         <p className=" text-lg text-white font-semibold">
           Designate Your Chosen Identity
         </p>
@@ -348,6 +348,6 @@ export default function BiometricsComponent() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

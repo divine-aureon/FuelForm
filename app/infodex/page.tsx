@@ -11,7 +11,7 @@ import { getAuth } from "firebase/auth";
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import useCoreData from "@/lib/hooks/CoreData";
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 
 
@@ -83,7 +83,8 @@ const showPremium = hasFuelFormAccount === true && isPaidUser;
   return (
     <>
     <NavLoad/>
-      <div className="backdrop-blur-md pb-3">
+    <PageFadeWrapper>
+      <div className="pb-3">
         <div>
           <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
@@ -97,7 +98,7 @@ const showPremium = hasFuelFormAccount === true && isPaidUser;
           </div>
         </div>
 
-        <section className="bg-white/30 rounded-2xl shadow-md p-6">
+        <section className="bg-white/30 backdrop-blur-md rounded-2xl shadow-md p-6">
 
           <h2 className="text-2xl font-bold mb-4">How to Use FuelForm</h2>
           <p className="mb-4">
@@ -179,6 +180,7 @@ const showPremium = hasFuelFormAccount === true && isPaidUser;
       {showFree && <NavPortalFree />}
       {showPremium && <NavPortalPaid />}
     </footer>
+    </PageFadeWrapper>
     </>
   );
 }

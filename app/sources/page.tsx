@@ -4,18 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from 'react';
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+import NavLoad from "@/components/Loading/NavLoad";
 
 export default function SourcesPage() {
 
 
   const { setBackgroundMode } = useBackground();
-  
+
   useEffect(() => {
     setBackgroundMode("loginpage");
   }, [setBackgroundMode]);
-  
+
   return (
-      <div className="mb-20">
+    <>
+      <NavLoad />
+      <PageFadeWrapper>
+
+        <div className="mb-20">
           <h1 className="text-2xl">Sources</h1>
 
           <section>
@@ -133,6 +139,8 @@ export default function SourcesPage() {
               </Link>
             </div>
           </div>
-      </div>
+        </div>
+      </PageFadeWrapper>
+    </>
   );
 }

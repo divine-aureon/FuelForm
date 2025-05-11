@@ -14,6 +14,8 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  BarChart,
+  Bar,
 } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import useCoreData from "@/lib/hooks/CoreData";
@@ -22,7 +24,9 @@ import NavLoad from "@/components/Loading/NavLoad";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 
-export default function PaidStatsEchoPage() {
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+
+export default function StatsEcho() {
 
   const { profile } = useCoreData();
   const isPaidUser = profile?.isPaid ?? null;
@@ -123,6 +127,43 @@ export default function PaidStatsEchoPage() {
 
   const chartWeightData = [...filteredSyncArray].reverse();
 
+  { /SLEEP HOURS ARRAY/ }
+
+  const [selectedSleepMonth, setSelectedSleepMonth] = useState("All");
+
+  type SleepSyncEntry = {
+    date: string;
+    sleepDuration: string | number;
+  };
+
+  const SleepSyncArray: SleepSyncEntry[] = stats?.syncs?.map((sync: any) => ({
+    date: sync.id,
+    sleepDuration: Number(sync.sleepDuration) ?? 0,
+  }));
+
+  const sleepValues = (SleepSyncArray || [])
+    .filter(entry => typeof entry.sleepDuration === "number")
+    .map(entry => entry.sleepDuration as number);
+
+  const minSleep = Math.min(...sleepValues);
+  const maxSleep = Math.max(...sleepValues);
+
+  const yMinSleep = Math.floor(minSleep - 0.2);
+  const yMaxSleep = Math.ceil(maxSleep + 0.2);
+
+  const filteredSleepSyncArray = (SleepSyncArray || []).filter(entry =>
+    selectedSleepMonth === "All" ? true : entry.date.startsWith(selectedSleepMonth));
+
+
+  const availableSleepMonths = SleepSyncArray
+    ? [...new Set(SleepSyncArray.map(entry => entry.date.slice(0, 7)))]
+    : [];
+
+  const chartSleepData = [...filteredSleepSyncArray].reverse();
+
+
+
+
   { /STEPS ARRAY/ }
 
   const [selectedStepsMonth, setSelectedStepsMonth] = useState("All");
@@ -197,11 +238,15 @@ export default function PaidStatsEchoPage() {
   type StatView =
     | "steps"
     | "exercise"
+    | "energy"
     | "weight"
-    | "sleepDuration"
-    | "sleepQuality"
+    | "sleep"
     | "mood"
-    | "macroAccuracy";
+    | "prime"
+    | "macros"
+    | "strength";
+
+
 
   const handleSectorClick = (sector: "dawnStats" | "coreStats" | "duskStats") => {
     if (selectedSector === sector && isDrawerOpen) {
@@ -234,7 +279,8 @@ export default function PaidStatsEchoPage() {
 
   return (
     <>
-<NavLoad/>
+      <NavLoad />
+      <PageFadeWrapper>
       <div>
         <div className="relative h-32 bg-[url('/images/menus/stats2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">
@@ -250,10 +296,11 @@ export default function PaidStatsEchoPage() {
         {selectedView === "weight" && (
           <motion.div
             key="weight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}>
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
               <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
                 <div className="place-self-center text-left text-xl font-semibold">Weight History</div>
@@ -313,20 +360,85 @@ export default function PaidStatsEchoPage() {
             </div>
           </motion.div>
         )}
+
+
+        {selectedView === "sleep" && (
+          <motion.div
+            key="sleep"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+            <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
+              <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
+                <div className="place-self-center text-left text-xl font-semibold">Sleep History</div>
+              </div>
+              <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartSleepData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                    <XAxis dataKey="date" stroke="#fff" />
+                    <YAxis
+                      stroke="#fff"
+                      domain={[yMinSleep, yMaxSleep]}
+                    />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#222", border: "none" }}
+                      labelStyle={{ color: "#fff" }}
+                      formatter={(value: any) => [`${value} ${SleepSyncArray[0]?.sleepDuration}`, "sleep"]}
+                    />
+                    <Line type="monotone" dataKey="sleepDuration" stroke="#00f5d4" strokeWidth={3} dot={{ r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-lg w-full max-w-md text-black">
+                <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
+                  <div className="flex flex-col place-self-center text-left font-semibold">
+                    <p className=" font-semibold">Filter by date</p>
+                    <select
+                      className="p-2 rounded-lg bg-black/30 text-white"
+                      value={selectedSleepMonth}
+                      onChange={(e) => setSelectedSleepMonth(e.target.value)}>
+                      <option value="All">All</option>
+                      {availableSleepMonths.sort().map(month => (
+                        <option key={month} value={month}>
+                          {month}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <ul className="space-y-2">
+                  {filteredSleepSyncArray.map((entry, index) => (
+                    <li key={index} className="p-4 grid grid-cols-2 items-center rounded-lg shadow bg-black/40 text-white">
+
+                      <div className="place-self-center text-left font-semibold"> {entry.date} </div>
+                      <div className="place-self-center text-right"> {entry?.sleepDuration} Hours </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+
         {selectedView === "steps" && (
           <motion.div
             key="steps"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}>
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
               <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
                 <div className="place-self-center text-left text-xl font-semibold">Step History</div>
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartStepData}>
+                  <BarChart data={chartStepData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis
@@ -338,8 +450,8 @@ export default function PaidStatsEchoPage() {
                       labelStyle={{ color: "#fff" }}
                       formatter={(value: any) => [`${value} ${StepSyncArray[0]?.steps}`, "steps"]}
                     />
-                    <Line type="monotone" dataKey="steps" stroke="#00f5d4" strokeWidth={3} dot={{ r: 4 }} />
-                  </LineChart>
+                    <Bar dataKey="steps" fill="#00f5d4" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="text-lg w-full max-w-md text-black">
@@ -377,11 +489,11 @@ export default function PaidStatsEchoPage() {
         {selectedView === "exercise" && (
           <motion.div
             key="exercise"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-          >
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
 
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
               <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-button">
@@ -390,7 +502,7 @@ export default function PaidStatsEchoPage() {
 
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartMinuteData}>
+                  <BarChart data={chartMinuteData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis
@@ -403,8 +515,8 @@ export default function PaidStatsEchoPage() {
                       formatter={(value: any) => [`${value} ${MinuteSyncArray[0]?.exerciseMinutes}`, "exerciseMinutes"]}
 
                     />
-                    <Line type="monotone" dataKey="exerciseMinutes" stroke="#00f5d4" strokeWidth={3} dot={{ r: 4 }} />
-                  </LineChart>
+                    <Bar dataKey="exerciseMinutes" fill="#00f5d4" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="text-lg w-full max-w-md text-black">
@@ -460,36 +572,37 @@ export default function PaidStatsEchoPage() {
               {isDrawerOpen && selectedSector && (
                 <motion.div
                   key={selectedSector}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                
                   className="w-full flex justify-between z-40"
                 >
                   {selectedSector === "dawnStats" && (
                     <div className="flex justify-center gap-2 w-full">
                       <button
-                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
+                        className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white }`}
                         onClick={() => { setSelectedView("weight"); setIsDrawerOpen(false); }}>Weight</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>Sleep</button>
+                        onClick={() => { setSelectedView("sleep"); setIsDrawerOpen(false); }}>Sleep</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>Mood</button>
+                        onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>Mood</button>
                     </div>
                   )}
                   {selectedSector === "coreStats" && (
                     <div className="flex justify-center gap-2 w-full">
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepDuration"); setIsDrawerOpen(false); }}>PrimeTasks</button>
+                        onClick={() => { setSelectedView("prime"); setIsDrawerOpen(false); }}>PrimeTasks</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("sleepQuality"); setIsDrawerOpen(false); }}>StrengthArchive</button>
+                        onClick={() => { setSelectedView("strength"); setIsDrawerOpen(false); }}>StrengthArchive</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>MacroVault</button>
+                        onClick={() => { setSelectedView("macros"); setIsDrawerOpen(false); }}>MacroVault</button>
                     </div>
                   )}
 
@@ -503,7 +616,7 @@ export default function PaidStatsEchoPage() {
                         onClick={() => { setSelectedView("exercise"); setIsDrawerOpen(false); }}>Exercise</button>
                       <button
                         className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 text-white}`}
-                        onClick={() => { setSelectedView("macroAccuracy"); setIsDrawerOpen(false); }}>Energy</button>
+                        onClick={() => { setSelectedView("energy"); setIsDrawerOpen(false); }}>Energy</button>
                     </div>
                   )}
                 </motion.div>
@@ -516,6 +629,7 @@ export default function PaidStatsEchoPage() {
       <footer className="pt-4 pb-2">
         {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
       </footer>
+      </PageFadeWrapper>
     </>
   );
 }

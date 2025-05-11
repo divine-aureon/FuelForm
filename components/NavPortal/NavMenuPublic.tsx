@@ -5,6 +5,7 @@ import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { useState, useEffect } from "react";
+import { Lock , Rotate3d , CircleCheckBig,KeyRound , ListChecks , Dumbbell , Utensils , Globe , LogOut } from 'lucide-react';
 
 type NavMenuProps = {
   onClose: () => void;
@@ -40,20 +41,20 @@ export default function NavMenuPublic({ onClose }: NavMenuProps) {
 
   return (
     <div className="flex flex-col gap-1 z-60 mb-4 mt-3">
-      <Link href="/unlock" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 pulse-glow text-green-200"  onClick={onClose}>
-        ✦ Unlock 1 Month Free ✦
+      <Link href="/unlock" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 text-green-200 gap-2 flex items-center justify-center"  onClick={onClose}>
+       <KeyRound size={15}/> Unlock 1 Month Free 
       </Link>
-      <Link href="/" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
-        ✦ Home ✦
+      <Link href="/" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
+       <CircleCheckBig size={15}/> Home 
       </Link>
-      <Link href="/login?querymode=login" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
-        ✦ Login ✦
+      <Link href="/login?querymode=login" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
+       <CircleCheckBig size={15}/> Login 
       </Link>
-      <Link href="/login?querymode=register" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
-        ✦ Register ✦
+      <Link href="/login?querymode=register" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
+        <CircleCheckBig size={15}/> Register 
       </Link>
-      <Link href="/infodex" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20" onClick={onClose}>
-        ✦ InfoDex ✦
+      <Link href="/infodex" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
+        <CircleCheckBig size={15}/> InfoDex 
       </Link>
     </div>
   );

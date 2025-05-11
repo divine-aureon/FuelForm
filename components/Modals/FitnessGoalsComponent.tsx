@@ -18,6 +18,7 @@ import {
     Heart,
     Bird
 } from 'lucide-react';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 
 
@@ -75,21 +76,21 @@ export default function FitnessGoalsPageComponent() {
 
     return (
 
-        <>
-            <div>
-                <div className="relative h-32 bg-[url('/images/menus/goals.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                        <div className="flex items-center gap-2 pulse-glow ">Adjusting Fitness Settings..</div>
+        <div className="flex items-center justify-center min-h-screen flex-col">
+        
+                <div className="h-32 relative w-full bg-[url('/images/menus/goals.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2 ">
+                    <div className="absolute inset-0 pt-5 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                        <div className="text-center gap-2 pulse-glow ">Adjusting Fitness Settings..</div>
                         <h2 className="text-sm font-bold text-white">
                             Optimize the interface to align with your rhythm, pace, and focus.
                         </h2>
                     </div>
                 </div>
-            </div>
+        
 
 
-            <div className="bg-white/30 rounded-xl p-3 shadow-lg mb-[110px]">
+            <div className="bg-white/30 w-full rounded-xl p-3 shadow-lg mb-[110px]">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <p className="text-lg text-white font-semibold mb-1">
                         Calorie Goals
@@ -121,7 +122,7 @@ export default function FitnessGoalsPageComponent() {
                     </div>
                 </form>
             </div>
-        </>
+        </div>
 
     );
 

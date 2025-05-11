@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function UpgradeLoad() {
   const [delayDone, setDelayDone] = useState(false);

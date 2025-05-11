@@ -5,7 +5,6 @@ import CheckoutForm from "@/components/CheckoutForm"
 import useAuth from '@/lib/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from "react";
-import SuccessLoad from "@/components/Loading/SuccessLoad";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import Link from 'next/link';
@@ -17,6 +16,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // adjust path as needed
 import { getAuth } from "firebase/auth";
 import NavLoad from "@/components/Loading/NavLoad";
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function UnlockPage() {
   const auth = getAuth();
@@ -45,6 +45,7 @@ const user = auth.currentUser;
   return (
     <>
         <NavLoad />
+        <PageFadeWrapper>
       <>
         <div className="bg-white/30 rounded-lg p-3">
 
@@ -125,6 +126,7 @@ const user = auth.currentUser;
       <footer className="pt-4 pb-2">
   {hasFuelFormAccount === true ? <NavPortalFree /> : <NavPortalPublic />}
 </footer>
+</PageFadeWrapper>
     </>
 
   );

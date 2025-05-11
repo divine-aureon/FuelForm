@@ -11,6 +11,8 @@ import NavLoad from "@/components/Loading/NavLoad";
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
 
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+
 export default function PaidSyncSimulator() {
 
       const { profile } = useCoreData();
@@ -166,6 +168,7 @@ export default function PaidSyncSimulator() {
     return (
         <main className="rounded-lg mb-12 p-0">
             <NavLoad/>
+            <PageFadeWrapper>
             <div className="rounded-xl overflow-hidden mb-2 ">
                 <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
                     <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
@@ -309,7 +312,7 @@ export default function PaidSyncSimulator() {
 
                 {/* Button */}
 
-                <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center z-30">
+                <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
                     <button
                         onClick={handleCalculate}
                         className="text-2xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
@@ -331,6 +334,7 @@ export default function PaidSyncSimulator() {
                   <footer className="pt-4 pb-2">
                     {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
                   </footer>
+                  </PageFadeWrapper>
         </main >
     );
 }

@@ -1,5 +1,6 @@
 export const PULSE_DROP_IDS = {
-  WELCOME_DROP: "welcomeDrop",
+  WELCOME_DROP: "v1_welcomeDrop",
+  UPDATE_DROP_1: "v2_updateDrop1",
 
 } as const;
 

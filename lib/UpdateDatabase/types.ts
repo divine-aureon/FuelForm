@@ -7,17 +7,19 @@ export interface SettingsData {
 
 export interface FitData {
   calorieGoal: number;
+  activeSplit: string;
 }
 
 export interface PulseMemoryData {
- welcomeDrop: boolean,
+ v1_welcomeDrop: boolean;
+ v2_updateDrop1: boolean;
 }
 
 export interface PulseData {
-  pulseMemory: PulseMemoryData
-  receivePulseDrops: boolean,
-  receiveTutorials: boolean,
-  dailyMotivation: boolean,
+  pulseMemory: PulseMemoryData;
+  receivePulseDrops: boolean;
+  receiveTutorials: boolean;
+  dailyMotivation: boolean;
 }
 
 export interface UserProfile {
@@ -36,9 +38,9 @@ export interface UserProfile {
   settings?: SettingsData;
   fitnessSettings?: FitData;
   pulseSettings?: PulseData;
-  isFitnessActive: boolean,
-  isMacroActive: boolean,
-  isTasksActive: boolean,
+  isStrengthActive: boolean;
+  isMacroActive: boolean;
+  isPrimeActive: boolean;
   isPaid: boolean;
   token: boolean;
 }
@@ -56,9 +58,9 @@ export const defaultProfile: UserProfile = {
   preferredWeightUnit: "",
   age: 0,
   email: "", // ✅ Add email here
-  isFitnessActive: false,
+  isStrengthActive: false,
   isMacroActive: false,
-  isTasksActive: false,
+  isPrimeActive: false,
   isPaid: false,
   token: true,
 
@@ -69,17 +71,17 @@ export const defaultProfile: UserProfile = {
 
   fitnessSettings: {
     calorieGoal: 0,
+    activeSplit: "",
   },
   pulseSettings: {
     pulseMemory: {
-      welcomeDrop: false,
+      v1_welcomeDrop: false,
+      v2_updateDrop1: true,
     },
     receivePulseDrops: true,
     receiveTutorials: true,
     dailyMotivation: true,
   }
-
-  
 
 };
 

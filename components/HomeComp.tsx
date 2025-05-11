@@ -9,6 +9,7 @@ import VHFixer from '@/components/VHFixer';
 import { Fingerprint } from 'lucide-react';
 import NavPortalPublic from "@/components/NavPortal/NavPortalPublic"
 import HomeLoad from "@/components/Loading/HomeLoad";
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function HomeComp() {
     const [pageReady, setPageReady] = useState(false);
@@ -21,6 +22,7 @@ export default function HomeComp() {
     return (
         <>
              <HomeLoad/>
+             <PageFadeWrapper>
             {pageReady && (<>
                 <HomeBackgroundSetter />
 
@@ -72,6 +74,7 @@ export default function HomeComp() {
                 </footer>
             </>
             )}
+            </PageFadeWrapper>
         </>
     );
 }

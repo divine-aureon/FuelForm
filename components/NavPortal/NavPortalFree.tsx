@@ -1,5 +1,6 @@
 "use client";
 
+     import { AnimatePresence, motion } from "framer-motion";
 import { useState } from 'react';
 import NavMenuFree from './NavMenuFree';
 import useCoreData from "@/lib/hooks/CoreData";
@@ -13,6 +14,7 @@ import {
   Heart,
   Bird
 } from 'lucide-react';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function NavPortalFree() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,25 +49,37 @@ export default function NavPortalFree() {
       </nav>
 
       {/* Expanding drawer from bottom */}
-      <div className={`fixed bottom-[60px] left-0 right-0 transition-all duration-300 ease-in-out z-40 ${isOpen ? 'opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
-        } overflow-hidden`}>
-        <div className="glowing-bg border border-indigo-400 rounded-3xl relative shadow-2xl w-full max-w-xs mx-auto overflow-hidden text-center"
-          style={{ backgroundColor: '#0f172a' }}>
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            key="navdrawer"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 2 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6 }}
+            className="fixed bottom-[60px] left-0 right-0 z-40 overflow-hidden"
+          >
+            <div
+              className="glowing-bg border border-indigo-400 rounded-3xl relative shadow-2xl w-full max-w-xs mx-auto overflow-hidden text-center"
+              style={{ backgroundColor: '#0f172a' }}
+            >
+              <div className="h-[80px] bg-[url('/images/menus/navportal.jpg')] relative glowing-bg border border-indigo-400 bg-cover bg-center bg-no-repeat border 
+           border-white/30 shadow-xl text-white text-2xl"
+              >
+                <div className="flex flex-col h-full pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center">
+                  <div className="z-20 flex items-center gap-2 font-semibold pulse-glow">NavPortal</div>
+                  <h2 className="z-20 text-xs font-bold text-white">
+                    Command your journey. Instantly.
+                  </h2>
+                </div>
+              </div>
 
-          <div className="h-[80px] bg-[url('/images/menus/navportal.jpg')] relative glowing-bg border border-indigo-400 bg-cover bg-center bg-no-repeat border 
-             border-white/30 shadow-xl text-white text-2xl">
-
-            <div className="flex flex-col h-full pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center">
-
-              <div className="z-20 flex items-center gap-2 font-semibold pulse-glow">NavPortal</div>
-              <h2 className="z-20 text-xs font-bold text-white">
-                Command your journey. Instantly.
-              </h2>
+              <NavMenuFree onClose={() => setIsOpen(false)} />
             </div>
-          </div>
-          <NavMenuFree onClose={() => setIsOpen(false)} />
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </>
   );
 }

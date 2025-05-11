@@ -7,8 +7,7 @@ import { useState, useEffect } from 'react';
 import NavLoad from "@/components/Loading/NavLoad";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import useCoreData from "@/lib/hooks/CoreData";
-
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function MacroVaultPage() {
 
@@ -33,6 +32,7 @@ export default function MacroVaultPage() {
   return (
     <>
     <NavLoad />
+    <PageFadeWrapper>
       <div>
         <div className="relative h-32 bg-[url('/images/menus/meals3.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button mb-2">
@@ -56,6 +56,7 @@ export default function MacroVaultPage() {
       <footer className="pt-4 pb-2">
           {isPaidUser ? <NavPortalPaid /> : <NavPortalFree />}
         </footer>
+        </PageFadeWrapper>
     </>
   );
 }

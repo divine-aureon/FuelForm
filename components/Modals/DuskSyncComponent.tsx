@@ -8,6 +8,8 @@ import { calculateActiveFuel } from "@/lib/FusionCore";
 import useCoreData from "@/lib/hooks/CoreData";
 import { Listbox } from '@headlessui/react'
 
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+
 const intensityOptions = ["None", "Light", "Moderate", "High"]
 
 export default function DuskSyncComponent() {
@@ -84,20 +86,20 @@ export default function DuskSyncComponent() {
     }, [status, router]);
 
     return (
-        <>
-            <div>
-                <div className="relative mb-2 h-32 bg-[url('/images/menus/dusk.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-2xl glowing-button">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                        <div className="flex items-center gap-2">Initiate DuskSync Protocol</div>
-                        <h2 className="text-xs font-bold text-white">
+        <div className="flex items-center justify-center min-h-screen flex-col pb-28">
+        
+                <div className="h-36 relative w-full bg-[url('/images/menus/dusk.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
+         text-white text-3xl glowing-button mb-2">
+                    <div className="absolute inset-0 pt-3 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                        <div className="text-center gap-2 pulse-glow">Initiate DuskSync Protocol</div>
+                        <h2 className="text-sm font-bold text-white">
                             The day is done. Sync the work and restore your baseline. </h2>
                     </div>
                 </div>
-            </div>
+           
 
 
-            <div className="bg-white/30 rounded-xl p-3 shadow-lg">
+            <div className="bg-white/30 w-full rounded-xl p-3 shadow-lg">
                 <form onSubmit={handleSubmit} className="">
                     <p className="text-xl text-white font-semibold mb-1">Steps
                         <input
@@ -144,7 +146,7 @@ export default function DuskSyncComponent() {
                         </Listbox>
                     </p>
 
-                    <div className="fixed bottom-16 left-0 w-full flex gap-2 justify-center mb-2 z-30">
+                    <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
                         <button
                             type="submit"
                             className="text-xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
@@ -154,7 +156,7 @@ export default function DuskSyncComponent() {
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     );
 
 }

@@ -7,19 +7,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useState, useEffect } from "react";
-import SuccessLoad from "@/components/Loading/SuccessLoad";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import Link from 'next/link';
 
 import UpgradeButton from "@/components/UpgradeButton"
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 const UnlockComponent = () => {
 
   return (
     <>
-      <>
+        <div className="flex items-center justify-center min-h-screen flex-col pb-32">
         <div className="bg-white/30 rounded-lg p-3">
 
           <div className="grid grid-cols-2 gap-3">
@@ -48,7 +47,7 @@ const UnlockComponent = () => {
           </div>
           <UpgradeButton />
         </div>
-      </>
+      </div>
 
     </>
 

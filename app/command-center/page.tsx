@@ -1,15 +1,6 @@
 'use client';
 
 import useCoreData from "@/lib/hooks/CoreData";
-import {
-  Sun, Moon, Lock, CircleCheckBig,
-  ChartSpline, Sparkles,
-  Rotate3d, Home, Activity,
-  SmilePlus,
-  Dumbbell,
-  Utensils,
-  ListChecks
-} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -38,32 +29,23 @@ import { BuildVitaminData } from "@/components/NutrientDisplay/BuildVitaminData"
 import { BuildMineralData } from "@/components/NutrientDisplay/BuildMineralData"
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
-import NavLoad from "@/components/Loading/NavLoad";
+
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Crown,
-  Flame,
-  Zap,
-  Star,
-  Shield,
-  Atom,
-  Heart,
-  Bird,
-  Dna,
-  KeyRound,
-  Settings,
-  Mars,
-  Venus,
-  Fingerprint
-} from 'lucide-react';
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+
+import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
+import { Sun, Moon, Lock, CircleCheckBig, Rotate3d, SmilePlus, Dumbbell, Utensils, ListChecks } from "lucide-react";
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import BirthdayDrop from "@/components/PulseDrops/BirthdayDrop";
 import PulseDropEngine from "@/components/PulseDrops/PulseDropEngine";
+
+import NavLoad from "@/components/Loading/NavLoad";
+import NavLoad_v2 from "@/components/Loading/NavLoad_v2";
 
 export default function PaidCommandCenter() {
 
@@ -150,8 +132,7 @@ export default function PaidCommandCenter() {
       document.body.classList.remove("scroll-lock");
     }
   }, [isOverrideOpen]);
-
-
+  
   useEffect(() => {
     if (isDawnOpen) {
       document.body.classList.add("scroll-lock");
@@ -198,9 +179,12 @@ export default function PaidCommandCenter() {
   if (typeof isPaidUser !== 'boolean') return;
 
   return (
-    <>
-      <NavLoad />
+<>
+<NavLoad/>
+<PageFadeWrapper>
+
       <BirthdayDrop />
+      <PulseDropEngine />
       <div className="relative z-0 pb-10">
 
         <div className=" bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md">
@@ -328,7 +312,7 @@ export default function PaidCommandCenter() {
               <button
                 onClick={() => setUnlockOpen(true)}
                 className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
-                Unlock<br />1 Month Free<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
+                Upgrade<br />1 Month Free<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
               </button>
 
               {isUnlockOpen && (
@@ -388,20 +372,22 @@ export default function PaidCommandCenter() {
             {selectedSector === "macros" && (
               <motion.div
                 key="macros"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}>
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
                 <EnergyBreakdown data={EnergyData} />
               </motion.div>
             )}
             {selectedSector === "vitamins" && (
               <motion.div
                 key="vitamins"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}>
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
                 <VitaminBreakdown Vitamins={Nutrient_V} />
               </motion.div>
             )}
@@ -410,10 +396,10 @@ export default function PaidCommandCenter() {
             {selectedSector === "minerals" && (
               <motion.div
                 key="minerals"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
               >
 
                 <MineralBreakdown minerals={Nutrient_M} />
@@ -475,7 +461,7 @@ export default function PaidCommandCenter() {
             {isPaidUser ? (
               <>
                 <div>
-                  <Link href="/strengtharchive" className="">
+                      <Link href="/strengtharchive" className="">
                     <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
                       <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
@@ -720,7 +706,9 @@ export default function PaidCommandCenter() {
         </div>
 
       </div >
-      <PulseDropEngine />
-    </>
+
+      </PageFadeWrapper>
+</>
+    
   );
 }

@@ -25,6 +25,12 @@ interface SyncData {
   timestamp?: any;
 }
 
+interface FitSyncData {
+  liftWeight_lbs: number;
+  liftWeight_kg: number;
+  movements: any[];
+}
+
 interface SettingsData {
   background: string;
   navIcon: string;
@@ -32,17 +38,19 @@ interface SettingsData {
 
 interface FitData {
   calorieGoal: number;
+  activeSplit: string;
 }
 
 interface PulseMemoryData {
-  welcomeDrop: boolean;
+  v1_welcomeDrop: boolean;
+  v2_updateDrop1: boolean,
 }
 
 interface PulseData {
-  pulseMemory: PulseMemoryData
-  receivePulseDrops: boolean,
-  receiveTutorials: boolean,
-  dailyMotivation: boolean,
+  pulseMemory: PulseMemoryData;
+  receivePulseDrops: boolean;
+  receiveTutorials: boolean;
+  dailyMotivation: boolean;
 }
 
 interface UserProfile {
@@ -62,9 +70,9 @@ interface UserProfile {
   settings?: SettingsData;
   fitnessSettings?: FitData;
   pulseSettings?: PulseData;
-  isFitnessActive: boolean,
-  isMacroActive: boolean,
-  isTasksActive: boolean,
+  isStrengthActive: boolean;
+  isMacroActive: boolean;
+  isPrimeActive: boolean;
   isPaid: boolean;
   token: boolean;
 }
@@ -82,9 +90,9 @@ const defaultProfile: UserProfile = {
   preferredWeightUnit: "",
   age: 0,
   email: "", // ✅ Add email here
-  isFitnessActive: false,
+  isStrengthActive: false,
   isMacroActive: false,
-  isTasksActive: false,
+  isPrimeActive: false,
   isPaid: false,
   token: true,
 
@@ -93,7 +101,7 @@ const defaultProfile: UserProfile = {
     weight_kg: 0,
     steps: 0,
     exerciseMinutes: 0,
-    exerciseIntensity: "low",
+    exerciseIntensity: "None",
     dawnSync: false,
     duskSync: false,
     dawnTimestamp: null,
@@ -102,16 +110,18 @@ const defaultProfile: UserProfile = {
   },
 
   settings: {
-    background: "NeuralLink",
-    navIcon: "Atom",
+    background: "",
+    navIcon: "",
   },
 
   fitnessSettings: {
     calorieGoal: 0,
+    activeSplit: "",
   },
   pulseSettings: {
     pulseMemory: {
-      welcomeDrop: false,
+      v1_welcomeDrop: true,
+      v2_updateDrop1: true,
     },
     receivePulseDrops: true,
     receiveTutorials: true,

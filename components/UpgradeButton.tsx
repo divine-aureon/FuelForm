@@ -44,8 +44,8 @@ export default function UpgradeButton() {
     </button>
 
 {loading && (
-  <div className="fixed inset-0 z-[1000] backdrop-blur-sm flex flex-col items-center justify-center space-y-4">
-    <p className="text-white text-3xl text-center font-bold pulse-glow">
+  <div className="min-h-screen my-auto min-w-screen mx-auto fixed inset-0 z-[9999] bg-black/50 p-4 backdrop-blur-lg rounded-3xl flex items-center justify-center ">
+    <p className="text-white text-3xl p-4 text-center font-bold pulse-glow">
       Preparing verification procedures...
     </p>
     <div className="flex space-x-2">

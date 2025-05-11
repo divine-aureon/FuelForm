@@ -4,15 +4,13 @@ import { useRouter } from "next/navigation";
 import { CircleAlert, CircleOff } from "lucide-react";
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import { useState, useEffect } from "react";
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 type OverrideButtonPanelProps = {
     onClose: () => void;
     setDawnOpen: (val: boolean) => void;
     setDuskOpen: (val: boolean) => void;
   };
-
-
 
 export default function OverrideComponent ({ onClose, setDawnOpen, setDuskOpen }: OverrideButtonPanelProps) {
     const router = useRouter();
@@ -21,20 +19,20 @@ export default function OverrideComponent ({ onClose, setDawnOpen, setDuskOpen }
 
 
     return (  
-        <>
-            <div>
-                <div className="relative h-32 bg-[url('/images/menus/override.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                        <div className="flex items-center gap-2 pulse-glow ">Initating Sync Override Protocol...</div>
+        <div className="flex items-center justify-center min-h-screen flex-col">
+           
+                <div className="h-36 relative w-full bg-[url('/images/menus/override.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
+         text-white text-3xl glowing-button mb-1">
+                    <div className="absolute inset-0 pt-1 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                        <div className="flex items-center pulse-glow px-3 pt-3">Initating Sync Override Protocol...</div>
                         <h2 className="text-sm font-bold text-white">
                         When the system wont bend, override it.                       </h2>
                     </div>
                 </div>
-            </div>
+      
 
 
-            <div className="bg-white/30 rounded-xl p-3 shadow-lg mb-[110px]">
+            <div className="bg-white/30 w-full rounded-xl p-3 mb-[110px]">
     
                 <div className="gap-4 ">
                     {hasDawnSyncedToday ? (
@@ -81,7 +79,7 @@ export default function OverrideComponent ({ onClose, setDawnOpen, setDuskOpen }
             </div>
 
 
-        </>
+        </div>
 
     );
 

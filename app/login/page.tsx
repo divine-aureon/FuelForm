@@ -10,7 +10,7 @@ import Link from "next/link";
 import NavPortalPublic from "@/components/NavPortal/NavPortalPublic"
 import NavLoad from "@/components/Loading/NavLoad";
 import useCoreData from "@/lib/hooks/CoreData";
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 declare global {
   interface Window {
@@ -209,6 +209,7 @@ export default function LoginPage() {
   return (
     <>
       <NavLoad />
+      <PageFadeWrapper>
       {pageReady && (
         <>
           <script
@@ -465,8 +466,10 @@ export default function LoginPage() {
           <footer className="pt-4 pb-2">
             <NavPortalPublic />
           </footer>
+          
         </>
       )}
+      </PageFadeWrapper>
     </>
   );
 }

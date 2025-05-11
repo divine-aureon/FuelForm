@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase'
 import useAuth from '@/lib/useAuth'
 import useCoreData from "@/lib/hooks/CoreData";
 import { BellRing ,Rocket} from 'lucide-react';
-
+import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function BirthdayDrop() {
 
