@@ -89,8 +89,7 @@ export default function DawnSyncComponent() {
                 timestamp: serverTimestamp(),
             }, { merge: true });
 
-
-            await setDoc(userRef, {
+           await setDoc(userRef, {
                 lastKnownWeight_lbs: weight_lbs,
                 lastKnownWeight_kg: weight_kg,
             }, { merge: true });

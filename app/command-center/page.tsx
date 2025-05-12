@@ -81,8 +81,8 @@ export default function PaidCommandCenter() {
     : `${profile.height_ft_in.feet}'${profile.height_ft_in.inches}"`;
 
   const weightDisplay = profile.preferredWeightUnit === "lbs"
-    ? `${profile.lastKnownWeight_lb} lbs`
-    : `${profile.lastKnownWeight_kg}'"`;
+    ? `${profile.lastKnownWeight_lbs} lbs`
+    : `${profile.lastKnownWeight_kg} kg`;
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isFitnessOpen, setFitnessOpen] = useState(false);

@@ -43,8 +43,6 @@ export interface UserProfile {
   isPrimeActive: boolean;
   isPaid: boolean;
   token: boolean;
-    lastKnownWeight_lb: number;
-  lastKnownWeight_kg: number;
 }
 
 export const defaultProfile: UserProfile = {
@@ -65,8 +63,6 @@ export const defaultProfile: UserProfile = {
   isPrimeActive: false,
   isPaid: false,
   token: true,
-    lastKnownWeight_lb: 0,
-  lastKnownWeight_kg: 0,
 
   settings: {
     background: "NeuralLink",
