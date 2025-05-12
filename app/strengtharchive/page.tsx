@@ -9,7 +9,6 @@ import AddSplitComponent from "@/components/Modals/StrengthArchiveModals/AddSpli
 import useCoreData from "@/lib/hooks/CoreData";
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 
-import NavLoad_v2 from "@/components/Loading/NavLoad_v2";
 import NavLoad from "@/components/Loading/NavLoad";
 
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
@@ -23,6 +22,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 import UpgradeButton from "@/components/UpgradeButton"
+
 
 import Link from 'next/link';
 
@@ -105,7 +105,7 @@ export default function StrengthArchive() {
   // Main Strength Archive UI
   return (
     <>
-      <NavLoad />
+    <NavLoad/>
       <PageFadeWrapper>
 
         <div>

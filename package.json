@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.2.2",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
+    "date-fns": "^4.1.0",
     "firebase": "^11.6.0",
     "firebase-admin": "^13.3.0",
     "framer-motion": "^12.9.4",

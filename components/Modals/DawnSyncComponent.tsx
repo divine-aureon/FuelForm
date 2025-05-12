@@ -5,11 +5,13 @@ import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateRecoveryFuel } from "@/lib/FusionCore";
 import useCoreData from "@/lib/hooks/CoreData";
+import useAuth from '@/lib/useAuth';
+
 import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 
 export default function DawnSyncComponent() {
 
-
+    const { user } = useAuth();
     const router = useRouter();
     const [status, setStatus] = useState("");
     const { profile, latestSync, fitnessSettings } = useCoreData();
@@ -51,6 +53,8 @@ export default function DawnSyncComponent() {
         }
     };
 
+  if (!user?.uid) return;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -66,6 +70,7 @@ export default function DawnSyncComponent() {
             });
 
             const userId = auth.currentUser!.uid;
+            const userRef = doc(db, "users", user.uid);
             const syncRef = collection(db, "users", userId, "syncs");
             const syncDocRef = doc(syncRef, dateString);
 
@@ -82,6 +87,12 @@ export default function DawnSyncComponent() {
                 dawnSync: true,
                 dawnTimestamp: serverTimestamp(),
                 timestamp: serverTimestamp(),
+            }, { merge: true });
+
+            
+              await setDoc(userRef, {
+                lastKnownWeight_lbs: weight_lbs,
+                lastKnownWeight_kg: weight_kg,
             }, { merge: true });
 
 

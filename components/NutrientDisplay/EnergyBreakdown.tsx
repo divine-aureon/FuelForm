@@ -8,6 +8,7 @@ import { HeartPlus } from "lucide-react";
 type MacroRange = {
   recovery: string;
   active: string;
+  average: string;
 };
 
 type EnergyData = {
@@ -25,7 +26,6 @@ interface EnergyBreakdownProps {
 export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
 
 
-
   return (
     <div className="bg-white/30 backdrop-blur-md rounded-2xl shadow-lg pt-2 w-full max-w-lg mx-auto mt-4 text-black overflow-hidden">
       <h2 className="text-center font-bold text-lg mb-3">Energy Breakdown</h2>
@@ -39,14 +39,16 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
         <thead>
           <tr className="bg-white/50 font-semibold">
             <th className="py-2">Energy</th>
-            <th className="py-2">Recovery</th>
-            <th className="py-2">Active</th>
+            <th className="py-2">RestDay</th>
+             <th className="py-2">7 Day Average</th>
+            <th className="py-2">ActiveDay</th>
           </tr>
         </thead>
         <tbody className="text-black">
           <tr className="hover:bg-white/20 transition">
             <td className="py-2 font-medium font-semibold bg-white/10">Calories</td>
             <td>{data.calories.recovery} kcal</td>
+            <td>{data.calories.average} kcal</td>
             <td>{data.calories.active} kcal</td>
           </tr>
 
@@ -59,6 +61,7 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
           <tr className="hover:bg-white/20 transition">
             <td className="py-2 font-medium font-semibold bg-white/10">Protein</td>
             <td>{data.protein.recovery}g</td>
+            <td>{data.protein.average}g</td>
             <td>{data.protein.active}g</td>
           </tr>
 
@@ -71,6 +74,7 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
           <tr className="hover:bg-white/20 transition">
             <td className="py-2 font-medium font-semibold bg-white/10">Carbs</td>
             <td>{data.carbs.recovery}g</td>
+            <td>{data.carbs.average}g</td>
             <td>{data.carbs.active}g</td>
           </tr>
 
@@ -84,6 +88,7 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
           <tr className="hover:bg-white/20 transition">
             <td className="py-2 font-medium font-semibold bg-white/10">Fats</td>
             <td>{data.fats.recovery}g</td>
+            <td>{data.fats.average}g</td>
             <td>{data.fats.active}g</td>
           </tr>
 
@@ -96,6 +101,7 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
           <tr className="hover:bg-white/20 transition">
             <td className="py-2 font-medium font-semibold bg-white/10">Fiber</td>
             <td>{data.fiber.recovery}g</td>
+            <td>{data.fiber.average}g</td>
             <td>{data.fiber.active}g</td>
           </tr>
         </tbody>

@@ -225,7 +225,7 @@ export default function PrimeTasks() {
               <button
                 onClick={() => handleSectorClick("longterm")}
                 className={`w-full text-md rounded-xl shadow ${selectedSector === "longterm" ? "bg-indigo-300/50" : "text-left flex justify-center glowing-button"}`}>
-                LongTerm
+                ThinkBig
               </button>
             </div>
           </div>

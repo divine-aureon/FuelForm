@@ -4,7 +4,6 @@ import useCoreData from "@/lib/hooks/CoreData";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import useAuth from '@/lib/useAuth';
 
 import { SettingsModal } from "@/components/Modals/SettingsModal"
 import SettingsPageComponent from "@/components/Modals/SettingsPageComponent"
@@ -18,8 +17,10 @@ import { DawnSyncModal } from "@/components/Modals/DawnSyncModal"
 import { DuskSyncModal } from "@/components/Modals/DuskSyncModal"
 import DawnSyncComponent from "@/components/Modals/DawnSyncComponent"
 import DuskSyncComponent from "@/components/Modals/DuskSyncComponent"
+
 import { UnlockModal } from "@/components/Modals/UnlockModal"
 import UnlockComponent from "@/components/Modals/UnlockComponent"
+
 import EnergyBreakdown from "@/components/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/components/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/components/NutrientDisplay/MineralBreakdown"
@@ -28,13 +29,16 @@ import { BuildVitaminData } from "@/components/NutrientDisplay/BuildVitaminData"
 import { BuildMineralData } from "@/components/NutrientDisplay/BuildMineralData"
 import NavPortalPaid from "@/components/NavPortal/NavPortalPaid";
 import NavPortalFree from "@/components/NavPortal/NavPortalFree";
+
 import { useBackground } from '@/components/Backgrounds/BackgroundMaker';
 import TodaysSync from '@/lib/hooks/TodaysSync'
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
 import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
+
 import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
 import { Sun, Moon, Lock, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, ListChecks, StepForward, StepBack } from "lucide-react";
+
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import BirthdayDrop from "@/components/PulseDrops/BirthdayDrop";
@@ -44,12 +48,14 @@ import PrimeTasksTile from "@/components/CoreTiles/PrimeTasks"
 import StatsEchoTile from "@/components/CoreTiles/StatsEcho"
 import StrengthArchiveTile from "@/components/CoreTiles/StrengthArchive"
 import MacroVaultTile from "@/components/CoreTiles/MacroVault"
-import SyncSimTile from "@/components/FastLinks/SyncSimulator"
-import NeuroUnlockTile from "@/components/FastLinks/NeuroSettings-Upgrade"
+
+
+
+
+
 
 export default function PaidCommandCenter() {
 
-    const { user } = useAuth();
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
   const { profile, latestSync, settings, fitnessSettings } = useCoreData();
@@ -81,8 +87,8 @@ export default function PaidCommandCenter() {
     : `${profile.height_ft_in.feet}'${profile.height_ft_in.inches}"`;
 
   const weightDisplay = profile.preferredWeightUnit === "lbs"
-    ? `${profile.lastKnownWeight_lb} lbs`
-    : `${profile.lastKnownWeight_kg}'"`;
+    ? `${latestSync?.weight_lbs} lbs`
+    : `${latestSync?.weight_kg}'"`;
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isFitnessOpen, setFitnessOpen] = useState(false);
@@ -186,7 +192,6 @@ export default function PaidCommandCenter() {
 
   const handlePageClick = (Page: PageId) => {
     setSelectedPage(Page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getNavigationTargets = (current: PageId): { left: PageId; right: PageId } => {
@@ -199,17 +204,18 @@ export default function PaidCommandCenter() {
 
   ///TEXT RESIXER FOR CUSTOMER CORE FEATURE CARDS
 
-  if (!user?.uid) return;
+
+
   if (typeof isPaidUser !== 'boolean') return;
 
   return (
     <>
-      <NavLoad />
       <PageFadeWrapper>
 
         <BirthdayDrop />
         <PulseDropEngine />
         <div className="z-0">
+
 
           <div className="bg-[url('/images/menus/vital.jpg')] bg-cover bg-center bg-no-repeat rounded-xl">
             <div className=" bg-indigo-400/20 inset-0 p-2 rounded-xl mb-2">
@@ -220,7 +226,6 @@ export default function PaidCommandCenter() {
             </div>
           </div>
 
-          {/*PAGE ONE OF COMMAND CENTER*/}
           <div className=" w-full rounded-xl">
             <AnimatePresence mode="wait">
               {selectedPage === "1" && (
@@ -241,48 +246,94 @@ export default function PaidCommandCenter() {
 
                   <div className="bg-white/30 backdrop-blur-sm rounded-lg p-3 shadow-md mt-3 ">
                     <div className="grid grid-cols-2 flex justify-center items-center gap-2 ">
+                      <div className=" bg-white/50 h-32 rounded-2xl flex flex-col justify-center p-1">
+                        <div className="bg-[url('/images/menus/cardbio.jpg')] rounded-xl bg-cover border border-indigo-300 bg-center bg-no-repeat">
+                          <div className="relative bg-indigo-200/40 rounded-xl pb-5 flex flex-col justify-center">
 
-                        <div className="relative bg-[url('/images/menus/cardbio.jpg')] rounded-xl h-32 bg-cover border border-indigo-300 bg-center bg-no-repeat">
-                          <div className="absolute inset-0 bg-indigo-200/40 rounded-xl flex flex-col items-left ">
-                            <h2 className="text-left text-white ml-2 text-lg pulse-glow flex items-center mt-1">User Biometrics{profile.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
-                            <h2 className="text-left text-white ml-2 text-xs">Age: {profile.age} Years</h2>
+                            <h2 className="text-left text-white ml-2 text-xl pulse-glow flex items-center mt-1">Biometrics{profile.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
+                            <h2 className="text-left text-white ml-2 text-xs">Age: {profile.age}</h2>
                             <h2 className="text-left text-white ml-2 text-xs">Height: {heightDisplay}</h2>
                             <h2 className="text-left text-white ml-2 text-xs">Current Weight: {weightDisplay}</h2>
-                            <h2 className="text-left text-white ml-2 text-xs">Calorie Goal: {fitnessSettings?.calorieGoal}Kcal</h2>
-                       
+                            <h2 className="text-left text-white ml-2 text-xs">Calorie Goal: {fitnessSettings?.calorieGoal}</h2>
+                            <h2></h2>
                           </div>
                         </div>
-                      
+                      </div>
 
-
-                      {isPaidUser ? (
-                        <StatsEchoTile isPaidUser={isPaidUser} />
-
-                      ) : (
-
-                        <PrimeTasksTile isPaidUser={isPaidUser} />
-
-                      )}
+                      <StatsEchoTile isPaidUser={isPaidUser} />
 
                     </div>
                   </div>
 
-                  {/* FASTLINKS AREA #1*/}
+
+
                   <div className="flex grid grid-cols-3 flex-col gap-4 py-3">
+                    {/* Right Column: FastLinks bar */}
 
-                    {/*TILE 1*/}
-                    <SyncSimTile isPaidUser={isPaidUser} />
 
-                    {/*TILE 2*/}
-                    <NeuroUnlockTile
-                      isPaidUser={isPaidUser}
-                      isSettingsOpen={isSettingsOpen}
-                      setSettingsOpen={setSettingsOpen}
-                      isUnlockOpen={isUnlockOpen}
-                      setUnlockOpen={setUnlockOpen}
-                    />
 
-                    {/*TILE 3*/}
+                    {isPaidUser ? (
+                      <>
+
+                        <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+                          onClick={() => router.push("/sync-simulator")}>
+                          Sync Simulator<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
+                        </button>
+
+
+
+                      </>
+                    ) : (
+                      <>
+
+                        <button className="w-full rounded-xl py-4 glowing-button leading-none bg-white/10 flex flex-col items-center  justify-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+                          onClick={() => router.push("/sync-simulator")}>
+                          Free Sync Simulator<Dna size={36} className="mt-1 text-white transition cursor-pointer" />
+                        </button>
+
+                      </>
+                    )}
+
+
+
+
+
+                    {isPaidUser ? (
+                      <>
+
+                        <button
+                          onClick={() => setSettingsOpen(true)}
+                          className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+                          Neuro <br />Settings<Settings size={36} className=" mt-1 text-white transition cursor-pointer" />
+                        </button>
+                        {isSettingsOpen && (
+                          <SettingsModal onClose={() => setSettingsOpen(false)}>
+                            < SettingsPageComponent />
+                          </SettingsModal>)}
+
+
+                      </>
+                    ) : (
+                      <>
+
+                        <button
+                          onClick={() => setUnlockOpen(true)}
+                          className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
+                          Upgrade<br />1 Month Free<KeyRound size={36} className="mt-1 text-white transition cursor-pointer" />
+                        </button>
+
+                        {isUnlockOpen && (
+                          <Elements stripe={stripePromise}>
+                            <UnlockModal onClose={() => setUnlockOpen(false)}>
+                              <UnlockComponent />
+                            </UnlockModal>
+                          </Elements>
+
+
+                        )}
+                      </>
+                    )}
+
                     <button
                       onClick={() => setBioOpen(true)}
                       className="w-full rounded-xl py-4 leading-none flex flex-col justify-center items-center bg-white/20 backdrop-blur hover:bg-indigo-300/50 text-white shadow-md">
@@ -299,12 +350,7 @@ export default function PaidCommandCenter() {
 
                 </motion.div>
               )}
-
-              {/*SECOND PAGE OF COMMAND CENTER*/}
               {selectedPage === "2" && (
-
-                /*NUTRIENT BLUEPRINT*/
-
                 <motion.div
                   key="2"
                   initial={{ opacity: 0 }}
@@ -387,7 +433,7 @@ export default function PaidCommandCenter() {
                 </motion.div>
               )}
 
-              {/*PAGE THREE OF COMMAND CENTER*/}
+
               {selectedPage === "3" && (
                 <motion.div
                   key="3"
@@ -407,32 +453,57 @@ export default function PaidCommandCenter() {
                     <div className="flex flex-col gap-4">
 
                       {/* TILE 1 */}
+                      <PrimeTasksTile isPaidUser={isPaidUser} />
 
-                {isPaidUser ? (
-                      
-                         <PrimeTasksTile isPaidUser={isPaidUser} />
-
-                      ) : (
-
-                         <StatsEchoTile isPaidUser={isPaidUser} />
-
-                      )}
 
                       {/* TILE 2*/}
 
-                      <StrengthArchiveTile isPaidUser={isPaidUser} />
+                      <StrengthArchiveTile isPaidUser={isPaidUser} />             
 
                       {/* TILE 3 */}
 
-                      <MacroVaultTile isPaidUser={isPaidUser} />
+                       <MacroVaultTile isPaidUser={isPaidUser} /> 
 
+                      {isPaidUser ? (
+                        <>
+
+                          <Link href="/macrovault" className="">
+                            <div className="relative h-32 bg-[url('/images/menus/meals3.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                              <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                                <div className="flex items-center gap-2"><Utensils />MacroVault</div>
+                                <h2 className="text-sm font-bold text-white">
+                                  Nourish. Record. Repeat.
+                                </h2>
+                              </div>
+                            </div>
+                          </Link>
+
+                        </>
+                      ) : (
+                        <>
+
+                          <Link href="/macrovault" className="">
+                            <div className="relative h-32 bg-[url('/images/menus/meals3.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
+        border-white/30 shadow-xl text-white text-2xl glowing-button">
+                              <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl hover:bg-indigo-300/50">
+                                <div className="flex items-center gap-2"><Lock />MacroVault</div>
+                                <h2 className="text-sm font-bold text-white">
+                                  Access Restricted.
+                                </h2>
+                              </div>
+                            </div>
+                          </Link>
+
+                        </>
+                      )}
 
                       {/* Add more tiles here */}
                     </div>
 
                     {/* Right Column: FastLinks bar */}
                     <div className="flex flex-col gap-3 ">
-                      <button className="w-full hidden rounded-xl py-4 leading-none bg-white/20 justify-center flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
+                      <button className="w-full rounded-xl py-4 leading-none bg-white/20 justify-center flex flex-col items-center backdrop-blur hover:bg-indigo-300/50 text-white shadow-md"
                         onClick={() => router.push("/crowns")}>
                         Crowns<Crown size={36} className="mt-1 text-white transition cursor-pointer" />
                       </button>
