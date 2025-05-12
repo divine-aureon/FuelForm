@@ -38,38 +38,13 @@ export async function POST(request: NextRequest) {
         }
         break;
 
-
-
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
-        const db = admin.firestore();
-        const usersRef = db.collection('users');
-        const querySnap = await usersRef
-          .where('stripeCustomerId', '==', customerId)
-          .limit(1)
-          .get();
-
-
-        if (!querySnap.empty) {
-          const userDoc = querySnap.docs[0];
-          await db.collection('users').doc(userDoc.id).set(
-            {
-              isPaid: false,
-            },
-            { merge: true }
-          );
-
-          console.log(`✅ User ${userDoc.id} marked as unpaid.`);
-        } else {
-          console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
-        }
+        await markUserUnpaidInFirestore(customerId);
         break;
       }
-
-
-
 
 
       default:
@@ -107,5 +82,34 @@ async function markUserPaidInFirestore(userId: string, session: Stripe.Checkout.
     console.log(`✅ User ${userId} marked as paid`);
   } catch (err) {
     console.error(`❌ Failed to update user ${userId}:`, err);
+  }
+}
+
+async function markUserUnpaidInFirestore(customerId: string) {
+  const db = admin.firestore();
+  const usersRef = db.collection('users');
+  const querySnap = await usersRef
+    .where('stripeCustomerId', '==', customerId)
+    .limit(1)
+    .get();
+
+  if (!querySnap.empty) {
+    const userDoc = querySnap.docs[0];
+    const userId = userDoc.id;
+
+    await db.collection('users').doc(userId).set(
+      {
+        isPaid: false,
+        paidAt: null,
+        canceledAt: new Date(),
+        subscriptionId: null,
+        stripeCustomerId: customerId,
+      },
+      { merge: true }
+    );
+
+    console.log(`✅ User ${userId} marked as unpaid.`);
+  } else {
+    console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
   }
 }
