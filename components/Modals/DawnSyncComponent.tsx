@@ -53,13 +53,13 @@ export default function DawnSyncComponent() {
         }
     };
 
-  if (!user?.uid) return;
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             console.log("Debug Profile:");
-
+            if (!user?.uid) return;
             const { recoveryTDEE, recoveryMacros, vitamins, minerals } = calculateRecoveryFuel({
                 weight_lbs,
                 weight_kg,        // ← live state value
@@ -89,8 +89,8 @@ export default function DawnSyncComponent() {
                 timestamp: serverTimestamp(),
             }, { merge: true });
 
-            
-              await setDoc(userRef, {
+
+            await setDoc(userRef, {
                 lastKnownWeight_lbs: weight_lbs,
                 lastKnownWeight_kg: weight_kg,
             }, { merge: true });
@@ -102,11 +102,13 @@ export default function DawnSyncComponent() {
         }
     };
 
+
+
     useEffect(() => {
         if (status === "success") {
-           
+
             const timeout = setTimeout(() => {
-               window.location.reload(); // hard refresh
+                window.location.reload(); // hard refresh
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);
@@ -114,20 +116,20 @@ export default function DawnSyncComponent() {
     }, [status, router]);
 
     return (
-       <div className="flex items-center justify-center min-h-screen flex-col pb-32">
-           
-                <div className="h-32 relative w-full bg-[url('/images/menus/dawn.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
+        <div className="flex items-center justify-center min-h-screen flex-col pb-32">
+
+            <div className="h-32 relative w-full bg-[url('/images/menus/dawn.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
          text-white text-3xl glowing-button mb-2">
-                    <div className="absolute inset-0 pt-5 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
-                        <div className="text-center gap-2 pulse-glow ">Initiate DawnSync Protocol</div>
-                        <h2 className="text-sm font-bold text-white">
+                <div className="absolute inset-0 pt-5 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+                    <div className="text-center gap-2 pulse-glow ">Initiate DawnSync Protocol</div>
+                    <h2 className="text-sm font-bold text-white">
                         Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.
-                        </h2>
-                    </div>
-    
+                    </h2>
+                </div>
+
             </div>
             <div className="bg-white/20 w-full rounded-xl p-2 shadow-lg">
-                        <form onSubmit={handleSubmit} className="">
+                <form onSubmit={handleSubmit} className="">
                     <p className="text-lg text-white font-semibold mb-1">
                         Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
                         <input
