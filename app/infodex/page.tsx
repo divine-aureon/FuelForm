@@ -24,6 +24,8 @@ export default function HelpPage() {
   const { setBackgroundMode } = useBackground();
   const [hasFuelFormAccount, setHasFuelFormAccount] = useState<boolean | null>(null);
 
+      const [loadingOverlay, setLoadingOverlay] = useState(false);
+
   useEffect(() => {
     const checkAccount = async () => {
       if (!user?.uid) {
@@ -85,6 +87,26 @@ export default function HelpPage() {
       <NavLoad />
       <PageFadeWrapper>
         <div className="pb-3">
+
+
+                {loadingOverlay && (
+        <div className="min-h-screen my-auto w-screen mx-auto fixed inset-0 z-[9999] bg-black/50 p-4 backdrop-blur-lg rounded-3xl flex flex-col items-center justify-center ">
+          <p className="text-white text-3xl p-4 text-center font-bold pulse-glow">
+            Preparing verification procedures...
+          </p>
+          <div className="flex space-x-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                className={`h-5 w-5 rounded-full bg-white opacity-70 animate-bounce`}
+                style={{ animationDelay: `${i * 0.4}s` }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      
           <div>
             <div className="relative mb-2 h-40 bg-[url('/images/menus/help.png')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-2xl glowing-button">
@@ -98,7 +120,7 @@ export default function HelpPage() {
             </div>
           </div>
 
-          <section className="bg-white/30 backdrop-blur-md rounded-2xl shadow-md p-6">
+          <section className="bg-white/30 backdrop-blur-md rounded-2xl shadow-md p-6 ">
 
             <h2 className="text-2xl font-bold mb-4">How to Use FuelForm</h2>
             <p className="mb-4">
@@ -190,11 +212,12 @@ export default function HelpPage() {
                     You are cleared for departure.
                   </div>
                   <div className="mt-3 mb-2">
-                    <CancelButton />
+                    <CancelButton triggerOverlay={() => setLoadingOverlay(true)} />
                   </div>
+
                 </>
               }
-              
+
             </div>
           </section>
         </div>
