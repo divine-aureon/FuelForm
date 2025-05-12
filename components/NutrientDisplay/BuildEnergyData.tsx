@@ -119,9 +119,9 @@ export function BuildEnergyData(latestSync: any) {
     
 
     // Protein (weight-based)
-    const proteinLow = profile.lastKnownWeight_lb ? Math.round(profile.lastKnownWeight_lb  * 0.7) : '[n/a]';
-    const proteinHigh = profile.lastKnownWeight_lb  ? Math.round(profile.lastKnownWeight_lb  * 1.2) : '[n/a]';
-    const estimatedProtein = profile.lastKnownWeight_lb  ? `${proteinLow}–${proteinHigh}` : '[n/a]';
+    const proteinLow = profile.lastKnownWeight_lbs ? Math.round(profile.lastKnownWeight_lbs  * 0.7) : '[n/a]';
+    const proteinHigh = profile.lastKnownWeight_lbs  ? Math.round(profile.lastKnownWeight_lbs  * 1.2) : '[n/a]';
+    const estimatedProtein = profile.lastKnownWeight_lbs  ? `${proteinLow}–${proteinHigh}` : '[n/a]';
 
 
     const EnergyData = {
