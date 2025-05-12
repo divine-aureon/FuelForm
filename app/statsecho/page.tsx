@@ -304,7 +304,7 @@ export default function StatsEcho() {
               transition={{ duration: 0.4 }}
             >
               <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                   <div className="place-self-center text-left text-xl font-semibold ">Weight History</div>
                 </div>
                 <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
@@ -324,7 +324,7 @@ export default function StatsEcho() {
                   </ResponsiveContainer>
                 </div>
                 <div className="text-lg 20 w-full max-w-md text-black">
-                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-gray-800/70 text-white glowing-green-button">
+                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-gray-800/70 text-white glowing-purple-button">
                     <div className="flex flex-col place-self-center text-left font-semibold">
                       <p className=" font-semibold">Filter by date</p>
                       <select
@@ -373,7 +373,7 @@ export default function StatsEcho() {
               transition={{ duration: 0.4 }}
             >
               <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                   <div className="place-self-center text-left text-xl font-semibold">Sleep History</div>
                 </div>
                 <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
@@ -395,7 +395,7 @@ export default function StatsEcho() {
                   </ResponsiveContainer>
                 </div>
                 <div className="text-lg w-full max-w-md text-black">
-                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                     <div className="flex flex-col place-self-center text-left font-semibold">
                       <p className=" font-semibold">Filter by date</p>
                       <select
@@ -435,7 +435,7 @@ export default function StatsEcho() {
               transition={{ duration: 0.4 }}
             >
               <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                   <div className="place-self-center text-left text-xl font-semibold">Step History</div>
                 </div>
                 <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
@@ -457,7 +457,7 @@ export default function StatsEcho() {
                   </ResponsiveContainer>
                 </div>
                 <div className="text-lg w-full max-w-md text-black">
-                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                     <div className="flex flex-col place-self-center text-left font-semibold">
                       <p className=" font-semibold">Filter by date</p>
                       <select
@@ -498,7 +498,7 @@ export default function StatsEcho() {
             >
 
               <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
-                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                   <div className="place-self-center text-left text-xl font-semibold">Exercise History</div>
                 </div>
 
@@ -522,7 +522,7 @@ export default function StatsEcho() {
                   </ResponsiveContainer>
                 </div>
                 <div className="text-lg w-full max-w-md text-black">
-                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-green-button">
+                  <div className="mb-2 p-2 grid grid-cols-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
                     <div className="flex flex-col place-self-center text-left font-semibold">
                       <p className=" font-semibold">Filter by date</p>
                       <select
@@ -584,26 +584,26 @@ export default function StatsEcho() {
                     {selectedSector === "dawnStats" && (
                       <div className="flex justify-center gap-2 w-full">
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white }`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white }`}
                           onClick={() => { setSelectedView("weight"); setIsDrawerOpen(false); }}>Weight</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("sleep"); setIsDrawerOpen(false); }}>Sleep</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("mood"); setIsDrawerOpen(false); }}>Mood</button>
                       </div>
                     )}
                     {selectedSector === "coreStats" && (
                       <div className="flex justify-center gap-2 w-full">
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("prime"); setIsDrawerOpen(false); }}>Coming soon!</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("strength"); setIsDrawerOpen(false); }}>Coming Soon!</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("macros"); setIsDrawerOpen(false); }}>Coming Soon!</button>
                       </div>
                     )}
@@ -611,13 +611,13 @@ export default function StatsEcho() {
                     {selectedSector === "duskStats" && (
                       <div className="flex justify-center gap-2 w-full">
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70 glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("steps"); setIsDrawerOpen(false); }}>Steps</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("exercise"); setIsDrawerOpen(false); }}>Exercise</button>
                         <button
-                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-green-button text-white}`}
+                          className={`px-4 py-2 rounded-lg w-full bg-blue-500/70  glowing-purple-button text-white}`}
                           onClick={() => { setSelectedView("energy"); setIsDrawerOpen(false); }}>Energy</button>
                       </div>
                     )}

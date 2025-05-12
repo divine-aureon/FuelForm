@@ -51,13 +51,13 @@ export default function NavMenuFree({ onClose }: NavMenuProps) {
       <Link href="/command-center" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
         <CircleCheckBig size={15}/>Command Centre  
       </Link>
-            <Link href="/strengtharchive" className="z-20 block p-3 rounded-xl gap-2 flex items-center justify-center hover:bg-indigo-300/20" onClick={onClose}>
+            <Link href="/infodex" className="z-20 block p-3 rounded-xl gap-2 flex items-center justify-center hover:bg-indigo-300/20" onClick={onClose}>
          <CircleCheckBig size={15}/>InfoDex
       </Link>
       <Link href="/primetasks" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center" onClick={onClose}>
          <CircleCheckBig size={15}/>PrimeTasks 
       </Link>
-      <Link href="/statsecho" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center " onClick={onClose}>
+      <Link href="/sync-simulator" className="z-20 block p-3 rounded-xl hover:bg-indigo-300/20 gap-2 flex items-center justify-center " onClick={onClose}>
        <CircleCheckBig size={15}/>SyncSimulator
       </Link>
       <button

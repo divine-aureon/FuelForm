@@ -225,7 +225,7 @@ export default function StrengthArchive() {
 
                               <div className="text-white mb-2 justify-center flex">
 
-                                <button className="w-full h-16 glowing-green-button rounded-xl">
+                                <button className="w-full h-16 glowing-purple-button rounded-xl">
                                   Current Active Split is Push-Pull-Legs
                                 </button>
                               </div>
@@ -281,7 +281,7 @@ export default function StrengthArchive() {
 
                               <div className="text-white mb-2 justify-center flex">
 
-                                <button className="w-full h-16 glowing-green-button rounded-xl">
+                                <button className="w-full h-16 glowing-purple-button rounded-xl">
                                   Last Session: Pull<br /> May 10, 2025 6:52pm
                                 </button>
                               </div>
@@ -327,7 +327,7 @@ export default function StrengthArchive() {
 
                               <div className="text-white mb-2 justify-center flex">
 
-                                <button className="w-full h-16 glowing-green-button rounded-xl">
+                                <button className="w-full h-16 glowing-purple-button rounded-xl">
                                   Movement Profile -Pull1- Selected
                                 </button>
                               </div>
@@ -355,17 +355,17 @@ export default function StrengthArchive() {
                         <div className="grid grid-cols-3 gap-1 w-full rounded-xl">
                           <button
                             onClick={() => handleSetupClick("splits")}
-                            className={`px-5 w-full text-md rounded-xl shadow ${selectedSetup === "splits" ? "bg-indigo-300/50" : "glowing-green-button"}`}>
+                            className={`px-5 w-full text-md rounded-xl shadow ${selectedSetup === "splits" ? "bg-indigo-300/50" : "glowing-purple-button"}`}>
                             Splits
                           </button>
                           <button
                             onClick={() => handleSetupClick("bodygroup")}
-                            className={`w-full text-md rounded-xl shadow ${selectedSetup === "bodygroup" ? "bg-indigo-300/50" : "glowing-green-button"}`}>
+                            className={`w-full text-md rounded-xl shadow ${selectedSetup === "bodygroup" ? "bg-indigo-300/50" : "glowing-purple-button"}`}>
                             BodyGroup
                           </button>
                           <button
                             onClick={() => handleSetupClick("movements")}
-                            className={`w-full text-md rounded-xl shadow ${selectedSetup === "movements" ? "bg-indigo-300/50" : "glowing-green-button"}`}>
+                            className={`w-full text-md rounded-xl shadow ${selectedSetup === "movements" ? "bg-indigo-300/50" : "glowing-purple-button"}`}>
                             Movements
                           </button>
                         </div>
