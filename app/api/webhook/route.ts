@@ -59,12 +59,14 @@ async function markUserPaidInFirestore(userId: string, session: Stripe.Checkout.
     const db = admin.firestore();
 
     const stripeCustomerId = session.customer as string;
+    const subscriptionId = session.subscription as string;
 
     await db.collection('users').doc(userId).set(
       {
         isPaid: true,
         paidAt: new Date(),
         stripeCustomerId,
+        subscriptionId,
       },
       { merge: true }
     );
