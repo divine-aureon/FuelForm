@@ -12,14 +12,14 @@ getAdminApp(); // safe to call multiple times
 export async function POST(req: Request) {
   try {
     const { uid } = await req.json();
-    if (!uid) return NextResponse.json({ error: "Missing UID" }, { status: 400 });
+    if (!uid) return NextResponse.json({ error: "Missing UID" }, { status: 431 });
 
     const db = getFirestore();
     const userDoc = await db.collection("users").doc(uid).get();
     const customerId = userDoc.data()?.stripeCustomerId;
 
     if (!customerId) {
-      return NextResponse.json({ error: "No Stripe customer found" }, { status: 400 });
+      return NextResponse.json({ error: "No Stripe customer found" }, { status: 432 });
     }
 
     const session = await stripe.billingPortal.sessions.create({

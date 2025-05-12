@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.userId;
 
         if (userId) {
-          await markUserPaidInFirestore(userId);
+          await markUserPaidInFirestore(userId , session );
         }
         break;
 
@@ -54,14 +54,17 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function markUserPaidInFirestore(userId: string) {
+async function markUserPaidInFirestore(userId: string, session: Stripe.Checkout.Session) {
   try {
     const db = admin.firestore();
+
+    const stripeCustomerId = session.customer as string;
 
     await db.collection('users').doc(userId).set(
       {
         isPaid: true,
         paidAt: new Date(),
+        stripeCustomerId,
       },
       { merge: true }
     );
