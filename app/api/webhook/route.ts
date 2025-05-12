@@ -38,14 +38,30 @@ export async function POST(request: NextRequest) {
         }
         break;
 
+
+
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
-        await markUserUnpaidInFirestore(customerId);
+        const db = admin.firestore();
+        const usersRef = db.collection('users');
+        const querySnap = await usersRef
+          .where('stripeCustomerId', '==', customerId)
+          .limit(1)
+          .get();
+
+        if (!querySnap.empty) {
+          const userDoc = querySnap.docs[0];
+          const userId = userDoc.id;
+
+          await markUserUnpaidInFirestore(userId);
+        } else {
+          console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
+        }
+
         break;
       }
-
 
       default:
         console.log(`Unhandled event type ${event.type}`);
@@ -85,29 +101,18 @@ async function markUserPaidInFirestore(userId: string, session: Stripe.Checkout.
   }
 }
 
-async function markUserUnpaidInFirestore(customerId: string) {
+async function markUserUnpaidInFirestore(userId: string) {
   const db = admin.firestore();
-  const usersRef = db.collection('users');
-  const querySnap = await usersRef
-    .where('stripeCustomerId', '==', customerId)
-    .limit(1)
-    .get();
 
-  if (!querySnap.empty) {
-    const userDoc = querySnap.docs[0];
-    const userId = userDoc.id;
+  await db.collection('users').doc(userId).set(
+    {
+      isPaid: false,
+      paidAt: null,
+      canceledAt: new Date(),
+      subscriptionId: null,
+    },
+    { merge: true }
+  );
 
-    await db.collection('users').doc(userId).set(
-      {
-        isPaid: false,
-        canceledAt: new Date(),
-        stripeCustomerId: customerId,
-      },
-      { merge: true }
-    );
-
-    console.log(`✅ User ${userId} marked as unpaid.`);
-  } else {
-    console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
-  }
+  console.log(`✅ User ${userId} marked as unpaid.`);
 }
