@@ -191,17 +191,10 @@ export default function HelpPage() {
                   </div>
                   <div className="mt-3 mb-2">
                     <CancelButton />
-
                   </div>
                 </>
               }
-              <Link href="https://billing.stripe.com/p/login/eVa8x80MQ5PmgPmdQQ">
-            <div>Cancel Here!</div>
               
-              </Link>
-
-
-
             </div>
           </section>
         </div>

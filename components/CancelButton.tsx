@@ -41,13 +41,31 @@ if (!res.ok) {
   return;
 }
 
-        if (data?.url) window.location.href = data.url;
-        setLoading(false);
     };
 
   return (
+    <>
     <button onClick={handleCancelSubscription} className="w-full text-white text-xl glowing-cancel-button">
       Revoke Access Codes..
     </button>
+
+      {loading && (
+        <div className="min-h-screen my-auto min-w-screen mx-auto fixed inset-0 z-[9999] bg-black/50 p-4 backdrop-blur-lg rounded-3xl flex flex-col items-center justify-center ">
+          <p className="text-white text-3xl p-4 text-center font-bold pulse-glow">
+            Preparing verification procedures...
+          </p>
+          <div className="flex space-x-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                className={`h-5 w-5 rounded-full bg-white opacity-70 animate-bounce`}
+                style={{ animationDelay: `${i * 0.4}s` }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    
+    </>
   );
 }

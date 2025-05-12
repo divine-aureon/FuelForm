@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect , useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -11,7 +11,7 @@ export default function UpgradeButton() {
   const [loading, setLoading] = useState(false);
 
   const handleUpgrade = async () => {
-     setLoading(true);
+    setLoading(true);
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user) return;
@@ -39,27 +39,27 @@ export default function UpgradeButton() {
 
   return (
     <>
-    <button onClick={handleUpgrade} className="text-lg font-bold text-center mb-2 text-white w-full glowing-button">
-      Click to Upgrade Your Access Codes
-    </button>
+      <button onClick={handleUpgrade} className="text-lg font-bold text-center mb-2 text-white w-full glowing-button">
+        Click to Upgrade Your Access Codes
+      </button>
 
-{loading && (
-  <div className="min-h-screen my-auto min-w-screen mx-auto fixed inset-0 z-[9999] bg-black/50 p-4 backdrop-blur-lg rounded-3xl flex items-center justify-center ">
-    <p className="text-white text-3xl p-4 text-center font-bold pulse-glow">
-      Preparing verification procedures...
-    </p>
-    <div className="flex space-x-2">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <span
-          key={i}
-          className={`h-5 w-5 rounded-full bg-white opacity-70 animate-bounce`}
-          style={{ animationDelay: `${i * 0.4}s` }}
-        />
-      ))}
-    </div>
-  </div>
-)}
-        </>
-    
+      {loading && (
+        <div className="min-h-screen my-auto min-w-screen mx-auto fixed inset-0 z-[9999] bg-black/50 p-4 backdrop-blur-lg rounded-3xl flex flex-col items-center justify-center ">
+          <p className="text-white text-3xl p-4 text-center font-bold pulse-glow">
+            Preparing verification procedures...
+          </p>
+          <div className="flex space-x-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                className={`h-5 w-5 rounded-full bg-white opacity-70 animate-bounce`}
+                style={{ animationDelay: `${i * 0.4}s` }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+
   );
 }
