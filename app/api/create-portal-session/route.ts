@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const session = await stripe.billingPortal.sessions.create({
-      customer: customerId,
+      customer: "cus_SIQfWh0kUf0yQk",
       return_url: "https://fuelform.online", // Change as needed
     });
 
