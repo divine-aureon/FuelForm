@@ -189,11 +189,11 @@ export default function HelpPage() {
 
                     You are cleared for departure.
                   </div>
-                  <div className="glowing-cancel-button mt-3 mb-2 ">
-
+                  <div className="mt-3 mb-2">
                     <CancelButton />
-                  </div>
 
+                  </div>
+<CancelButton/>
                 </>
               }
 

@@ -40,7 +40,7 @@ const [user, setUser] = useState<any>(null);
     };
 
   return (
-    <button onClick={handleCancelSubscription} className="text-white text-xl">
+    <button onClick={handleCancelSubscription} className="w-full text-white text-xl glowing-cancel-button">
       Revoke Access Codes..
     </button>
   );
