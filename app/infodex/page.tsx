@@ -178,12 +178,12 @@ export default function HelpPage() {
               {isPaidUser &&
                 <>
                   <div className="text-lg">
-                    “Mission Control acknowledges your transmission.”
+                    Mission Control acknowledges your transmission.
                     We understand that your journey is taking you elsewhere — to new frontiers, new priorities, and perhaps a different rhythm of life.
 
                     Just know this: your presence in the FuelForm Command Center left a trace — a spark in the system, a log in the archives, a legacy in motion.
 
-                    Whether you're returning to base or charting a new path, your mission was — and always will be — honored.
+                    Whether youre returning to base or charting a new path, your mission was — and always will be — honored.
 
                     At ease, Commander.
 
