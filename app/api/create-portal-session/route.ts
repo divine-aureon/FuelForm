@@ -23,13 +23,21 @@ export async function POST(req: Request) {
     }
 
     const session = await stripe.billingPortal.sessions.create({
-      customer: "cus_SIQfWh0kUf0yQk",
+      customer: customerId,
       return_url: "https://fuelform.online", // Change as needed
     });
 
-    return NextResponse.json({ url: session.url });
-  } catch (err) {
-    console.error("Stripe portal session error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
+} catch (err: unknown) {
+  const error = err as any;
+
+  return NextResponse.json(
+    {
+      error: "Stripe billing portal session creation failed.",
+      message: error?.message || "No message provided",
+      type: error?.type || "Unknown error type",
+      statusCode: error?.statusCode || 500,
+      raw: error?.raw || null,
+    },
+    { status: 500 }
+  );
+}}

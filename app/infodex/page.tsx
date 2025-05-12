@@ -13,7 +13,7 @@ import { db } from '../../lib/firebase';
 import useCoreData from "@/lib/hooks/CoreData";
 import PageFadeWrapper from "@/components/Loading/PageFadeWrapper"
 import CancelButton from "@/components/CancelButton"
-
+import Link from 'next/link';
 
 
 export default function HelpPage() {
@@ -196,7 +196,10 @@ export default function HelpPage() {
 <CancelButton/>
                 </>
               }
-
+              <Link href="https://billing.stripe.com/p/login/eVa8x80MQ5PmgPmdQQ">
+            <div>Cancel Here!</div>
+              
+              </Link>
 
 
 

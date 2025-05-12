@@ -35,6 +35,12 @@ const [user, setUser] = useState<any>(null);
         });
 
         const data = await res.json();
+
+if (!res.ok) {
+  alert(`❌ ${data.error}\n\nMessage: ${data.message}\nType: ${data.type}`);
+  return;
+}
+
         if (data?.url) window.location.href = data.url;
         setLoading(false);
     };

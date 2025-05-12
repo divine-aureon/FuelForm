@@ -34,9 +34,44 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.userId;
 
         if (userId) {
-          await markUserPaidInFirestore(userId , session );
+          await markUserPaidInFirestore(userId, session);
         }
         break;
+
+
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+
+        const db = admin.firestore();
+        const usersRef = db.collection('users');
+        const querySnap = await usersRef
+          .where('stripeCustomerId', '==', customerId)
+          .limit(1)
+          .get();
+
+        if (!querySnap.empty) {
+          const userDoc = querySnap.docs[0];
+          await db.collection('users').doc(userDoc.id).set(
+            {
+              isPaid: false,
+              subscriptionId: null,
+              canceledAt: new Date(),
+            },
+            { merge: true }
+          );
+
+          console.log(`✅ User ${userDoc.id} marked as unpaid.`);
+        } else {
+          console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
+        }
+        break;
+      }
+
+
+
+
 
       default:
         console.log(`Unhandled event type ${event.type}`);
