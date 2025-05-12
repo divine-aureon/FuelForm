@@ -183,7 +183,7 @@ export default function HelpPage() {
 
                     Just know this: your presence in the FuelForm Command Center left a trace — a spark in the system, a log in the archives, a legacy in motion.
 
-                    Whether youre returning to base or charting a new path, your mission was — and always will be — honored.
+                    Whether you&apos;re returning to base or charting a new path, your mission was — and always will be — honored.
 
                     At ease, Commander.
 

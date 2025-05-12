@@ -145,7 +145,7 @@ export default function PrimeTasks() {
 
                     <div className="text-white text-md text-center p-3">
                       PrimeTasks are your core objectives — the essential tasks you commit to completing each day to stay
-                      aligned with your goals, routines, and values. They represent discipline in action. Whether youre
+                      aligned with your goals, routines, and values. They represent discipline in action. Whether you&apos;re
                       focused on fitness, productivity, mental clarity, or growth, PrimeTasks are your non-negotiables.
                       Each morning, set your PrimeTasks. At night, check them off and track your momentum.
                     </div>
@@ -169,9 +169,9 @@ export default function PrimeTasks() {
 
                     <div className="text-white text-md text-center p-3">
                       This is where youll keep track of your larger goals — the ones that unfold over weeks or months, not just a single day.
-                      Whether youre working toward building a new system, transforming your body, launching a project, or creating lasting
+                      Whether you&apos;re working toward building a new system, transforming your body, launching a project, or creating lasting
                       habits, your long-term tasks live here. These are the missions that require consistency, vision, and patience. You
-                      can update them as you evolve, mark milestones along the way, and stay grounded in what youre truly working toward.
+                      can update them as you evolve, mark milestones along the way, and stay grounded in what you&apos;re truly working toward.
                       Let this section be your reminder of the bigger picture — the reason behind your daily efforts.
                     </div>
 
@@ -197,8 +197,8 @@ export default function PrimeTasks() {
                     <div className="text-white text-md text-center p-3">
                       This is your archive of wins — the place where your progress becomes real. Every time you check off a
                       task, it gets logged here as proof of your consistency, focus, and follow-through. Over time, this
-                      space becomes a timeline of your growth — not just what youve done, but how far youve come. On
-                      tough days, come here to remind yourself: youre building something, and its working. Every checkbox is a step forward.
+                      space becomes a timeline of your growth — not just what you&apos;ve done, but how far you&apos;ve come. On
+                      tough days, come here to remind yourself: you&apos;re building something, and its working. Every checkbox is a step forward.
                     </div>
 
                   </div>

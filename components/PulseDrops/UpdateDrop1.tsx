@@ -40,7 +40,7 @@ export default function UpdateDrop1() {
                 <div className="pb-6 pt-4 bg-[#0f172a] text-white rounded-2xl shadow-xl border border-indigo-500 max-w-sm w-full space-y-4 text-center">
                     <div className="text-left text-lg text-gray-300 bg-black/30 pb-2 pt-1 pl-3 gap-3 items-center">Incoming PulseDrop...</div>
                     <h2 className="text-3xl px-3 font-bold pulse-glow gap-2"> There Have been some new developments, {profile.name} </h2>
-                    <p className="text-sm text-indigo-300">We have implemented a new PulseDrop System.. If youre seeing this, thats means its now working.
+                    <p className="text-sm text-indigo-300">We have implemented a new PulseDrop System.. If you&apos;re seeing this, thats means its now working.
                         There will be many more drops to come, so stay stuned for more future developments. At ease.
                     </p>
                     <button

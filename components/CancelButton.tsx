@@ -1,19 +1,33 @@
+'use client';
+
 
 import { useEffect, useState } from 'react';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function CancelButton() {
 
+const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
-    const handleCancelSubscription = async () => {
+   
 
-        setLoading(true);
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (!user) return;
+ useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+        return () => unsubscribe();
+  }, []);
 
 
+ const handleCancelSubscription = async () => {
+    
+    if (!user?.uid) {
+      alert("User not loaded.");
+      return;
+    }
+    setLoading(true);
         const res = await fetch("/api/create-portal-session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -22,11 +36,12 @@ export default function CancelButton() {
 
         const data = await res.json();
         if (data?.url) window.location.href = data.url;
+        setLoading(false);
     };
 
-    return (
-        <button onClick={handleCancelSubscription} className="text-white text-xl">
-            Revoke Access Codes..
-        </button>
-    );
+  return (
+    <button onClick={handleCancelSubscription} className="text-white text-xl">
+      Revoke Access Codes..
+    </button>
+  );
 }

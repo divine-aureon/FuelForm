@@ -174,7 +174,7 @@ export default function StrengthArchive() {
                   <h2 className="text-2xl font-bold mb-4">Access Restricted..</h2>
                   <p className="mb-4">The Strength Archive is your personal vault of power — a place to log your lifts,
                     track your progress, and unlock your true potential over time. Right now, the system is offline,
-                    waiting for activation. When youre ready to record every rep, hit personal records, and watch
+                    waiting for activation. When you&apos;re ready to record every rep, hit personal records, and watch
                     your strength evolve day by day, power up this feature and take control of your training like never before.</p>
 
                   <Link href="/unlock">
