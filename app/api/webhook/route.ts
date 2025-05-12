@@ -100,9 +100,7 @@ async function markUserUnpaidInFirestore(customerId: string) {
     await db.collection('users').doc(userId).set(
       {
         isPaid: false,
-        paidAt: null,
         canceledAt: new Date(),
-        subscriptionId: null,
         stripeCustomerId: customerId,
       },
       { merge: true }
