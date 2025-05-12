@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
 
     switch (event.type) {
-      case 'checkout.session.completed':
+      case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
           await markUserPaidInFirestore(userId, session);
         }
         break;
-
+      }
 
 
       case 'customer.subscription.deleted': {
@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
 
         if (!querySnap.empty) {
           const userDoc = querySnap.docs[0];
-          const userId = userDoc.id;
+          const CANCELuserId = userDoc.id;
 
-          await markUserUnpaidInFirestore(userId);
+          await markUserUnpaidInFirestore(CANCELuserId);
         } else {
           console.warn(`⚠️ No user found with Stripe customer ID: ${customerId}`);
         }
@@ -101,10 +101,10 @@ async function markUserPaidInFirestore(userId: string, session: Stripe.Checkout.
   }
 }
 
-async function markUserUnpaidInFirestore(userId: string) {
+async function markUserUnpaidInFirestore(CANCELuserId: string) {
   const db = admin.firestore();
 
-  await db.collection('users').doc(userId).set(
+  await db.collection('users').doc(CANCELuserId).set(
     {
       isPaid: false,
       paidAt: null,
@@ -114,5 +114,5 @@ async function markUserUnpaidInFirestore(userId: string) {
     { merge: true }
   );
 
-  console.log(`✅ User ${userId} marked as unpaid.`);
+  console.log(`✅ User ${CANCELuserId} marked as unpaid.`);
 }

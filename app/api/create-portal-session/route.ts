@@ -27,6 +27,9 @@ export async function POST(req: Request) {
       return_url: "https://fuelform.online", // Change as needed
     });
 
+return NextResponse.json({ url: session.url }); // ← this never runs!
+
+
 } catch (err: unknown) {
   const error = err as any;
 
@@ -41,3 +44,4 @@ export async function POST(req: Request) {
     { status: 500 }
   );
 }}
+
