@@ -53,9 +53,10 @@ export async function POST(request: NextRequest) {
 
         if (!querySnap.empty) {
           const userDoc = querySnap.docs[0];
-          await db.collection('users').doc(userDoc.id).set(
+          await userDoc.ref.set(
             {
               isPaid: false,
+              paidAt: null,
               subscriptionId: null,
               canceledAt: new Date(),
             },
