@@ -51,14 +51,12 @@ export async function POST(request: NextRequest) {
           .limit(1)
           .get();
 
+
         if (!querySnap.empty) {
           const userDoc = querySnap.docs[0];
-          await userDoc.ref.set(
+          await db.collection('users').doc(userDoc.id).set(
             {
               isPaid: false,
-              paidAt: null,
-              subscriptionId: null,
-              canceledAt: new Date(),
             },
             { merge: true }
           );
