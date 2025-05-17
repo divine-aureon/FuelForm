@@ -11,12 +11,15 @@ import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 export default function PulseDropEngine() {
     const userProfile = useGlobalData((s) => s.userProfile);
 
-    const activeDrops = useMemo(() => {
-    if (!userProfile || !userProfile?.pulseSettings) return [];
-    return pulseDropRegistry.filter((drop) =>
-      drop.condition(userProfile, userProfile?.pulseSettings)
-    );
-  }, [userProfile, userProfile?.pulseSettings]);
+const activeDrops = useMemo(() => {
+  if (!userProfile || !userProfile.pulseSettings) return [];
+
+  const { pulseSettings } = userProfile;
+
+  return pulseDropRegistry.filter((drop) =>
+    drop.condition(userProfile, pulseSettings)
+  );
+}, [userProfile]);
 
   return (
     <>

@@ -2,7 +2,7 @@ import { UserProfile, PulseData } from "@/lib/UpdateDatabase/types";
 import {
   PULSE_DROP_IDS,
   PulseDropId
-} from "@/OverViewComponents/PulseDrops/Data/pulseDropIds";
+} from "../../../OverViewComponents/PulseDrops/Data/pulseDropIds";
 
 export type PulseDropType = "system" | "update" | "birthday" | "tutorial";
 
