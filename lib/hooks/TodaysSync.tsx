@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import useAuth from "@/lib/useAuth";
+import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
-export default function TodaysSync() {
+export default function useTodaysSync() {
   const { user } = useAuth();
-  const [hasDawnSyncedToday, setHasDawnSyncedToday] = useState(false);
-  const [hasDuskSyncedToday, setHasDuskSyncedToday] = useState(false);
+
+    const setHasDawnSyncedToday = useGlobalData((s) => s.setHasDawnSyncedToday);
+    const setHasDuskSyncedToday = useGlobalData((s) => s.setHasDuskSyncedToday);
 
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -20,11 +22,13 @@ export default function TodaysSync() {
     const fetchTodaySync = async () => {
       const docRef = doc(db, "users", user.uid, "syncs", dateString);
       const docSnap = await getDoc(docRef);
-
+console.log("🗓️ Sync Date:", dateString);
       if (docSnap.exists()) {
         const data = docSnap.data();
         setHasDawnSyncedToday(data.dawnSync === true);
         setHasDuskSyncedToday(data.duskSync === true);
+
+
       } else {
         setHasDawnSyncedToday(false);
         setHasDuskSyncedToday(false);
@@ -34,5 +38,5 @@ export default function TodaysSync() {
     fetchTodaySync();
   }, [user?.uid, dateString]);
 
-  return { hasDawnSyncedToday, hasDuskSyncedToday };
+  return  null;
 }

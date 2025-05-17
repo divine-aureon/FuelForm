@@ -1,6 +1,6 @@
 {
-    "name": "FuelForm",
-    "short_name": "FuelForm",
+    "name": "BodySync",
+    "short_name": "BodySync",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#000000",

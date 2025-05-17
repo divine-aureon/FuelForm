@@ -25,38 +25,69 @@ interface SyncData {
   timestamp?: any;
 }
 
-interface FitSyncData {
+interface StrengthSyncData {
   liftWeight_lbs: number;
   liftWeight_kg: number;
   movements: any[];
 }
 
-interface SettingsData {
+interface CustomSettingsData {
   background: string;
   navIcon: string;
+  lightMode: boolean;
 }
 
-interface FitData {
+interface StrengthData {
+  isStrengthArchiveActive: boolean;
+  currentSplit: string;
+  activeSession: boolean;
+  liftIndex: {
+    [bodygroup: string]: BodygroupProfile;
+  };
+}
+
+interface Profile {
+  name: string;
+  movements: string[];
+}
+
+interface BodygroupProfile {
+  profile1?: Profile;
+  profile2?: Profile;
+  profile3?: Profile;
+}
+
+
+interface PrimeData {
+  isPrimeTasksActive: boolean;
+}
+
+interface MacroData {
   calorieGoal: number;
-  activeSplit: string;
+  isMacroVaultActive: boolean;
 }
 
 interface PulseMemoryData {
   v1_welcomeDrop: boolean;
-  v2_updateDrop1: boolean,
+  v2_updateDrop1: boolean;
+  Thanks4UpgradeDrop: boolean;
 }
 
 interface PulseData {
   pulseMemory: PulseMemoryData;
   receivePulseDrops: boolean;
-  receiveTutorials: boolean;
-  dailyMotivation: boolean;
+  tutorialDrops: boolean;
+  motivationDrops: boolean;
+  humourDrops: boolean;
 }
 
-interface UserProfile {
+export interface UserProfile {
   name: string;
+  age: number;
+  email: string;
   birthday: string;
   gender: string;
+
   height_cm: number;
   height_ft_in: {
     feet: number;
@@ -64,25 +95,29 @@ interface UserProfile {
   };
   preferredHeightUnit: string;
   preferredWeightUnit: string;
-  age: number;
-  email: string; // ✅ Add email here
-  latestSync?: SyncData;
-  settings?: SettingsData;
-  fitnessSettings?: FitData;
-  pulseSettings?: PulseData;
-  isStrengthActive: boolean;
-  isMacroActive: boolean;
-  isPrimeActive: boolean;
-  isPaid: boolean;
-  token: boolean;
+
   lastKnownWeight_lbs: number;
   lastKnownWeight_kg: number;
+
+  latestSync?: SyncData;
+
+  customSettings?: CustomSettingsData;
+  strengthArchiveSettings?: StrengthData;
+  primeTasksSettings?: PrimeData;
+  macroVaultSettings?: MacroData;
+  pulseSettings?: PulseData;
+
+  isPaid: boolean;
+  token: boolean;
 }
 
 const defaultProfile: UserProfile = {
   name: "",
+  age: 0,
+  email: "",
   birthday: "",
   gender: "",
+
   height_cm: 0,
   height_ft_in: {
     feet: 0,
@@ -90,15 +125,45 @@ const defaultProfile: UserProfile = {
   },
   preferredHeightUnit: "",
   preferredWeightUnit: "",
-  age: 0,
-  email: "", // ✅ Add email here
-  isStrengthActive: false,
-  isMacroActive: false,
-  isPrimeActive: false,
-  isPaid: false,
-  token: true,
+
   lastKnownWeight_lbs: 0,
   lastKnownWeight_kg: 0,
+
+  isPaid: false,
+  token: true,
+
+  customSettings: {
+    background: "",
+    navIcon: "",
+    lightMode: true,
+  },
+
+  strengthArchiveSettings: {
+    isStrengthArchiveActive: false,
+    currentSplit: "",
+    activeSession: false,
+    liftIndex: {},
+  },
+
+  primeTasksSettings: {
+    isPrimeTasksActive: false,
+  },
+
+  macroVaultSettings: {
+    isMacroVaultActive: false,
+    calorieGoal: 0,
+  },
+  pulseSettings: {
+    pulseMemory: {
+      v1_welcomeDrop: true,
+      v2_updateDrop1: true,
+      Thanks4UpgradeDrop: true,
+    },
+    receivePulseDrops: true,
+    tutorialDrops: true,
+    motivationDrops: true,
+    humourDrops: true,
+  },
 
   latestSync: {
     weight_lbs: 0,
@@ -113,29 +178,11 @@ const defaultProfile: UserProfile = {
     timestamp: null,
   },
 
-  settings: {
-    background: "",
-    navIcon: "",
-  },
-
-  fitnessSettings: {
-    calorieGoal: 0,
-    activeSplit: "",
-  },
-  pulseSettings: {
-    pulseMemory: {
-      v1_welcomeDrop: true,
-      v2_updateDrop1: true,
-    },
-    receivePulseDrops: true,
-    receiveTutorials: true,
-    dailyMotivation: true,
-  }
 
 };
 
 export default function useCoreData() {
-  const [profile, setProfile] = useState<UserProfile>(defaultProfile);
+  const [userProfile, setProfile] = useState<UserProfile>(defaultProfile);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -159,15 +206,10 @@ export default function useCoreData() {
           ? (syncSnap.docs[0].data() as SyncData)
           : defaultProfile.latestSync;
 
-        const settings = profileData.settings ?? defaultProfile.settings;
-
-        const fitnessSettings = profileData.fitnessSettings ?? defaultProfile.fitnessSettings;
-
-        const pulseSettings = profileData.pulseSettings ?? defaultProfile.pulseSettings;
-
-        const isPaid = profileData.isPaid ?? defaultProfile.isPaid;
-
-        setProfile({ ...profileData, latestSync, settings, fitnessSettings, pulseSettings, isPaid });
+        setProfile({
+          ...profileData,
+          latestSync
+        });
       }
     });
 
@@ -175,11 +217,8 @@ export default function useCoreData() {
   }, []);
 
   return {
-    profile,
-    latestSync: profile.latestSync,
-    settings: profile.settings,
-    fitnessSettings: profile.fitnessSettings,
-    pulseSettings: profile.pulseSettings,
-    isPaid: profile.isPaid,
+    userProfile,
+    latestSync: userProfile.latestSync,
   };
 }
+
