@@ -3,10 +3,9 @@ import { ListChecks } from "lucide-react";
 import Link from "next/link";
 import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
 import { Sun, Moon, Lock, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, StepForward, StepBack } from "lucide-react";
-import { SettingsModal } from "@/ArchivedComponents/Modals/CustomSettingsModal"
+
 import SettingsPageComponent from "@/app/OverViewComponents/Settings/CustomSettingsComponent"
-import { UnlockModal } from "@/ArchivedComponents/UnlockModal"
-import UnlockComponent from "@/ArchivedComponents/UnlockComponent"
+
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";

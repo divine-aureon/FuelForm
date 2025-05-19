@@ -5,10 +5,9 @@ import { ListChecks } from "lucide-react";
 import Link from "next/link";
 import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
 import { Sun, Moon, Lock, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, StepForward, StepBack } from "lucide-react";
-import { SettingsModal } from "@/ArchivedComponents/Modals/CustomSettingsModal"
+
 import SettingsPageComponent from "@/app/OverViewComponents/Settings/CustomSettingsComponent"
-import { UnlockModal } from "@/ArchivedComponents/UnlockModal"
-import UnlockComponent from "@/ArchivedComponents/UnlockComponent"
+
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -24,7 +23,6 @@ export default function UnlockTile() {
   const selectedPage = useGlobalData((s) => s.selectedPage);
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
-  const setCoreOpen = useGlobalData((s) => s.setCoreOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
 
 
