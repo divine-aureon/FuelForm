@@ -9,8 +9,6 @@ export default function OverrideComponent() {
 
     const router = useRouter();
     useTodaysSync();
-    const isOverrideOpen = useGlobalData((s) => s.isOverrideOpen);
-    const setOverrideOpen = useGlobalData((s) => s.setOverrideOpen);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const hasDawnSyncedToday = useGlobalData((s) => s.hasDawnSyncedToday);
     const hasDuskSyncedToday = useGlobalData((s) => s.hasDuskSyncedToday);
