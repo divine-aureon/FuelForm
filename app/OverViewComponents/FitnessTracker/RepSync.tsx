@@ -350,7 +350,7 @@ export default function RepSync() {
           <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
             <div className="flex text-5xl pulse-glow mb-2 items-center gap-2">RepSync</div>
             <h2 className="text-sm font-bold text-white">
-              Let's Begin.
+              Lets Begin.
             </h2>
           </div>
         </div>
@@ -399,98 +399,98 @@ export default function RepSync() {
                   const locked = info.locked ?? false;
 
                   return (
-
-                    <div className="grid grid-cols-[4fr_1fr] gap-4">
-                      <div className="grid grid-cols-2 gap-4 mt-2 ">
-                        <div>
-                          <p className="text-sm text-white font-semibold mb-1">
-                            Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
-                            <input
-                              disabled={locked}
-                              type="number"
-                              step="0.1"
-                              min="0"
-                              value={
-                                preferredWeightUnit === "lbs"
-                                  ? liftWeight_lbs === undefined ? "" : liftWeight_lbs
-                                  : liftWeight_kg === undefined ? "" : liftWeight_kg
-                              }
-                              onChange={(e) => {
-                                const value = parseFloat(e.target.value);
-                                setWorkoutSessionData((prev) => ({
-                                  ...prev,
-                                  [movementName]: {
-                                    ...prev[movementName],
-                                    [item.setKey]: {
-                                      ...prev[movementName]?.[item.setKey],
-                                      liftWeight_lbs: preferredWeightUnit === "lbs" ? Number(value) : Number(value) * 2.2,
-                                      liftWeight_kg: preferredWeightUnit === "kg" ? Number(value) : Number(value) * 0.45,
+                    <>
+                      <div className="grid grid-cols-[4fr_1fr] gap-4">
+                        <div className="grid grid-cols-2 gap-4 mt-2 ">
+                          <div>
+                            <p className="text-sm text-white font-semibold mb-1">
+                              Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
+                              <input
+                                disabled={locked}
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                value={
+                                  preferredWeightUnit === "lbs"
+                                    ? liftWeight_lbs === undefined ? "" : liftWeight_lbs
+                                    : liftWeight_kg === undefined ? "" : liftWeight_kg
+                                }
+                                onChange={(e) => {
+                                  const value = parseFloat(e.target.value);
+                                  setWorkoutSessionData((prev) => ({
+                                    ...prev,
+                                    [movementName]: {
+                                      ...prev[movementName],
+                                      [item.setKey]: {
+                                        ...prev[movementName]?.[item.setKey],
+                                        liftWeight_lbs: preferredWeightUnit === "lbs" ? Number(value) : Number(value) * 2.2,
+                                        liftWeight_kg: preferredWeightUnit === "kg" ? Number(value) : Number(value) * 0.45,
+                                      },
                                     },
-                                  },
-                                }));
-                              }}
-                              placeholder="Weight"
-                              className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
-                            />
-                          </p>
+                                  }));
+                                }}
+                                placeholder="Weight"
+                                className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
+                              />
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-sm text-white font-semibold mb-1">
+                              Set
+                              <input
+                                disabled={locked}
+                                type="number"
+                                min="0"
+                                value={reps === undefined ? "" : reps}
+                                onChange={(e) => {
+                                  const value = parseInt(e.target.value);
+                                  setWorkoutSessionData((prev) => ({
+                                    ...prev,
+                                    [movementName]: {
+                                      ...prev[movementName],
+                                      [item.setKey]: {
+                                        ...prev[movementName]?.[item.setKey],
+                                        reps: value,
+                                      },
+                                    },
+                                  }));
+                                }}
+                                placeholder="Reps"
+                                className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
+                              />
+                            </p>
+                          </div>
                         </div>
 
-                        <div>
-                          <p className="text-sm text-white font-semibold mb-1">
-                            Set
-                            <input
-                              disabled={locked}
-                              type="number"
-                              min="0"
-                              value={reps === undefined ? "" : reps}
-                              onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                setWorkoutSessionData((prev) => ({
-                                  ...prev,
-                                  [movementName]: {
-                                    ...prev[movementName],
-                                    [item.setKey]: {
-                                      ...prev[movementName]?.[item.setKey],
-                                      reps: value,
-                                    },
+                        <div className="flex justify-center items-center">
+                          <button
+                            onClick={() => {
+                              setWorkoutSessionData((prev) => ({
+                                ...prev,
+                                [movementName]: {
+                                  ...prev[movementName],
+                                  [item.setKey]: {
+                                    ...prev[movementName]?.[item.setKey],
+                                    liftWeight_lbs: Number(liftWeight_lbs),
+                                    liftWeight_kg: Number(liftWeight_kg),
+                                    reps: Number(reps),
+                                    locked: !locked,
                                   },
-                                }));
-                              }}
-                              placeholder="Reps"
-                              className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
-                            />
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex justify-center items-center">
-                        <button
-                          onClick={() => {
-                            setWorkoutSessionData((prev) => ({
-                              ...prev,
-                              [movementName]: {
-                                ...prev[movementName],
-                                [item.setKey]: {
-                                  ...prev[movementName]?.[item.setKey],
-                                  liftWeight_lbs: Number(liftWeight_lbs),
-                                  liftWeight_kg: Number(liftWeight_kg),
-                                  reps: Number(reps),
-                                  locked: !locked,
                                 },
-                              },
-                            }));
-                          }}
-                          className={`flex rounded-2xl p-3 justify-center items-center ${locked
-                            ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
-                            : "glowing-button"
-                            }`}
-                        >
-                          <Lock size={24} />
-                        </button>
+                              }));
+                            }}
+                            className={`flex rounded-2xl p-3 justify-center items-center ${locked
+                              ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
+                              : "glowing-button"
+                              }`}
+                          >
+                            <Lock size={24} />
+                          </button>
+                        </div>
+
                       </div>
-
-                    </div>
-
+                    </>
                   );
                 }
                 else if (item.type === "drop") {
