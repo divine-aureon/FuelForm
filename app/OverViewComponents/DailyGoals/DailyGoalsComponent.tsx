@@ -8,9 +8,6 @@ import useCoreData from "@/lib/hooks/CoreData";
 import NavLoad from "@/app/initializing/LoadingComponents/NavLoad";
 import ControlHub from "../ControlHub/ControlHubBar";
 import { motion, AnimatePresence } from "framer-motion";
-
-import { UnlockModal } from "@/ArchivedComponents/UnlockModal"
-import UnlockComponent from "@/ArchivedComponents/UnlockComponent"
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
@@ -72,49 +69,6 @@ export default function DailyGoals() {
           </div>
         </div>
       </div>
-
-
-      {!userProfile?.primeTasksSettings?.isPrimeTasksActive ? (
-        <>
-
-          <div className="p-4 text-center backdrop-blur-sm bg-white/30 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Activate PrimeTasks</h2>
-            <p className="mb-4">Get ready to lead your days with purpose. PrimeTasks is your daily command deck —
-              a space to set intentions, track wins, and build unstoppable momentum.
-              Activate to begin your mission.</p>
-
-            <button
-              disabled
-              className="px-4 py-2  text-white rounded glowing-button"
-              onClick={async () => {
-                if (!user) return;
-
-                const userRef = doc(db, "users", user.uid);
-
-                // Set meta initialized
-                await setDoc(userRef, {
-                  isPrimeActive: true,
-                }, { merge: true });
-
-                const primeRef = collection(db, "users", user.uid, "prime");
-                const primeDocRef = doc(primeRef, dateString);
-
-                // Set meta initialized
-                await setDoc(primeDocRef, {
-                  primeTasks: [],
-                  completed: 0,
-                }, { merge: true });
-                window.location.reload();
-              }}
-
-            >
-              Coming Soon!
-            </button>
-          </div>
-
-        </>
-      ) : (
-        <>
 
           <div className=" w-full rounded-xl ">
             <AnimatePresence mode="wait">
@@ -221,12 +175,6 @@ export default function DailyGoals() {
           </div>
 
 
-        </>
-      )}
-
-      <footer className="pt-4 pb-2">
-        <ControlHub />
-      </footer>
     </>
   );
 }
