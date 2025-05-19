@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import useCoreData from "@/lib/hooks/CoreData";
 import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { useRouter } from "next/navigation";
 
@@ -15,6 +14,15 @@ import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 export default function CoreStackComponent() {
 
     const userProfile = useGlobalData((s) => s.userProfile);
+    const setUserProfile = useGlobalData((s) => s.setUserProfile);
+    const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+    const activeSessionStatus = useGlobalData((s) => s.activeSessionStatus);
+    const setActiveSessionStatus = useGlobalData((s) => s.setActiveSessionStatus);
+    const liftIndex = useGlobalData((s) => s.liftIndex);
+
+    const setTemporaryFitnessSync = useGlobalData((s) => s.setTemporaryFitnessSync);
+    const setWorkoutSessionData = useGlobalData((s) => s.setWorkoutSessionData); // read live
+
     const { user } = useAuth();
 
     const router = useRouter();
@@ -27,21 +35,12 @@ export default function CoreStackComponent() {
 
 
     const [activeSplit, setActiveSplit] = useState("");
-    const [bodygroup, setBodygroup] = useState("");
-    const [movements, setMovements] = useState("");
+    const [activeBodygroup, setActiveBodygroup] = useState("");
     const [activeProfile, setActiveProfile] = useState("");
 
-
-    const profile1 = userProfile?.strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile1;
-    const profile2 = userProfile?.strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile2;
-    const profile3 = userProfile?.strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile3;
-
-
-
-    const BodygroupsDisabled = !activeSplit;
-    const MovementsDisabled = !bodygroup;
-    const SubmitDisabled = !(activeSplit && bodygroup);
-
+    const profile1 = liftIndex?.[activeBodygroup]?.profile1;
+    const profile2 = liftIndex?.[activeBodygroup]?.profile2;
+    const profile3 = liftIndex?.[activeBodygroup]?.profile3;
 
 
     //Workout selector view pages NEXT BACK BUTTONS/ 
@@ -102,21 +101,43 @@ export default function CoreStackComponent() {
 
     //NEW CURRENT ACTIVE SPLIT DETECTED
 
+    //NEW CURRENT ACTIVE SPLIT DETECTED
     const [warningSeen, setWarningSeen] = useState(false)
     useEffect(() => {
         if (
             activeSplit &&
-            userProfile?.strengthArchiveSettings?.currentSplit &&
-            activeSplit !== userProfile?.strengthArchiveSettings.currentSplit
+            userProfile?.fitnessSettings?.currentSplit &&
+            activeSplit !== userProfile?.fitnessSettings.currentSplit
         ) {
             if (!warningSeen) {
                 setWarningSeen(true);
             }
         }
-    }, [activeSplit, userProfile?.strengthArchiveSettings?.currentSplit]);
+    }, [activeSplit, userProfile?.fitnessSettings?.currentSplit]);
 
 
-    if (!userProfile?.strengthArchiveSettings?.currentSplit) return;
+
+    useEffect(() => {
+        if (userProfile?.fitnessSettings?.activeSession) {
+            setActiveSessionStatus(userProfile.fitnessSettings.activeSession);
+        }
+    }, [userProfile?.fitnessSettings?.activeSession]);
+
+
+    const [activeSessionWarningSeen, setActiveSessionWarningSeen] = useState(false)
+    useEffect(() => {
+        if (
+
+            activeSessionStatus === true
+        ) {
+            if (!activeSessionWarningSeen) {
+                setActiveSessionWarningSeen(true);
+            }
+        }
+    }, []);
+
+
+    if (!userProfile?.fitnessSettings?.currentSplit) return;
 
     return (
         <>
@@ -146,13 +167,14 @@ export default function CoreStackComponent() {
                         >
 
 
+
                             <div className="p-2 backdrop-blur-sm mb-2 items-center rounded-lg shadow bg-indigo-300/50 text-white">
 
 
                                 <div className="text-white mb-2 justify-center flex">
 
                                     <div className="w-full glowing-purple-button text-center rounded-xl">
-                                        Current Active Split: {SplitDisplayNames[userProfile?.strengthArchiveSettings?.currentSplit]} <br />
+                                        Current Active Split: {SplitDisplayNames[userProfile?.fitnessSettings?.currentSplit]} <br />
                                         <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
                                         {activeSplit && (
                                             <p className="text-green-300 text-center font-semibold">
@@ -208,18 +230,6 @@ export default function CoreStackComponent() {
                                             Bro-Split(5-Day)
                                         </button>
 
-                                        <button
-                                            disabled
-                                            onClick={() => {
-                                                setActiveSplit("brosplit3");
-                                                handleSplitClick("brosplit3");
-                                            }}
-                                            className={`mb-2 p-2  w-full rounded-xl ${SplitButton === "brosplit3" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                            Bro-Split(3-Day) Coming soon.
-                                        </button>
-
-
-
                                     </div>
                                 </div>
 
@@ -228,7 +238,7 @@ export default function CoreStackComponent() {
 
                             </div>
 
-                            {warningSeen && userProfile?.strengthArchiveSettings?.currentSplit !== "None" && (
+                            {warningSeen && (
 
                                 <div className="absolute inset-0 mt-24 z-100 text-center flex justify-center items-center flex-col font-semibold">
                                     <div className="bg-black/40 max-w-xs rounded-3xl p-3 py-10 backdrop-blur-lg border border-indigo-300 ">
@@ -237,7 +247,7 @@ export default function CoreStackComponent() {
 
                                                 <CircleAlert size={30} /> Warning <br />
                                             </div>
-                                            {SplitDisplayNames[activeSplit]} Will Overwrite Current Active Split {SplitDisplayNames[userProfile?.strengthArchiveSettings?.currentSplit]} in UserProfile.
+                                            {SplitDisplayNames[activeSplit || "None"]} Will Overwrite Current Active Split {SplitDisplayNames[userProfile?.fitnessSettings?.currentSplit]} in UserProfile.
                                             Are you sure you want to continue?
                                         </div>
                                         <button
@@ -247,6 +257,67 @@ export default function CoreStackComponent() {
                                             className="mb-2 p-2 w-full rounded-xl glowing-button">
                                             Continue
                                         </button>
+                                    </div>
+                                </div>
+
+                            )}
+
+
+                            {activeSessionWarningSeen === true && (
+
+
+                                <div className="absolute inset-0 mt-24 z-100 text-center flex justify-center items-center flex-col font-semibold">
+                                    <div className="bg-black/40 max-w-xs rounded-3xl p-3 py-10 backdrop-blur-lg border border-indigo-300 ">
+                                        <div className=" text-yellow-400 flex justify-center items-center flex-col mb-5">
+                                            <div className="flex justify-center pulse-glow text-3xl items-center flex-col mb-3">
+
+                                                <CircleAlert size={30} /> Warning <br />
+                                            </div>
+                                            Active Workout Session Detected. Would you like to continue your progress?..
+                                        </div>
+                                        <div className="flex gap-2 justify-center">
+
+                                            <button
+                                                onClick={() => {
+                                                    setActiveSessionWarningSeen(false);
+                                                    setSelectedPage("RepSync");
+                                                }}
+                                                className="mb-2 p-2 w-full rounded-xl glowing-button">
+                                                Resume RepSync
+                                            </button>
+
+                                            <button
+                                                onClick={async () => {
+                                                    if (!user) return;
+
+                                                    const userRef = doc(db, "users", user.uid);
+
+                                                    // Set meta initialized
+                                                    await setDoc(userRef, {
+                                                        fitnessSettings: {
+                                                            activeSession: false,
+                                                        },
+                                                    }, { merge: true });
+
+                                                    const strengthRef = collection(db, "users", user.uid, "fitness");
+                                                    const strengthDocRef = doc(strengthRef, dateString);
+
+                                                    // Set meta initialized
+                                                    await setDoc(strengthDocRef, {
+                                                        completed: false,
+                                                        EndTime: serverTimestamp(),
+                                                    }, { merge: true });
+                                                    setActiveSessionWarningSeen(false);
+                                                    setActiveSessionStatus(false);
+                                                    setWorkoutSessionData({});
+
+                                                }}
+                                                className="mb-2 p-2 w-full rounded-xl glowing-button">
+                                                Cancel Active Session
+                                            </button>
+                                        </div>
+
+
                                     </div>
                                 </div>
 
@@ -267,13 +338,13 @@ export default function CoreStackComponent() {
 
 
                                 <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
-                                    Last Active Session: {SplitDisplayNames[userProfile?.strengthArchiveSettings?.currentSplit]} <br />
+                                    Last Active Session: {BodyGroupDisplayNames[userProfile?.fitnessSettings?.lastBodygroup]} <br />
                                     <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
-                                    {bodygroup && (
+                                    {activeBodygroup && (
                                         <p className="text-green-300 text-center font-semibold">
                                             Please proceed to apply your Movements
                                         </p>)}
-                                    {!bodygroup && (
+                                    {!activeBodygroup && (
                                         <p className="text-yellow-300 text-center font-semibold">
                                             Please choose a BodyGroup
                                         </p>)}
@@ -288,7 +359,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("push");
+                                                    setActiveBodygroup("push");
                                                     handleBodygroupClick("push");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "push" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -297,7 +368,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("pull");
+                                                    setActiveBodygroup("pull");
                                                     handleBodygroupClick("pull");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "pull" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -306,7 +377,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("legs");
+                                                    setActiveBodygroup("legs");
                                                     handleBodygroupClick("legs");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "legs" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -320,7 +391,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("upper");
+                                                    setActiveBodygroup("upper");
                                                     handleBodygroupClick("upper");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "upper" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -329,7 +400,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("lower");
+                                                    setActiveBodygroup("lower");
                                                     handleBodygroupClick("lower");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "lower" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -343,7 +414,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("fullbody");
+                                                    setActiveBodygroup("fullbody");
                                                     handleBodygroupClick("fullbody");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "fullbody" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -358,7 +429,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("chest");
+                                                    setActiveBodygroup("chest");
                                                     handleBodygroupClick("chest");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "chest" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -367,7 +438,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("back");
+                                                    setActiveBodygroup("back");
                                                     handleBodygroupClick("back");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "back" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -376,7 +447,7 @@ export default function CoreStackComponent() {
 
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("shoulders");
+                                                    setActiveBodygroup("shoulders");
                                                     handleBodygroupClick("shoulders");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "shoulders" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -384,7 +455,7 @@ export default function CoreStackComponent() {
                                             </button>
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("brolegs");
+                                                    setActiveBodygroup("brolegs");
                                                     handleBodygroupClick("brolegs");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "brolegs" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -392,7 +463,7 @@ export default function CoreStackComponent() {
                                             </button>
                                             <button
                                                 onClick={() => {
-                                                    setBodygroup("arms");
+                                                    setActiveBodygroup("arms");
                                                     handleBodygroupClick("arms");
                                                 }}
                                                 className={`mb-2 p-2 w-full rounded-xl ${bodygroupButton === "arms" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
@@ -436,24 +507,24 @@ export default function CoreStackComponent() {
                                             handleMovementClick("profile1");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile1" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {bodygroup}:{profile1?.name}
+                                        {activeBodygroup}:{profile1?.name}
                                     </button>
                                     <button
                                         onClick={() => {
-                                            setMovements("profile2");
+                                            setActiveProfile("profile2");
                                             handleMovementClick("profile2");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile2" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {bodygroup} {profile2?.name}
+                                        {activeBodygroup} {profile2?.name}
                                     </button>
 
                                     <button
                                         onClick={() => {
-                                            setMovements("profile3");
+                                            setActiveProfile("profile3");
                                             handleMovementClick("profile3");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile3" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {bodygroup} {profile3?.name}
+                                        {activeBodygroup} {profile3?.name}
                                     </button>
 
 
@@ -462,9 +533,9 @@ export default function CoreStackComponent() {
 
                                 <div className="flex px-12 pt-3 justify-center">
                                     <button
-                                        disabled={!(activeSplit && bodygroup && movements)}
+                                        disabled={!(activeSplit && activeBodygroup && activeProfile)}
                                         className={`w-full text-md rounded-xl p-6 shadow transition-all duration-50
-                                     ${!(activeSplit && bodygroup && movements) ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
+                                     ${!(activeSplit && activeBodygroup && activeProfile) ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
                                         onClick={async () => {
                                             if (!user) return;
 
@@ -472,29 +543,37 @@ export default function CoreStackComponent() {
 
                                             // Set meta initialized
                                             await setDoc(userRef, {
-                                                strengthArchiveSettings: {
+                                                fitnessSettings: {
                                                     currentSplit: activeSplit,
                                                     activeSession: true,
-                                                    activeProfile: { [bodygroup]: activeProfile }
+                                                    lastBodygroup: activeBodygroup,
+                                                    lastMovements: activeProfile
                                                 },
                                             }, { merge: true });
 
-                                            const strengthRef = collection(db, "users", user.uid, "strengthArchive");
+                                            const strengthRef = collection(db, "users", user.uid, "fitness");
                                             const strengthDocRef = doc(strengthRef, dateString);
 
                                             // Set meta initialized
                                             await setDoc(strengthDocRef, {
                                                 split: activeSplit,
-                                                bodygroup: bodygroup,
-                                                profileUsed: activeProfile,
+                                                bodygroup: activeBodygroup,
+                                                whichProfile: activeProfile,
                                                 completed: false,
                                                 StartTime: serverTimestamp(),
                                             }, { merge: true });
-                                            router.push("/repzone");
+                                            setSelectedPage("RepSync");
+                                            setActiveSessionStatus(true);
+                                            setTemporaryFitnessSync({
+                                                profileSlot: activeProfile,
+                                                bodygroup: activeBodygroup,
+                                            });
 
                                         }}
+
+
                                     >
-                                        Initiate Strength Protocol
+                                        Have a good Workout!
                                     </button>
 
                                 </div>
@@ -503,7 +582,7 @@ export default function CoreStackComponent() {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <div className="w-full fixed bottom-28 left-0 ">
+                <div className="w-full max-w-md fixed bottom-28 px-2 left-1/2 -translate-x-1/2">
                     <div className="grid grid-cols-3 gap-1 w-full rounded-xl">
                         <button
                             onClick={() => handleSetupClick("splits")}
@@ -523,9 +602,9 @@ export default function CoreStackComponent() {
 
 
                         <button
-                            disabled={!bodygroup}
+                            disabled={!activeBodygroup}
                             onClick={() => handleSetupClick("movements")}
-                            className={`w-full text-md rounded-xl shadow transition-all duration-50 ${!bodygroup ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
+                            className={`w-full text-md rounded-xl shadow transition-all duration-50 ${!activeBodygroup ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
                                 : selectedSetup === "movements" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}>
                             Movements
                         </button>

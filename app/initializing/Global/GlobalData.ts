@@ -1,13 +1,71 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UserProfile } from "@/lib/hooks/CoreData"
+import type { UserProfile, SyncData, FitnessSyncData } from "@/lib/hooks/CoreData";
+
+type WorkoutSessionData = Record<
+    string, // movement name
+    Record<
+        string, // set key (set1, set2)
+        {
+            reps?: number;
+            liftWeight_lbs?: number;
+            liftWeight_kg?: number;
+            locked?: boolean;
+            dropset?: boolean;
+            dropsets?: Record<
+                string, // drop key (drop1, drop2)
+                {
+                    reps?: number;
+                    liftWeight_lbs?: number;
+                    liftWeight_kg?: number;
+                    locked?: boolean;
+                }
+            >;
+        }
+    >
+>;
 
 interface GlobalData {
+
+    //USERID INFO
     userProfile: UserProfile | null;
-    setUserProfile: (userProfile: UserProfile) => void;
+    setUserProfile: (profile: UserProfile | ((prev: UserProfile | null) => UserProfile)) => void;
+
+    syncHistory: SyncData [] | null;
+    setSyncHistory: (data: SyncData[] | ((prev: SyncData []| null) => SyncData[] )) => void;
+
+    fitnessHistory: FitnessSyncData []| null;
+    setFitnessHistory: (data: FitnessSyncData[] | ((prev: FitnessSyncData [] | null) => FitnessSyncData [] )) => void;
 
     latestSync: any | null;
     setLatestSync: (sync: any) => void;
+
+     latestFitnessSync: any | null;
+    setLatestFitnessSync: (sync: any) => void;
+
+    //FITNESS INFO
+    temporaryFitnessSync: any | null;
+    setTemporaryFitnessSync: (data: {
+        profileSlot: string;
+        bodygroup: string;
+    }) => void;
+
+    workoutSessionData: WorkoutSessionData;
+    setWorkoutSessionData: (
+        updater: WorkoutSessionData | ((prev: WorkoutSessionData) => WorkoutSessionData)
+    ) => void;
+
+    activeSessionStatus: boolean;
+    setActiveSessionStatus: (value: boolean) => void;
+
+    liftIndex: Record<string, any>;
+    setLiftIndex: (
+        value: Record<string, any> | ((prev: Record<string, any>) => Record<string, any>)
+    ) => void;
+
+    //OVERVIEW INFO
+    selectedSector2: string;
+    setSelectedSector2: (value: string) => void;
 
     pageDefault: string;
     selectedPage: string;
@@ -17,54 +75,81 @@ interface GlobalData {
     selectedHomePage: string;
     setSelectedHomePage: (value: string) => void;
 
-    // modal states
-
+    //CONTROL HUB INFO
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
 
-    isSettingsOpen: boolean;
-    setSettingsOpen: (value: boolean) => void;
-
-    isFitnessOpen: boolean;
-    setFitnessOpen: (value: boolean) => void;
-
-    isOverrideOpen: boolean;
-    setOverrideOpen: (value: boolean) => void;
-
-    isBioOpen: boolean;
-    setBioOpen: (value: boolean) => void;
-
-    isDawnOpen: boolean;
-    setDawnOpen: (value: boolean) => void;
-
-    isDuskOpen: boolean;
-    setDuskOpen: (value: boolean) => void;
-
-    isUnlockOpen: boolean;
-    setUnlockOpen: (value: boolean) => void;
-
-    isCoreOpen: boolean;
-    setCoreOpen: (value: boolean) => void;
-
+    //SYNC INFO
     hasDawnSyncedToday: boolean;
     setHasDawnSyncedToday: (value: boolean) => void;
 
     hasDuskSyncedToday: boolean;
     setHasDuskSyncedToday: (value: boolean) => void;
+
+
 }
 
 export const useGlobalData = create<GlobalData>()(
     persist(
         (set) => ({
-            //SEED SYNC PROTOCOL
-
-
+            //USERID INFO
             userProfile: null,
-            setUserProfile: (userProfile: UserProfile) => set({ userProfile }),
+            setUserProfile: (profile) =>
+                set((state) => ({
+                    userProfile:
+                        typeof profile === "function" ? profile(state.userProfile) : profile,
+                })),
+
+                            syncHistory: null,
+            setSyncHistory: (data) =>
+                set((state) => ({
+                    syncHistory:
+                        typeof data === "function" ? data(state.syncHistory) : data,
+                })),
+
+                            fitnessHistory: null,
+            setFitnessHistory: (data) =>
+                set((state) => ({
+                    fitnessHistory:
+                        typeof data === "function" ? data(state.fitnessHistory) : data,
+                })),
+
+
 
             latestSync: null,
             setLatestSync: (sync: any) => set({ latestSync: sync }),
 
+             latestFitnessSync: null,
+            setLatestFitnessSync: (sync: any) => set({ latestFitnessSync: sync }),
+
+            //FITNESS INFO
+            activeSessionStatus: false,
+            setActiveSessionStatus: (status: boolean) => set({ activeSessionStatus: status }),
+
+            temporaryFitnessSync: null,
+            setTemporaryFitnessSync: (fitnessSync: { profileSlot: string; bodygroup: string }) =>
+                set({ temporaryFitnessSync: fitnessSync }),
+
+            workoutSessionData: {},
+            setWorkoutSessionData: (updater) =>
+                set((state) => ({
+                    workoutSessionData:
+                        typeof updater === "function"
+                            ? updater(state.workoutSessionData)
+                            : updater,
+                })),
+
+            selectedSector2: "newsession",
+            setSelectedSector2: (value: string) => set({ selectedSector2: value }),
+
+            liftIndex: {},
+            setLiftIndex: (value) =>
+                set((state) => ({
+                    liftIndex: typeof value === "function" ? value(state.liftIndex) : value,
+                })),
+
+
+            //OVERVIEW INFO
             pageDefault: "bodysync",
             selectedPage: "bodysync",
             setSelectedPage: (value: string) => set({ selectedPage: value }),
@@ -73,33 +158,12 @@ export const useGlobalData = create<GlobalData>()(
             selectedHomePage: "home",
             setSelectedHomePage: (value: string) => set({ selectedHomePage: value }),
 
-            isSettingsOpen: false,
-            setSettingsOpen: (value) => set({ isSettingsOpen: value }),
-
+            //CONTROL HUB INFO
             isOpen: false,
             setIsOpen: (value) => set({ isOpen: value }),
 
-            isFitnessOpen: false,
-            setFitnessOpen: (value) => set({ isFitnessOpen: value }),
 
-            isOverrideOpen: false,
-            setOverrideOpen: (value) => set({ isOverrideOpen: value }),
-
-            isBioOpen: false,
-            setBioOpen: (value) => set({ isBioOpen: value }),
-
-            isDawnOpen: false,
-            setDawnOpen: (value) => set({ isDawnOpen: value }),
-
-            isDuskOpen: false,
-            setDuskOpen: (value) => set({ isDuskOpen: value }),
-
-            isUnlockOpen: false,
-            setUnlockOpen: (value) => set({ isUnlockOpen: value }),
-
-            isCoreOpen: false,
-            setCoreOpen: (value) => set({ isCoreOpen: value }),
-
+            //SYNC INFO
             hasDawnSyncedToday: false,
             setHasDawnSyncedToday: (value) => set({ hasDawnSyncedToday: value }),
 

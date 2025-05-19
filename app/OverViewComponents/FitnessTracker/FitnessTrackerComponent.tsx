@@ -18,8 +18,9 @@ export default function StrengthArchive() {
   //inialization steps
 
   const { user } = useAuth();
-  const userProfile = useGlobalData((s) => s.userProfile);
 
+  const userProfile = useGlobalData((s) => s.userProfile);
+  const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
   //DATA INPUT
 
   const today = new Date();
@@ -40,41 +41,21 @@ export default function StrengthArchive() {
   };
 
   //SELECTED VIEW BAR/ 
-  const [selectedSector, setSelectedSector] = useState<"newsession" | "profiles" | "history">("newsession");
+  
+  const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
 
-  const handleSectorClick = (sector: "newsession" | "profiles" | "history") => {
-    setSelectedSector(sector); // No toggling, just always set the new one
-  };
+useEffect(() => {
+  const liftIndex = userProfile?.fitnessSettings?.liftIndex;
+  if (liftIndex) {
+    setLiftIndex(liftIndex);
+  }
+}, [userProfile]);
 
+    const selectedSector2 = useGlobalData((s) => s.selectedSector2);
+  const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
 
-  //Workout selector view pages NEXT BACK BUTTONS/ 
-  const [selectedSetup, setSelectedSetup] = useState<"splits" | "bodygroup" | "movements">("splits");
+  const pageView = selectedSector2 || "newsession";
 
-
-  const handleSetupClick = (page: "splits" | "bodygroup" | "movements") => {
-    setSelectedSetup(page); // No toggling, just always set the new one
-  };
-
-  //SPLIT SELECTOR BUTTONS
-  const [SplitButton, setSplitButton] = useState<"pushpulllegs" | "fullbody" | "brosplit5" | "upperlower" | "brosplit3" | null>(null);
-
-  const handleSplitClick = (selection: "pushpulllegs" | "fullbody" | "brosplit5" | "upperlower" | "brosplit3") => {
-    setSplitButton(selection); // No toggling, just always set the new one
-  };
-
-  //BODYGROUP SELECTOR BUTTONS
-  const [bodygroupButton, setBodygroupButton] = useState<"1" | "2" | "3" | "4" | "5" | null>(null);
-
-  const handleBodygroupClick = (selection: "1" | "2" | "3" | "4" | "5") => {
-    setBodygroupButton(selection); // No toggling, just always set the new one
-  };
-
-  //MOVEMENT SELECTOR BUTTONS
-  const [movementButton, setMovementButton] = useState<"profile" | null>(null);
-
-  const handleMovementClick = (selection: "profile") => {
-    setMovementButton(selection); // No toggling, just always set the new one
-  };
 
   const SplitDisplayNames: { [key: string]: string } = {
     pushpulllegs: "Push-Pull-Legs",
@@ -120,19 +101,7 @@ export default function StrengthArchive() {
   };
 
 
-  //NEW CURRENT ACTIVE SPLIT DETECTED
-  const [warningSeen, setWarningSeen] = useState(false)
-  useEffect(() => {
-    if (
-      activeSplit &&
-      userProfile?.strengthArchiveSettings?.currentSplit &&
-      activeSplit !== userProfile?.strengthArchiveSettings.currentSplit
-    ) {
-      if (!warningSeen) {
-        setWarningSeen(true);
-      }
-    }
-  }, [activeSplit, userProfile?.strengthArchiveSettings?.currentSplit]);
+
 
 
   if (typeof userProfile?.isPaid !== 'boolean') return;
@@ -141,208 +110,13 @@ export default function StrengthArchive() {
   return (
     <>
       <ScrollLoad />
-      {!userProfile?.strengthArchiveSettings?.isStrengthArchiveActive ? (
-        <>
-
-          <div className="p-4 text-center backdrop-blur-sm bg-white/30 rounded-lg">
-
-
-            {userProfile?.isPaid ? (
-              <>
-
-
-                <div>
-                  <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
-                    <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
-                      <div className="flex items-center gap-2">StrengthArchive Lobby</div>
-                      <h2 className="text-sm font-bold text-white">
-                        Log It. Lift It. Level Up.
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-
-
-                <h2 className="text-2xl font-bold mb-4">Activate StrengthArchive</h2>
-                <p className="mb-4">First time setup required.</p>
-
-                <button
-                  disabled
-                  className="px-4 py-2  text-white rounded glowing-button"
-                  onClick={async () => {
-                    if (!user) return;
-
-                    const userRef = doc(db, "users", user.uid);
-
-                    // Set meta initialized
-                    await setDoc(userRef, {
-                      strengthArchiveSettings: {
-                        isStrengthArchiveActive: true,
-                        currentSplit: "None",
-                        activeSession: false,
-                        totalWorkouts: 0,
-                        totalPRs: 0,
-                        liftIndex: {
-                          push: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          pull: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          legs: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          upper: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          lower: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          fullbody: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          chest: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          back: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          brolegs: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          shoulders: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                          arms: {
-                            profile1: {
-                              name: "Create a Profile"
-                            },
-                            profile2: {
-                              name: "Create a Profile"
-                            },
-                            profile3: {
-                              name: "Create a Profile"
-                            },
-                          },
-                        },
-                      },
-                    }, { merge: true });
-                    window.location.reload();
-                  }}
-
-                >
-                  Development In Progress..
-                </button>
-
-              </>
-            ) : (
-              <>
-
-                <h2 className="text-2xl font-bold mb-4">Access Restricted..</h2>
-                <p className="mb-4">The Strength Archive is your personal vault of power — a place to log your lifts,
-                  track your progress, and unlock your true potential over time. Right now, the system is offline,
-                  waiting for activation. When you&apos;re ready to record every rep, hit personal records, and watch
-                  your strength evolve day by day, power up this feature and take control of your training like never before.</p>
-
-                <Link href="/unlock">
-                  <div className="text-center p-3 text-lg hover:bg-indigo-300/50 glowing-button">More Info</div>
-                </Link>
-
-              </>
-            )}
-
-
-          </div>
-
-        </>
-      ) : (
+      {userProfile?.isPaid ? (
         <>
 
           <div className=" w-full rounded-xl ">
             <AnimatePresence mode="wait">
 
-              {selectedSector === "newsession" && (
+              {pageView === "newsession" && (
                 <motion.div
                   key="newsession"
                   initial={{ opacity: 0 }}
@@ -355,7 +129,7 @@ export default function StrengthArchive() {
                 </motion.div>
               )}
 
-              {selectedSector === "profiles" && (
+              {pageView === "profiles" && (
                 <motion.div
                   key="profiles"
                   initial={{ opacity: 0 }}
@@ -369,7 +143,7 @@ export default function StrengthArchive() {
               )}
 
 
-              {selectedSector === "history" && (
+              {pageView === "history" && (
                 <motion.div
                   key="history"
                   initial={{ opacity: 0 }}
@@ -408,30 +182,48 @@ export default function StrengthArchive() {
           </div>
 
 
-          <div className="w-full  fixed bottom-16 left-0">
+          <div className="w-full max-w-md px-2 left-1/2 -translate-x-1/2 fixed bottom-16 ">
             <div className="grid grid-cols-3 gap-1 w-full rounded-xl">
               <button
-                onClick={() => handleSectorClick("history")}
-                className={`px-5 w-full text-md rounded-xl shadow ${selectedSector === "history" ? "bg-indigo-300/50" : "glowing-button"}`}>
+                onClick={() => setSelectedSector2("history")}
+                className={`px-5 w-full text-md rounded-xl shadow ${selectedSector2 === "history" ? "bg-indigo-300/50" : "glowing-button"}`}>
                 History
               </button>
               <button
-                onClick={() => handleSectorClick("newsession")}
-                className={`w-full text-md rounded-xl shadow ${selectedSector === "newsession" ? "bg-indigo-300/50" : "glowing-button"}`}>
+                onClick={() => setSelectedSector2("newsession")}
+                className={`w-full text-md rounded-xl shadow ${selectedSector2 === "newsession" ? "bg-indigo-300/50" : "glowing-button"}`}>
                 CoreStack
               </button>
               <button
-                onClick={() => handleSectorClick("profiles")}
-                className={`px-5 w-full text-md rounded-xl shadow ${selectedSector === "profiles" ? "bg-indigo-300/50" : "glowing-button"}`}>
+                onClick={() => setSelectedSector2("profiles")}
+                className={`px-5 w-full text-md rounded-xl shadow ${selectedSector2 === "profiles" ? "bg-indigo-300/50" : "glowing-button"}`}>
                 Lift Index
               </button>
             </div>
           </div>
 
 
+
+
         </>
-      )
-      }
+      ) : (
+        <>
+
+          <h2 className="text-2xl font-bold mb-4">Access Restricted..</h2>
+          <p className="mb-4">The Strength Archive is your personal vault of power — a place to log your lifts,
+            track your progress, and unlock your true potential over time. Right now, the system is offline,
+            waiting for activation. When you&apos;re ready to record every rep, hit personal records, and watch
+            your strength evolve day by day, power up this feature and take control of your training like never before.</p>
+
+          <button onClick={() => {
+            setSelectedPage("Unlock");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} className="text-center p-3 text-lg hover:bg-indigo-300/50 glowing-button">
+            More Info
+          </button>
+
+        </>
+      )}
     </>
   );
 }

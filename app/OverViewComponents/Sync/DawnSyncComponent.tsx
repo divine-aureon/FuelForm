@@ -65,7 +65,7 @@ export default function DawnSyncComponent() {
                 height_cm: userProfile?.height_cm,
                 gender: userProfile?.gender,
                 age: userProfile?.age,
-                calorieGoal: userProfile?.macroVaultSettings?.calorieGoal
+                calorieGoal: userProfile?.nutritionSettings?.calorieGoal
             });
 
             const userId = auth.currentUser!.uid;
@@ -91,6 +91,7 @@ export default function DawnSyncComponent() {
                 lastKnownWeight_lbs: weight_lbs,
                 lastKnownWeight_kg: weight_kg,
             }, { merge: true });
+        
 
 
             setStatus("success");

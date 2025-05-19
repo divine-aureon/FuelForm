@@ -6,20 +6,21 @@ import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
 import useCoreData from "@/lib/hooks/CoreData";
-
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 
 
 
 
 export default function SettingsPageComponent() {
-   const userProfile = useGlobalData((s) => s.userProfile);
+    const userProfile = useGlobalData((s) => s.userProfile);
 
     const router = useRouter();
     const [status, setStatus] = useState("");
 
-    const [background, setBackground] = useState("");
+    const [background, setBackground] = useState(userProfile?.customSettings?.background);
+    const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
-    const [navIcon, setNavIcon] = useState("");
+    const [navIcon, setNavIcon] = useState(userProfile?.customSettings?.navIcon);
     const { user } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -30,10 +31,14 @@ export default function SettingsPageComponent() {
         const userRef = doc(db, "users", userId,);
         try {
             await setDoc(userRef, {
+
                 customSettings: {
                     background,
                     navIcon,
+
+
                 }
+
             }, { merge: true });
 
             setStatus("success");
@@ -45,6 +50,7 @@ export default function SettingsPageComponent() {
     useEffect(() => {
         if (status === "success") {
             const timeout = setTimeout(() => {
+
                 window.location.reload(); // hard refresh
             }, 0);
 
@@ -72,116 +78,116 @@ export default function SettingsPageComponent() {
                 <form onSubmit={handleSubmit} className="">
                     <p className="text-lg text-white font-semibold mb-1">
                         Overview Background
-                         </p>
-                        <div className="flex">
+                    </p>
+                    <div className="flex">
 
 
-                            <div className="flex w-full">
-                                {/* Custom Dropdown replacing the select */}
-                                <div className="custom-dropdown w-full">
-                                    <div
-                                        className="dropdown-btn w-full rounded text-white cursor-pointer"
-                                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                                        style={{ backgroundColor: 'rgba(31, 41, 55, 0.7)', padding: '6px 10px', boxSizing: 'border-box' }}
+                        <div className="flex w-full">
+                            {/* Custom Dropdown replacing the select */}
+                            <div className="custom-dropdown w-full">
+                                <div
+                                    className="dropdown-btn w-full rounded text-white cursor-pointer"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    style={{ backgroundColor: 'rgba(31, 41, 55, 0.7)', padding: '6px 10px', boxSizing: 'border-box' }}
 
-                                    >
-                                        <span className="p-0 text-white">{background || "Customize Background"}</span>
+                                >
+                                    <span className="p-0 text-white">{background || "Customize Background"}</span>
 
-                                    </div>
-
-                                    {/* Dropdown Content with Image Options */}
-                                    {dropdownOpen && (
-                                        <div className=" bg-black text-white w-full rounded grid grid-cols-3 p-1 gap-1">
-                                            {["NeuralLink", "StarVeil", "QuantumFade" , "CircuitRift", "DarkFirewall", "DataDrift"
-                                                , "HexPulse", "ObsidianProtocol"].map((bg) => (
-                                                    <div
-                                                        key={bg}
-                                                        className="bg-gray-800 rounded cursor-pointer hover:bg-indigo-300/30 transition transform duration-150 flex flex-col items-center p-2"
-                                                        onClick={() => {
-                                                            setBackground(bg); // Set the selected background
-                                                            setDropdownOpen(false); // Close dropdown
-
-                                                        }}
-                                                    >
-                                                        {/* Replace these with actual image paths */}
-                                                        <img
-                                                            src={bg === "NeuralLink" ? "/images/dropdownmenu/neurallink.webp" :
-                                                                bg === "StarVeil" ? "/images/dropdownmenu/starveil.jpg" :
-                                                                    bg === "QuantumFade" ? "/images/dropdownmenu/quantumfade.jpg" :
-                                                                            bg === "CircuitRift" ? "/images/dropdownmenu/circuitrift.jpg" :
-                                                                                bg === "DarkFirewall" ? "/images/dropdownmenu/darkfirewall.jpg" :
-                                                                                    bg === "DataDrift" ? "/images/dropdownmenu/datadrift.jpg" :
-                                                                                        bg === "HexPulse" ? "/images/dropdownmenu/hexpulse.jpg" :
-                                                                                           
-                                                                                                bg === "ObsidianProtocol" ? "/images/dropdownmenu/obsidianprotocol.jpg" :
-
-
-                                                                                                    "/images/default-image.jpg"}
-                                                            alt={bg}
-
-                                                         className=" w-[60px] h-[60px] object-cover rounded mb-1"
-                                                  
-                                                        />
-                                                        <span className="text-xs text-center w-full mt-1 ">{bg}</span>
-                                                    </div>
-                                                ))}
-                                        </div>
-                                    )}
                                 </div>
-                            </div>
 
+                                {/* Dropdown Content with Image Options */}
+                                {dropdownOpen && (
+                                    <div className=" bg-black text-white w-full rounded grid grid-cols-3 p-1 gap-1">
+                                        {["NeuralLink", "StarVeil", "QuantumFade", "CircuitRift", "DarkFirewall", "DataDrift"
+                                            , "HexPulse", "ObsidianProtocol"].map((bg) => (
+                                                <div
+                                                    key={bg}
+                                                    className="bg-gray-800 rounded cursor-pointer hover:bg-indigo-300/30 transition transform duration-150 flex flex-col items-center p-2"
+                                                    onClick={() => {
+                                                        setBackground(bg); // Set the selected background
+                                                        setDropdownOpen(false); // Close dropdown
+
+                                                    }}
+                                                >
+                                                    {/* Replace these with actual image paths */}
+                                                    <img
+                                                        src={bg === "NeuralLink" ? "/images/dropdownmenu/neurallink.webp" :
+                                                            bg === "StarVeil" ? "/images/dropdownmenu/starveil.jpg" :
+                                                                bg === "QuantumFade" ? "/images/dropdownmenu/quantumfade.jpg" :
+                                                                    bg === "CircuitRift" ? "/images/dropdownmenu/circuitrift.jpg" :
+                                                                        bg === "DarkFirewall" ? "/images/dropdownmenu/darkfirewall.jpg" :
+                                                                            bg === "DataDrift" ? "/images/dropdownmenu/datadrift.jpg" :
+                                                                                bg === "HexPulse" ? "/images/dropdownmenu/hexpulse.jpg" :
+
+                                                                                    bg === "ObsidianProtocol" ? "/images/dropdownmenu/obsidianprotocol.jpg" :
+
+
+                                                                                        "/images/default-image.jpg"}
+                                                        alt={bg}
+
+                                                        className=" w-[60px] h-[60px] object-cover rounded mb-1"
+
+                                                    />
+                                                    <span className="text-xs text-center w-full mt-1 ">{bg}</span>
+                                                </div>
+                                            ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                   
+
+                    </div>
+
                     <p className="text-lg text-white font-semibold mb-1">
-                        ControlHub Icon 
-                        </p>
-                        <div className="flex text-md mb-1">
-                            <select
-                                value={navIcon}
-                                onChange={(e) => setNavIcon(e.target.value)}
-                                className="w-full p-2 rounded bg-gray-800/70 text-white"
-                            >
-                                <option value="">Choose an Icon</option>
-                                {["Atom", "Crown", "Flame", "Zap", "Star", "Shield", "Heart", "Bird"].map((icon) => (
-                                    <option key={icon} value={icon}>
-                                        {icon}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                   
+                        ControlHub Icon
+                    </p>
+                    <div className="flex text-md mb-1">
+                        <select
+                            value={navIcon}
+                            onChange={(e) => setNavIcon(e.target.value)}
+                            className="w-full p-2 rounded bg-gray-800/70 text-white"
+                        >
+                            <option value="">Choose an Icon</option>
+                            {["Atom", "Crown", "Flame", "Zap", "Star", "Shield", "Heart", "Bird"].map((icon) => (
+                                <option key={icon} value={icon}>
+                                    {icon}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <p className="text-lg text-white font-semibold mb-1">
                         Light/Dark Mode - Coming Soon!
-                        </p>
-                        <div className="flex mb-1">
-                            <select
-                                className="w-full p-2 rounded bg-gray-800/70 text-white"
-                            >
-                                <option value="">Choose a Style</option>
-                                {["Coming Soon!"].map((theme) => (
-                                    <option key={theme} value={theme}>
-                                        {theme}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    
+                    </p>
+                    <div className="flex mb-1">
+                        <select
+                            className="w-full p-2 rounded bg-gray-800/70 text-white"
+                        >
+                            <option value="">Choose a Style</option>
+                            {["Coming Soon!"].map((theme) => (
+                                <option key={theme} value={theme}>
+                                    {theme}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <p className="text-lg text-white font-semibold mb-1">
                         Colour Theme - Coming Soon!
-                        </p>
-                        <div className="flex">
-                            <select
-                                className="w-full p-2 rounded bg-gray-800/70 text-white"
-                            >
-                                <option value="">Choose a Theme</option>
-                                {["Coming Soon!"].map((fastlink) => (
-                                    <option key={fastlink} value={fastlink}>
-                                        {fastlink}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    
+                    </p>
+                    <div className="flex">
+                        <select
+                            className="w-full p-2 rounded bg-gray-800/70 text-white"
+                        >
+                            <option value="">Choose a Theme</option>
+                            {["Coming Soon!"].map((fastlink) => (
+                                <option key={fastlink} value={fastlink}>
+                                    {fastlink}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
 
 
                     <div className="fixed bottom-16 max-w-md w-full left-1/2 -translate-x-1/2 px-2 flex justify-center z-30">

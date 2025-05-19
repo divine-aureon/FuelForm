@@ -52,7 +52,7 @@ export default function DuskSyncComponent() {
                     height_cm: userProfile?.height_cm,
                     gender: userProfile?.gender,
                     age: userProfile?.age,
-                    calorieGoal: userProfile?.macroVaultSettings?.calorieGoal,
+                    calorieGoal: userProfile?.nutritionSettings?.calorieGoal,
                 });
 
             const userId = auth.currentUser!.uid;

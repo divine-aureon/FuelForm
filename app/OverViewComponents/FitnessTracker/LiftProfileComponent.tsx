@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import useCoreData from "@/lib/hooks/CoreData";
 import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { useRouter } from "next/navigation";
-
+import NavLoad from "../../initializing/LoadingComponents/NavLoad";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import useAuth from "@/lib/useAuth";
@@ -13,8 +13,14 @@ import ScrollLoad from "@/Backgrounds/ScrollLoad"
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 export default function LiftIndexComponent() {
+
     const userProfile = useGlobalData((s) => s.userProfile);
-    const strengthArchiveSettings = userProfile?.strengthArchiveSettings;
+    const fitnessSettings = userProfile?.fitnessSettings;
+
+    const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
+    const liftIndex = useGlobalData((s) => s.liftIndex);
+    const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
+
 
 
     const { user } = useAuth();
@@ -36,14 +42,39 @@ export default function LiftIndexComponent() {
     const [profileName, setProfileName] = useState("");
 
 
-    const profile1 = strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile1;
-    const profile2 = strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile2;
-    const profile3 = strengthArchiveSettings?.liftIndex?.[bodygroup]?.profile3;
+    const profile1 = fitnessSettings?.liftIndex?.[bodygroup]?.profile1;
+    const profile2 = fitnessSettings?.liftIndex?.[bodygroup]?.profile2;
+    const profile3 = fitnessSettings?.liftIndex?.[bodygroup]?.profile3;
 
 
-    const [movementLevels, setMovementLevels] = useState([""]);
+    const [movementLevels, setMovementLevels] = useState<any[]>([]);
 
-    const allOptions = ["1", "2", "3", "4", "5"];
+    const allOptions = [
+        "Incline Bench Press",
+        "Bench Press",
+        "Lat Pulldown",
+        "HackSquat",
+        "Chest Fly",
+        "Dumbell Chest Fly",
+        "Cable Chest Fly",
+        "RearDelt Fly",
+        "Chest Targeted Pullover",
+        "Shoulder Press",
+        "Dumbell Shoulder Press",
+        "Barbell Shoulder Press",
+        "Machine Lateral Raise",
+        "Dumbell Lateral Raise",
+        "Katana Extension",
+        "Overhead Dumbell Tricep Extension",
+        "Skull Crusher",
+        "Tricep Press Machine",
+        "Dips",
+        "Cable Shoulder Flexion",
+        "Cable Internal Rotation",
+        "Cable External Rotation",
+        "Cable Overhead External Rotation",
+    ];
+
 
     const handleChange = (value: string, index: number) => {
         const updated = [...movementLevels];
@@ -141,17 +172,17 @@ export default function LiftIndexComponent() {
     useEffect(() => {
         if (
             activeSplit &&
-            strengthArchiveSettings?.currentSplit &&
-            activeSplit !== strengthArchiveSettings.currentSplit
+            fitnessSettings?.currentSplit &&
+            activeSplit !== fitnessSettings.currentSplit
         ) {
             if (!warningSeen) {
                 setWarningSeen(true);
             }
         }
-    }, [activeSplit, strengthArchiveSettings?.currentSplit]);
+    }, [activeSplit, fitnessSettings?.currentSplit]);
 
 
-    if (!strengthArchiveSettings?.currentSplit) return;
+    if (!fitnessSettings?.currentSplit) return;
 
     return (
         <>
@@ -186,9 +217,16 @@ export default function LiftIndexComponent() {
                                 <div className="text-white mb-2 justify-center flex">
 
                                     <div className="w-full glowing-purple-button text-center rounded-xl">
-                                        Current Active Split: {SplitDisplayNames[strengthArchiveSettings?.currentSplit]} <br />
+                                        Current Active Split: {SplitDisplayNames[fitnessSettings?.currentSplit]} <br />
                                         <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
-                                        Selected Split: {SplitDisplayNames[activeSplit]}<br />
+                                        {activeSplit && (
+                                            <p className="text-green-300 text-center font-semibold">
+                                                Please proceed to define your BodyGroup
+                                            </p>)}
+                                        {!activeSplit && (
+                                            <p className="text-yellow-300 text-center font-semibold">
+                                                Please Choose a split
+                                            </p>)}
 
                                     </div>
                                 </div>
@@ -237,13 +275,6 @@ export default function LiftIndexComponent() {
                                     </div>
                                 </div>
 
-
-                                {activeSplit && (
-                                    <p className="text-green-300 text-center mb-2 font-semibold mt-2">
-                                        Please proceed to Choose Bodygroup
-                                    </p>
-                                )}
-
                             </div>
 
                         </motion.div>
@@ -260,11 +291,18 @@ export default function LiftIndexComponent() {
                             <div className="p-2 backdrop-blur-sm mb-2 items-center rounded-lg shadow bg-indigo-300/50 text-white">
 
 
-                                <div className="text-white mb-2 justify-center flex">
+                                <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
+                                    Last Active Session: {SplitDisplayNames[fitnessSettings?.currentSplit]} <br />
+                                    <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
+                                    {bodygroup && (
+                                        <p className="text-green-300 text-center font-semibold">
+                                            Please proceed to apply your Movements
+                                        </p>)}
+                                    {!bodygroup && (
+                                        <p className="text-yellow-300 text-center font-semibold">
+                                            Please choose a BodyGroup
+                                        </p>)}
 
-                                    <button className="w-full h-16 glowing-purple-button rounded-xl">
-                                        Last Session: Pull<br /> May 10, 2025 6:52pm
-                                    </button>
                                 </div>
 
                                 <div className="grid grid-cols gap-2 left-0 ">
@@ -390,15 +428,9 @@ export default function LiftIndexComponent() {
 
 
                                 </div>
-                                {bodygroup && (
-                                    <p className="text-green-300 text-center mb-2 font-semibold mt-2">
-                                        Please proceed to apply Movements
-                                    </p>
-                                )}
                             </div>
                         </motion.div>
                     )}
-
 
                     {selectedSetup === "movements" && (
                         <motion.div
@@ -415,7 +447,19 @@ export default function LiftIndexComponent() {
 
                                 <div className="text-white mb-2 justify-center flex">
 
+                                </div>
 
+                                <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
+
+
+                                    {profileSlot && (
+                                        <p className="text-green-300 text-center font-semibold">
+                                            Proceed to apply Liftindex to Profile
+                                        </p>)}
+                                    {!profileSlot && (
+                                        <p className="text-yellow-300 text-center font-semibold">
+                                            Choose a Profile Slot to Edit
+                                        </p>)}
 
                                 </div>
 
@@ -501,8 +545,8 @@ export default function LiftIndexComponent() {
                                 <div className="flex px-12 pt-3 justify-center">
                                     <button
                                         disabled={!(activeSplit && bodygroup && profileSlot && profileName)}
-                                        className={`w-full text-md rounded-xl p-6 shadow transition-all duration-50
-                                     ${!(activeSplit && bodygroup && profileSlot && profileName) ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
+                                        className={`w-full text-md rounded-xl p-2 shadow transition-all duration-50
+                                     ${!(activeSplit && bodygroup && profileSlot && profileName) ? "bg-gray-800/80 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
                                         onClick={async () => {
                                             if (!user) return;
 
@@ -510,21 +554,31 @@ export default function LiftIndexComponent() {
 
                                             // Set meta initialized
                                             await setDoc(userRef, {
-                                                strengthArchiveSettings: {
+                                                fitnessSettings: {
                                                     liftIndex: {
                                                         [bodygroup]: {
                                                             [profileSlot]: {
                                                                 name: profileName,
-                                                                movements: movementLevels, // ← this right here
+                                                                movements: movementLevels,
                                                             }
                                                         }
                                                     }
-                                                },
+                                                }
                                             }, { merge: true });
-                                            window.location.reload();
+                                            setLiftIndex((prev) => ({
+                                                ...prev,
+                                                [bodygroup]: {
+                                                    ...prev[bodygroup],
+                                                    [profileSlot]: {
+                                                        name: profileName,
+                                                        movements: movementLevels,
+                                                    },
+                                                },
+                                            }));
+                                            setSelectedSector2("newsession");
                                         }}
                                     >
-                                        Apply Movements to {BodyGroupDisplayNames[bodygroup]} LiftIndex
+                                        Apply Chosen Lift Index to {profileSlot}?
                                     </button>
 
                                 </div>
@@ -533,7 +587,7 @@ export default function LiftIndexComponent() {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <div className="w-full fixed bottom-28 left-0 ">
+                <div className="w-full max-w-md fixed bottom-28 px-2 left-1/2 -translate-x-1/2">
                     <div className="grid grid-cols-3 gap-1 w-full rounded-xl">
                         <button
                             onClick={() => handleSetupClick("splits")}

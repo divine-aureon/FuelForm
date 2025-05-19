@@ -77,103 +77,227 @@ export default function RegisterComponent() {
     return feet * 30.48 + inches * 2.54;
   }
 
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-    const userCred = await registerUser(email, password);
+      const userCred = await registerUser(email, password);
 
-    // Height
-    let finalHeightCm = 0;
-    let finalFeet = 0;
-    let finalInches = 0;
+      // Height
+      let finalHeightCm = 0;
+      let finalFeet = 0;
+      let finalInches = 0;
 
-    if (preferredHeightUnit === "cm") {
-      finalHeightCm = Number(height_cm);
-      const { feet: convertedFeet, inches: convertedInches } = convertCmToFeetInches(finalHeightCm);
-      finalFeet = convertedFeet;
-      finalInches = convertedInches;
-    } else {
-      const feetNum = Number(heightFeet);
-      const inchesNum = Number(heightInches);
-      finalFeet = feetNum;
-      finalInches = inchesNum;
-      finalHeightCm = convertFeetInchesToCm(feetNum, inchesNum);
-    }
-
-    const finalBirthYear = birthYear || "0000";
-    const finalBirthMonth = birthMonth || "00";
-    const finalBirthDay = birthDay || "00";
-
-    // 🗓 Build DateOfBirth
-    const DateOfBirth = `${finalBirthYear.padStart(4, '0')}-${finalBirthMonth.padStart(2, '0')}-${finalBirthDay.padStart(2, '0')}`;
-
-    // 🧠 Calculate age directly from birth values
-    const birthY = Number(birthYear);
-    const birthM = Number(birthMonth);
-    const birthD = Number(birthDay);
-    const today = new Date();
-
-    let age = today.getFullYear() - birthY;
-    const monthDiff = today.getMonth() + 1 - birthM;
-    const dayDiff = today.getDate() - birthD;
-
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-      age--;
-    }
-
-    await setDoc(doc(db, 'users', userCred.user.uid), {
-      name,
-      email: userCred.user.email,
-      birthday: DateOfBirth,
-      gender,
-      preferredHeightUnit: 'cm',
-      preferredWeightUnit: 'lbs',
-      height_cm: finalHeightCm,
-      height_ft_in: { feet: finalFeet, inches: finalInches },
-      age,
-      isPaid: false,
-      createdAt: serverTimestamp(),
-      customSettings: {
-        background: "NeuralLink",
-        navIcon: "Atom",
-        lightMode: true,
-      },
-      strengthArchiveSettings: {
-        isStrengthArchiveActive: false,
-      },
-      primeTasksSettings: {
-        isPrimeTasksActive: false,
-      },
-      macroVaultSettings: {
-        isMacroVaultActive: false,
-        calorieGoal: 0,
-      },
-      pulseSettings: {
-        pulseMemory: {
-          v1_welcomeDrop: false,
-        },
-        receivePulseDrops: true,
-        TutorialDrops: true,
-        MotivationDrops: true,
-        HumourDrops: true,
+      if (preferredHeightUnit === "cm") {
+        finalHeightCm = Number(height_cm);
+        const { feet: convertedFeet, inches: convertedInches } = convertCmToFeetInches(finalHeightCm);
+        finalFeet = convertedFeet;
+        finalInches = convertedInches;
+      } else {
+        const feetNum = Number(heightFeet);
+        const inchesNum = Number(heightInches);
+        finalFeet = feetNum;
+        finalInches = inchesNum;
+        finalHeightCm = convertFeetInchesToCm(feetNum, inchesNum);
       }
-    });
 
-    
-    setLoading(true);
-    router.push('/overview');
+      const finalBirthYear = birthYear || "0000";
+      const finalBirthMonth = birthMonth || "00";
+      const finalBirthDay = birthDay || "00";
 
+      // 🗓 Build DateOfBirth
+      const DateOfBirth = `${finalBirthYear.padStart(4, '0')}-${finalBirthMonth.padStart(2, '0')}-${finalBirthDay.padStart(2, '0')}`;
 
+      // 🧠 Calculate age directly from birth values
+      const birthY = Number(birthYear);
+      const birthM = Number(birthMonth);
+      const birthD = Number(birthDay);
+      const today = new Date();
 
+      let age = today.getFullYear() - birthY;
+      const monthDiff = today.getMonth() + 1 - birthM;
+      const dayDiff = today.getDate() - birthD;
+
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+
+      await setDoc(doc(db, 'users', userCred.user.uid), {
+        name,
+        email: userCred.user.email,
+        birthday: DateOfBirth,
+        gender,
+        preferredHeightUnit: 'cm',
+        preferredWeightUnit: 'lbs',
+        height_cm: finalHeightCm,
+        height_ft_in: { feet: finalFeet, inches: finalInches },
+        age,
+        isPaid: false,
+        createdAt: serverTimestamp(),
+        customSettings: {
+          background: "NeuralLink",
+          navIcon: "Atom",
+          lightMode: true,
+        },
+        dailyGoalSettings: {
+          dailyGoalToken: false,
+        },
+        nutritionSettings: {
+          nutritionToken: false,
+          calorieGoal: 0,
+        },
+        pulseSettings: {
+          pulseMemory: {
+            v1_welcomeDrop: false,
+          },
+          receivePulseDrops: true,
+          TutorialDrops: true,
+          MotivationDrops: true,
+          HumourDrops: true,
+        },
+      fitnessSettings: {
+          fitnessToken: false,
+          currentSplit: "None",
+          activeSession: false,
+          totalWorkouts: 0,
+          totalPRs: 0,
+          liftIndex: {
+            push: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            pull: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            legs: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            upper: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            lower: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            fullbody: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            chest: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            back: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            brolegs: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            shoulders: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+            arms: {
+              profile1: {
+                name: "Create a Profile"
+              },
+              profile2: {
+                name: "Create a Profile"
+              },
+              profile3: {
+                name: "Create a Profile"
+              },
+            },
+          },
+        },
+      });
+
+      setLoading(true);
+      router.push('/overview');
 
     } catch (err: any) {
-  setError(err.message || "Something went wrong.");
-  setLoading(false);
-}};
+      setError(err.message || "Something went wrong.");
+      setLoading(false);
+    }
+  };
 
 
   return (

@@ -10,18 +10,6 @@ export default function ControlHub() {
   const toggleMenu = () => {
     const next = !isOpen;
     setIsOpen(next);
-
-    if (!next) {
-      setSettingsOpen(false);
-      setBioOpen(false);
-      setOverrideOpen(false);
-      setFitnessOpen(false);
-      setUnlockOpen(false);
-      setDawnOpen(false);
-      setDuskOpen(false);
-      setCoreOpen(false);
-
-    }
   };
 
 
@@ -44,102 +32,8 @@ export default function ControlHub() {
   const selectedPage = useGlobalData((s) => s.selectedPage);
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
-  const isSettingsOpen = useGlobalData((s) => s.isSettingsOpen);
-  const setSettingsOpen = useGlobalData((s) => s.setSettingsOpen);
-
-  const isFitnessOpen = useGlobalData((s) => s.isFitnessOpen);
-  const setFitnessOpen = useGlobalData((s) => s.setFitnessOpen);
-
-  const isOverrideOpen = useGlobalData((s) => s.isOverrideOpen);
-  const setOverrideOpen = useGlobalData((s) => s.setOverrideOpen);
-
-  const isBioOpen = useGlobalData((s) => s.isBioOpen);
-  const setBioOpen = useGlobalData((s) => s.setBioOpen);
-
-  const isUnlockOpen = useGlobalData((s) => s.isUnlockOpen);
-  const setUnlockOpen = useGlobalData((s) => s.setUnlockOpen);
-
-  const isCoreOpen = useGlobalData((s) => s.isCoreOpen);
-  const setCoreOpen = useGlobalData((s) => s.setCoreOpen);
-
-  const isDawnOpen = useGlobalData((s) => s.isDawnOpen);
-  const setDawnOpen = useGlobalData((s) => s.setDawnOpen);
-
-  const isDuskOpen = useGlobalData((s) => s.isDuskOpen);
-  const setDuskOpen = useGlobalData((s) => s.setDuskOpen);
-
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
-
-
-
-  useEffect(() => {
-    if (isCoreOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isCoreOpen]);
-
-
-  useEffect(() => {
-    if (isUnlockOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isUnlockOpen]);
-
-  useEffect(() => {
-    if (isSettingsOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isSettingsOpen]);
-
-  useEffect(() => {
-    if (isBioOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isBioOpen]);
-
-
-  useEffect(() => {
-    if (isFitnessOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isFitnessOpen]);
-
-
-  useEffect(() => {
-    if (isOverrideOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isOverrideOpen]);
-
-  useEffect(() => {
-    if (isDawnOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isDawnOpen]);
-
-  useEffect(() => {
-    if (isDuskOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isDuskOpen]);
-
 
 
   return (

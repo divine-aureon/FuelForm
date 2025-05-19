@@ -5,8 +5,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, collection, getDocs, query, orderBy, limit, } from "firebase/firestore";
 import { ensureDefaultsExist } from "@/lib/UpdateDatabase/ensureDefaultsExist";
+import { liftIndexData } from "@/lib/UpdateDatabase/liftIndexData";
 
-interface SyncData {
+//LATEST SYNC
+export interface SyncData {
   weight_lbs: number;
   weight_kg: number;
   steps: number;
@@ -25,55 +27,80 @@ interface SyncData {
   timestamp?: any;
 }
 
-interface StrengthSyncData {
+//LATEST FITNESS SYNC
+export interface FitnessSyncData {
+  split: string;
+  bodygroup: string;
+  whichProfile: string;
+  completed: boolean;
+  StartTime: any;
+  EndTime: any;
+  sessionData: any;
+}
+
+interface GoalSyncData {
   liftWeight_lbs: number;
   liftWeight_kg: number;
   movements: any[];
 }
 
+interface NutritionSyncData {
+  liftWeight_lbs: number;
+  liftWeight_kg: number;
+  movements: any[];
+}
+
+//CUSTOM SETTINGS
 interface CustomSettingsData {
   background: string;
   navIcon: string;
   lightMode: boolean;
 }
 
-interface StrengthData {
-  isStrengthArchiveActive: boolean;
+//FITNESSETTINGS
+interface FitnessSettingsData {
   currentSplit: string;
+  lastBodygroup: string;
+  fitnessToken: boolean;
   activeSession: boolean;
+  totalWorkouts: number;
+  totalPRs: number;
   liftIndex: {
     [bodygroup: string]: BodygroupProfile;
   };
 }
 
+//LIFT PROFILE INFO
 interface Profile {
   name: string;
   movements: string[];
 }
 
+//BODYGROUP PROFILE INFO
 interface BodygroupProfile {
   profile1?: Profile;
   profile2?: Profile;
   profile3?: Profile;
 }
 
-
-interface PrimeData {
-  isPrimeTasksActive: boolean;
+//DAILY GOAL SETTINGS
+interface DailyGoalSettingsData {
+  dailyGoalToken: boolean;
 }
 
-interface MacroData {
+//NUTRITION SETTINGS
+interface NutritionSettingsData {
   calorieGoal: number;
-  isMacroVaultActive: boolean;
+  nutritionToken: boolean;
 }
-
+//PULSE DROP SETTINGS
 interface PulseMemoryData {
   v1_welcomeDrop: boolean;
   v2_updateDrop1: boolean;
   Thanks4UpgradeDrop: boolean;
 }
 
-interface PulseData {
+interface PulseSettingsData {
   pulseMemory: PulseMemoryData;
   receivePulseDrops: boolean;
   tutorialDrops: boolean;
@@ -81,6 +108,7 @@ interface PulseData {
   humourDrops: boolean;
 }
 
+// THE ONE AND ONLY USER PROFILE
 export interface UserProfile {
   name: string;
   age: number;
@@ -99,16 +127,19 @@ export interface UserProfile {
   lastKnownWeight_lbs: number;
   lastKnownWeight_kg: number;
 
-  latestSync?: SyncData;
-
+  //SETTINGS
   customSettings?: CustomSettingsData;
-  strengthArchiveSettings?: StrengthData;
-  primeTasksSettings?: PrimeData;
-  macroVaultSettings?: MacroData;
-  pulseSettings?: PulseData;
+  fitnessSettings?: FitnessSettingsData;
+  dailyGoalSettings?: DailyGoalSettingsData;
+  nutritionSettings?: NutritionSettingsData;
+  pulseSettings?: PulseSettingsData;
 
   isPaid: boolean;
   token: boolean;
+
+  //COLLECTIONS
+  latestSync?: SyncData;
+  latestFitnessSync?: FitnessSyncData;
 }
 
 const defaultProfile: UserProfile = {
@@ -138,19 +169,22 @@ const defaultProfile: UserProfile = {
     lightMode: true,
   },
 
-  strengthArchiveSettings: {
-    isStrengthArchiveActive: false,
-    currentSplit: "",
+  fitnessSettings: {
+    fitnessToken: false,
+    currentSplit: "None",
+    lastBodygroup: "None",
     activeSession: false,
-    liftIndex: {},
+    totalWorkouts: 0,
+    totalPRs: 0,
+    liftIndex: liftIndexData(),
   },
 
-  primeTasksSettings: {
-    isPrimeTasksActive: false,
+  dailyGoalSettings: {
+    dailyGoalToken: false,
   },
 
-  macroVaultSettings: {
-    isMacroVaultActive: false,
+  nutritionSettings: {
+    nutritionToken: false,
     calorieGoal: 0,
   },
   pulseSettings: {
@@ -178,38 +212,62 @@ const defaultProfile: UserProfile = {
     timestamp: null,
   },
 
+  latestFitnessSync: {
+    split: "",
+    bodygroup: "",
+    whichProfile: "",
+    completed: false,
+    StartTime: "",
+    EndTime: "",
+    sessionData: "",
+  },
+
 
 };
 
 export default function useCoreData() {
+  //EVERYTHING THAT WE ARE PULLING FROM FIRESTORE
   const [userProfile, setProfile] = useState<UserProfile>(defaultProfile);
+  const [syncs, setSyncs] = useState<SyncData[]>([]);
+  const [fitness, setFitness] = useState<FitnessSyncData[]>([]);
 
+
+  //APPLICATION
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
 
         const userRef = doc(db, "users", user.uid);
         const syncRef = collection(db, "users", user.uid, "syncs");
+        const fitnessRef = collection(db, "users", user.uid, "fitness");
 
-        const [profileSnap, syncSnap] = await Promise.all([
+        const [profileSnap, syncSnap, fitnessSnap] = await Promise.all([
           getDoc(userRef),
-          getDocs(query(syncRef, orderBy("timestamp", "desc"), limit(1))),
+          getDocs(query(syncRef, orderBy("timestamp", "desc"))),
+          getDocs(query(fitnessRef, orderBy("timestamp", "desc"))),
         ]);
 
         const profileData = profileSnap.exists()
           ? (profileSnap.data() as UserProfile)
           : defaultProfile;
 
-        await ensureDefaultsExist(user.uid, profileData); //check UpdateDatbase to match fields. 
+        await ensureDefaultsExist(user.uid, profileData); //check UpdateDatbase to match fields.
 
-        const latestSync = syncSnap.docs.length > 0
-          ? (syncSnap.docs[0].data() as SyncData)
-          : defaultProfile.latestSync;
+        const allSyncs = syncSnap.docs.map(doc => doc.data() as SyncData);
+        const allFitness = fitnessSnap.docs.map(doc => doc.data() as FitnessSyncData);
+
+        const latestSync = allSyncs[0] ?? defaultProfile.latestSync;
+        const latestFitnessSync = allFitness[0] ?? defaultProfile.latestFitnessSync;
 
         setProfile({
           ...profileData,
-          latestSync
+          latestSync,
+          latestFitnessSync,
         });
+
+        setSyncs(allSyncs);
+        setFitness(allFitness);
+
       }
     });
 
@@ -219,6 +277,8 @@ export default function useCoreData() {
   return {
     userProfile,
     latestSync: userProfile.latestSync,
+    latestFitnessSync: userProfile.latestFitnessSync,
+    allSyncs: syncs,
+    allFitness: fitness,
   };
 }
-

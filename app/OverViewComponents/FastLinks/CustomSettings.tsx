@@ -10,9 +10,7 @@ import UnlockComponent from "@/ArchivedComponents/UnlockComponent"
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-
-
-
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 
 export default function CustomSettingsTile() {
   const userProfile = useGlobalData((s) => s.userProfile);

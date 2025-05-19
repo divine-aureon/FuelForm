@@ -20,6 +20,7 @@ import {
     Bird
 } from 'lucide-react';
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 
 
 
@@ -28,6 +29,7 @@ export default function FitnessGoalsPageComponent() {
     const router = useRouter();
     const [status, setStatus] = useState("");
     const userProfile = useGlobalData((s) => s.userProfile);
+      const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -38,10 +40,10 @@ export default function FitnessGoalsPageComponent() {
     const [calorieGoal, setCalorieGoal] = useState("");
 
     useEffect(() => {
-        if (!userProfile?.macroVaultSettings) return;
-        setCalorieGoal(userProfile?.macroVaultSettings.calorieGoal?.toString() || "");
+        if (!userProfile?.nutritionSettings) return;
+        setCalorieGoal(userProfile?.nutritionSettings.calorieGoal?.toString() || "");
 
-    }, [userProfile?.macroVaultSettings]);
+    }, [userProfile?.nutritionSettings]);
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -53,7 +55,7 @@ export default function FitnessGoalsPageComponent() {
 
         try {
             await setDoc(userRef, {
-                macroVaultSettings: {
+                nutritionSettings: {
                     calorieGoal: Number(calorieGoal),
                 }
             }, { merge: true });

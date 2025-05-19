@@ -1,5 +1,6 @@
 'use client';
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -19,8 +20,8 @@ export default function BiometricsComponent() {
   const setUserProfile = useGlobalData((s) => s.setUserProfile);
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
-  const isBioOpen = useGlobalData((s) => s.isBioOpen);
-  const setBioOpen = useGlobalData((s) => s.setBioOpen);
+  const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -188,6 +189,7 @@ export default function BiometricsComponent() {
 
       if (Object.keys(updates).length > 0) {
         await updateDoc(doc(db, "users", user.uid), updates);
+        EstablishConnection(user?.uid);
       } else {
       }
 
@@ -203,9 +205,10 @@ export default function BiometricsComponent() {
   useEffect(() => {
     if (status === "success") {
       const timeout = setTimeout(() => {
+
         setIsOpen(false);
-        setBioOpen(false);
-        window.location.reload(); // hard refresh
+        setSelectedPage("bodysync");
+        //window.location.reload(); // hard refresh
       }, 0); // optional delay (1 second)
 
       return () => clearTimeout(timeout);

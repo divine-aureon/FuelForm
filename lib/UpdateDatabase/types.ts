@@ -1,4 +1,4 @@
-
+import { liftIndexData } from "@/lib/UpdateDatabase/liftIndexData";
 
 export interface CustomSettingsData {
   background: string;
@@ -6,19 +6,33 @@ export interface CustomSettingsData {
   lightMode: boolean;
 }
 
-export interface StrengthData {
-  isStrengthArchiveActive: boolean,
+export interface FitnessData {
+  fitnessToken: boolean;
   currentSplit: string;
   activeSession: boolean;
+  liftIndex: {
+    [bodygroup: string]: BodygroupProfile;
+  };
 }
 
-export interface PrimeData {
-  isPrimeTasksActive: boolean,
+export interface Profile {
+  name: string;
+  movements: string[];
 }
 
-export interface MacroData {
+export interface BodygroupProfile {
+  profile1?: Profile;
+  profile2?: Profile;
+  profile3?: Profile;
+}
+
+export interface DailyGoalData {
+  dailyGoalToken: boolean,
+}
+
+export interface NutritionData {
   calorieGoal: number;
-  isMacroVaultActive: boolean,
+  nutritionToken: boolean,
 }
 
 export interface PulseMemoryData {
@@ -55,9 +69,9 @@ export interface UserProfile {
   lastKnownWeight_kg: number;
 
   customSettings?: CustomSettingsData;
-  strengthArchiveSettings?: StrengthData;
-  primeTasksSettings?: PrimeData;
-  macroVaultSettings?: MacroData;
+  fitnessSettings?: FitnessData;
+  dailyGoalSettings?: DailyGoalData;
+  nutritionSettings?: NutritionData;
   pulseSettings?: PulseData;
 
   isPaid: boolean;
@@ -91,20 +105,22 @@ export const defaultProfile: UserProfile = {
     lightMode: true,
   },
 
-  strengthArchiveSettings: {
-    isStrengthArchiveActive: false,
+ fitnessSettings: {
+    fitnessToken: false,
     currentSplit: "",
     activeSession: false,
+    liftIndex: liftIndexData(),
   },
 
-  primeTasksSettings: {
-    isPrimeTasksActive: false,
+  dailyGoalSettings: {
+    dailyGoalToken: false,
   },
 
-  macroVaultSettings: {
-    isMacroVaultActive: false,
+  nutritionSettings: {
+    nutritionToken: false,
     calorieGoal: 0,
   },
+
   pulseSettings: {
     pulseMemory: {
       v1_welcomeDrop: false,

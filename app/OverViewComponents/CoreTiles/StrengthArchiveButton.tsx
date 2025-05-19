@@ -1,18 +1,15 @@
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { AutoClamp } from "@/lib/hooks/AutoClamp";
-import { ListChecks } from "lucide-react";
-import Link from "next/link";
-import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
-import { Sun, Moon, Lock, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, StepForward, StepBack } from "lucide-react";
-import { useEffect, useState } from 'react'
+import { Lock , Dumbbell} from "lucide-react";
+
 
 export default function StrengthArchiveTile() {
 
     const selectedPage = useGlobalData((s) => s.selectedPage);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const userProfile = useGlobalData((s) => s.userProfile);
+       const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
 
-    const setCoreOpen = useGlobalData((s) => s.setCoreOpen);
+
     const setIsOpen = useGlobalData((s) => s.setIsOpen);
     return (
 
@@ -21,7 +18,7 @@ export default function StrengthArchiveTile() {
                 <>
                     <button onClick={() => {
                         setSelectedPage("FitnessTracker");
-                        setCoreOpen(false);
+                        setSelectedSector2("newsession");
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>
@@ -46,7 +43,7 @@ export default function StrengthArchiveTile() {
 
                     <button onClick={() => {
                         setSelectedPage("FitnessTracker");
-                        setCoreOpen(false);
+                        setSelectedSector2("newsession");
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>

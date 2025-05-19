@@ -1,77 +1,89 @@
 'use client';
+//DUAL STATES DATABASE & GLOBALDATA ACCISABILITY
 import { useGlobalData } from "../initializing/Global/GlobalData";
-import useCoreData from "@/lib/hooks/CoreData"
+import { EstablishConnection } from "../initializing/Global/EstablishConnection";
+
+//MISC..
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import React from "react";
 import useAuth from '@/lib/useAuth';
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { ensureDefaultsExist } from "@/lib/UpdateDatabase/ensureDefaultsExist";
-import { DawnSyncModal } from "../../ArchivedComponents/Modals/DawnSyncModal";
-import { DuskSyncModal } from "../../ArchivedComponents/Modals/DuskSyncModal";
+import { motion, AnimatePresence } from "framer-motion";
+import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
+import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
+import { Sun, Moon, Lock, Sprout, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, ListChecks, StepForward, StepBack } from "lucide-react";
+
+
+//PAGE COMPONENTS
 import DawnSyncComponent from "../OverViewComponents/Sync/DawnSyncComponent";
 import DuskSyncComponent from "../OverViewComponents/Sync/DuskSyncComponent";
+import ControlHub from "../OverViewComponents/ControlHub/ControlHubBar";
+import SyncReport from "../OverViewComponents/SyncReportsPage";
+import SyncSimulator from "../OverViewComponents/SyncSimulatorPage";
+import Crowns from "../OverViewComponents/CrownsPage";
+import InfoDex from "../OverViewComponents/InfoDexPage";
+import StrengthArchive from "../OverViewComponents/FitnessTracker/FitnessTrackerComponent";
+import RepSync from "../OverViewComponents/FitnessTracker/RepSync";
+import NutritionLog from "../OverViewComponents/NutrientLog/NutritionLogComponent";
+import DailyGoals from "../OverViewComponents/DailyGoals/DailyGoalsComponent";
+import UnlockPageComponent from "../OverViewComponents/CustomerPortal/UnlockPageComponent";
+import CoreFeaturesComponent from "../OverViewComponents/CoreTiles/CoreFeaturesComponent";
+import OverrideComponent from "../OverViewComponents/Sync/OverrideComponent";
+import BiometricsComponent from "../OverViewComponents/Settings/BiometricsComponent";
+import CustomSettingsComponent from "../OverViewComponents/Settings/CustomSettingsComponent";
+import FitnessGoalsPageComponent from "../OverViewComponents/Settings/MacroSettingsComponent";
+
+//MISC COMPONENTS
 import EnergyBreakdown from "../OverViewComponents/NutrientDisplay/EnergyBreakdown";
 import VitaminBreakdown from "../OverViewComponents/NutrientDisplay/VitaminBreakdown";
 import MineralBreakdown from "../OverViewComponents/NutrientDisplay/MineralBreakdown";
 import { BuildEnergyData } from "../OverViewComponents/NutrientDisplay/BuildEnergyData";
 import { BuildVitaminData } from "../OverViewComponents/NutrientDisplay/BuildVitaminData";
 import { BuildMineralData } from "../OverViewComponents/NutrientDisplay/BuildMineralData";
-import ControlHub from "../OverViewComponents/ControlHub/ControlHubBar";
 import useTodaysSync from '@/lib/hooks/TodaysSync';
-import { motion, AnimatePresence } from "framer-motion";
-import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
-import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird, Dna, KeyRound, Settings, Mars, Venus, Fingerprint } from 'lucide-react';
-import { Sun, Moon, Lock, Sprout, CircleCheckBig, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, ListChecks, StepForward, StepBack } from "lucide-react";
+import NavLoad from "../initializing/LoadingComponents/NavLoad";
+import ScrollLoad from "@/Backgrounds/ScrollLoad";
+
+//PULSE DROP COMPONENT
 import BirthdayDrop from "../OverViewComponents/PulseDrops/BirthdayDrop";
 import PulseDropEngine from "../OverViewComponents/PulseDrops/Data/PulseDropEngine";
-import NavLoad from "../initializing/LoadingComponents/NavLoad";
-import { AutoClamp } from "@/lib/hooks/AutoClamp";
-import ScrollLoad from "@/Backgrounds/ScrollLoad";
-import SyncReport from "../OverViewComponents/SyncReportsPage";
-import SyncSimulator from "../OverViewComponents/SyncSimulatorPage";
-import Crowns from "../OverViewComponents/CrownsPage";
-import InfoDex from "../OverViewComponents/InfoDexPage";
-import StrengthArchiveComponent from "../OverViewComponents/FitnessTracker/FitnessTrackerComponent";
-import NutritionLog from "../OverViewComponents/NutrientLog/NutritionLogComponent";
-import DailyGoals from "../OverViewComponents/DailyGoals/DailyGoalsComponent";
 
-import UnlockPageComponent from "../OverViewComponents/CustomerPortal/UnlockPageComponent";
-import CoreFeaturesComponent from "../OverViewComponents/CoreTiles/CoreFeaturesComponent";
-
-import OverrideComponent from "../OverViewComponents/Sync/OverrideComponent";
-import BiometricsComponent from "../OverViewComponents/Settings/BiometricsComponent";
-import CustomSettingsComponent from "../OverViewComponents/Settings/CustomSettingsComponent";
-import FitnessGoalsPageComponent from "../OverViewComponents/Settings/MacroSettingsComponent";
-
+//OVERVIEW PAGE BEGINS
 export default function CommandCenter() {
 
+
+  //CENTRAL INTELLIGENCE
   const { user } = useAuth();
-  const { userProfile, latestSync } = useCoreData();
+
+  const userProfile = useGlobalData((s) => s.userProfile);
+
+  useEffect(() => {
+    if (user?.uid) {
+      EstablishConnection(user?.uid);
+    }
+  }, [user?.uid]);
+
+  ///END NOTE
+
   const setUserProfile = useGlobalData((s) => s.setUserProfile);
   const setLatestSync = useGlobalData((s) => s.setLatestSync);
-  const UserBackground = userProfile?.customSettings?.background || "None";
+  const setLatestFitnessSync = useGlobalData((s) => s.setLatestFitnessSync);
+  const setSyncHistory = useGlobalData.getState().setSyncHistory;
+  const setFitnessHistory = useGlobalData.getState().setFitnessHistory;
 
 
-  useEffect(() => {
-    if (userProfile) {
-      setUserProfile(userProfile);
-    }
-  }, [userProfile]);
-
-  useEffect(() => {
-    if (latestSync) {
-      setLatestSync(latestSync);
-    }
-  }, [latestSync]);
+  //useEffect(() => {
+  //  if (latestSync) {
+  //    setLatestSync(latestSync);
+  //  }
+  // }, [latestSync]);
 
 
-  useEffect(() => {
-    if (user && userProfile) {
-      ensureDefaultsExist(user.uid, userProfile);
-    }
-  }, [user, userProfile]);
+  //useEffect(() => {
+  //  if (user && userProfile) {
+  //    ensureDefaultsExist(user.uid, userProfile);
+  //   }
+  //}, [user, userProfile]);
 
   const LucideIconMap: Record<string, React.ElementType> = {
     Atom: Atom,
@@ -87,91 +99,21 @@ export default function CommandCenter() {
   const Icon = LucideIconMap[userProfile?.customSettings?.navIcon || "Atom"];
 
 
+  //DISPLAY INFORMATION FOR BODYSYNC PANEL
+
+  //HEIGHT INFO
   const heightDisplay = userProfile?.preferredHeightUnit === "cm"
     ? `${userProfile?.height_cm} cm`
     : `${userProfile?.height_ft_in.feet}'${userProfile?.height_ft_in.inches}"`;
 
+
+  //WEIGHT INFO
   const weightDisplay = userProfile?.preferredWeightUnit === "lbs"
     ? `${userProfile?.lastKnownWeight_lbs} lbs`
     : `${userProfile?.lastKnownWeight_kg} kg`;
 
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [isFitnessOpen, setFitnessOpen] = useState(false);
-  const [isOverrideOpen, setOverrideOpen] = useState(false);
-  const [isBioOpen, setBioOpen] = useState(false);
-  const [isDawnOpen, setDawnOpen] = useState(false);
-  const [isDuskOpen, setDuskOpen] = useState(false);
-  const [isUnlockOpen, setUnlockOpen] = useState(false);
-  const [isCoreOpen, setCoreOpen] = useState(false);
 
-  useEffect(() => {
-    if (isCoreOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isCoreOpen]);
-
-
-  useEffect(() => {
-    if (isUnlockOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isUnlockOpen]);
-
-  useEffect(() => {
-    if (isSettingsOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isSettingsOpen]);
-
-  useEffect(() => {
-    if (isBioOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isBioOpen]);
-
-
-  useEffect(() => {
-    if (isFitnessOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isFitnessOpen]);
-
-
-  useEffect(() => {
-    if (isOverrideOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isOverrideOpen]);
-
-  useEffect(() => {
-    if (isDawnOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isDawnOpen]);
-
-  useEffect(() => {
-    if (isDuskOpen) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-  }, [isDuskOpen]);
-
-
+  //????
   const mergedMacros = (userProfile?.latestSync?.recoveryMacros || []).map((recoveryMacro) => {
     const matchingActive = (userProfile?.latestSync?.activeMacros || []).find(
       (activeMacro) => activeMacro.name === recoveryMacro.name
@@ -184,21 +126,14 @@ export default function CommandCenter() {
     };
   });
 
+
+  //NUTRIENT PANEL DISPLAYS
   const EnergyData = BuildEnergyData(userProfile?.latestSync);
   const Nutrient_V = BuildVitaminData(userProfile?.latestSync);
   const Nutrient_M = BuildMineralData(userProfile?.latestSync);
 
-  //  if (typeof AccessToken !== 'boolean') return;
 
-  //NUTRIENT BLUEPRINT SECTIONS
-  const [selectedSector, setSelectedSector] = useState<"macros" | "vitamins" | "minerals">("macros");
-
-  const handleSectorClick = (sector: "macros" | "vitamins" | "minerals") => {
-    setSelectedSector(sector); // No toggling, just always set the new one
-
-  };
-
-  // COMMAND CENTER SECTIONS
+  // COMMAND CENTER PAGE SECTION MANAGEMENT
   const pageDefault = useGlobalData.getState().pageDefault;
 
   useEffect(() => {
@@ -211,26 +146,7 @@ export default function CommandCenter() {
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
 
-  const bgKey = userProfile?.customSettings?.background || "None";
-
-  const BGdisplay: Record<string, string> = {
-    "None": "bg-[url('/images/loading.jpg')]",
-    "homepage": "bg-[url('/images/home.webp')]",
-    "loginpage": "bg-[url('/images/login.jpg')]",
-    "homepage2": "bg-[url('/images/home2.jpg')]",
-    "NeuralLink": "bg-[url('/images/backgrounds/neurallink.webp')]",
-    "StarVeil": "bg-[url('/images/backgrounds/starveil.jpg')]",
-    "QuantumFade": "bg-[url('/images/backgrounds/quantumfade.jpg')]",
-    "ObsidianProtocol": "bg-[url('/images/backgrounds/obsidianprotocol.jpg')]",
-    "HexPulse": "bg-[url('/images/backgrounds/hexpulse.jpg')]",
-    "CircuitRift": "bg-[url('/images/backgrounds/circuitrift.jpg')]",
-    "ChronoSync": "bg-[url('/images/backgrounds/chronosync.webp')]",
-    "DataDrift": "bg-[url('/images/backgrounds/datadrift.jpg')]",
-    "DarkFirewall": "bg-[url('/images/backgrounds/darkfirewall.jpg')]",
-  };
-  const backgroundClass = BGdisplay[bgKey] ?? BGdisplay["None"];
-  ///TEXT RESIXER FOR CUSTOMER CORE FEATURE CARDS
-
+  //BACKGROUND MANAGMENT
   const imageKey = userProfile?.customSettings?.background || "None";
   const BG: Record<string, string> = {
     "None": "/images/loading.jpg",
@@ -249,17 +165,28 @@ export default function CommandCenter() {
   };
   const backgroundURL = BG[imageKey] ?? BG["None"];
 
-  useTodaysSync();
+  //BACKGROUND MANAGMENT
+  const GenderKey = userProfile?.gender || "None";
+  const GenderBG: Record<string, string> = {
+    "male": "/images/greyscale/genderMALE.png",
+    "female": "/images/greyscale/genderFEMALE.png",
+  };
+  const GenderBackgroundURL = GenderBG[GenderKey] ?? GenderBG["None"];
 
+
+  //DAWN SYNC BUTTON MANIPULATION
+  useTodaysSync();
   const hasDawnSyncedToday = useGlobalData((s) => s.hasDawnSyncedToday);
   const hasDuskSyncedToday = useGlobalData((s) => s.hasDuskSyncedToday);
 
+
+  //THE VISUAL PAGE STARTS HERE
   return (
     <>
       <ScrollLoad />
-
       <NavLoad />
       <PageFadeWrapper>
+
         <BirthdayDrop />
         <PulseDropEngine />
 
@@ -297,51 +224,52 @@ export default function CommandCenter() {
                     <div className="grid grid-cols-[5fr_1fr] gap-4 h-full">
                       {/*LARGE COLUMN*/}
                       <div>
-                        {userProfile?.gender === 'male' ? (
-                          <>
-                            <div className="h-[500px] bg-[url('/images/greyscale/bodysyncmale.webp')] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2">
-                              <div className="relative h-[500px]  bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
-                                <div className="absolute text-white top-0 left-0 w-full h-full">
+
+
+                        <div className="">
+
+                          <div className="h-[500px] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2"
+                            style={{
+                              backgroundImage: `url('${GenderBackgroundURL}')`,
+
+                            }}>
+
+
+                            <div className=" relative h-[500px]  bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
+                              <div className="absolute text-white top-0 left-0 w-full h-full">
 
 
 
-                                  <h2 className="text-left  ml-2 text-lg pulse-glow flex items-center">Biometrics{userProfile?.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
-                                  <h2 className="text-left ml-2 text-xs">Age: {userProfile?.age} Years</h2>
-                                  <h2 className="text-left ml-2 text-xs">Height: {heightDisplay}</h2>
-                                  <h2 className="text-left  ml-2 text-xs">Current Weight: {weightDisplay}</h2>
-                                  <h2 className="text-left ml-2 text-xs pb-1">Calorie Goal: {userProfile?.macroVaultSettings?.calorieGoal}Kcal</h2>
+                                <h2 className="text-left  ml-2 text-lg pulse-glow flex items-center">Biometrics{userProfile?.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
+                                <h2 className="text-left ml-2 text-xs">Age: {userProfile?.age} Years</h2>
+                                <h2 className="text-left ml-2 text-xs">Height: {heightDisplay}</h2>
+                                <h2 className="text-left  ml-2 text-xs">Current Weight: {weightDisplay}</h2>
+                                <h2 className="text-left ml-2 text-xs pb-1">Calorie Goal: {userProfile?.nutritionSettings?.calorieGoal}Kcal</h2>
 
 
 
-                                  <div className="flex justify-end pr-[5px] items-end h-full pb-[95px] ">
-                                    <button onClick={() => {
-                                      setSelectedPage("SyncReport");
-                                      window.scrollTo({ top: 0, behavior: "smooth" });
-                                    }}>
-                                      <div
-                                        className="bg-white/30 rounded-xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
-                                        <div className="flex leading-none text-sm items-center font-semibold" >
-                                          SyncReport
-                                          <Rotate3d size={30} />
-                                        </div>
+                                <div className="flex justify-end pr-[5px] items-end h-full pb-[95px] ">
+                                  <button onClick={() => {
+                                    setSelectedPage("SyncReport");
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  }}>
+                                    <div
+                                      className="bg-white/30 rounded-xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
+                                      <div className="flex leading-none text-sm items-center font-semibold" >
+                                        SyncReport
+                                        <Rotate3d size={30} />
                                       </div>
-                                    </button>
-                                  </div>
-
-
-
+                                    </div>
+                                  </button>
                                 </div>
+
+
+
                               </div>
                             </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="h-[500px]  bg-[url('/images/greyscale/bodysyncfemale.webp')] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2">
-                              <div className="h-[500px]  bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl">
-                              </div>
-                            </div>
-                          </>
-                        )}
+                          </div>
+                        </div>
+
                       </div>
                       {/*SMALL COLUMN*/}
                       <div className="">
@@ -394,22 +322,6 @@ export default function CommandCenter() {
                       </div>
 
                     </div>
-
-                    {/*DAWNSYNC 7 DUSKSYNC LOGIC*/}
-
-
-                    {isDawnOpen && (
-                      <DawnSyncModal onClose={() => setDawnOpen(false)}>
-                        < DawnSyncComponent />
-                      </DawnSyncModal>)}
-
-
-                    {isDuskOpen && (
-                      <DuskSyncModal onClose={() => setDuskOpen(false)}>
-                        < DuskSyncComponent />
-                      </DuskSyncModal>)}
-
-
 
                     <div className="fixed bottom-16 max-w-md left-1/2 -translate-x-1/2 w-full flex justify-center z-30">
                       {userProfile?.isPaid ? (
@@ -507,10 +419,29 @@ export default function CommandCenter() {
 
 
 
-                  <StrengthArchiveComponent />
+                  <StrengthArchive />
 
                 </motion.div>
               )}
+
+
+              {/*RepSync*/}
+              {pageView === "RepSync" && (
+
+                <motion.div
+                  key="RepSync"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}>
+
+
+
+                  <RepSync />
+
+                </motion.div>
+              )}
+
 
               {/*DAILY GOALS */}
               {pageView === "DailyGoals" && (

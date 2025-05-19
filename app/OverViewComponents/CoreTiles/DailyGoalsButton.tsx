@@ -11,7 +11,6 @@ export default function PrimeTasksTile() {
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const userProfile = useGlobalData((s) => s.userProfile);
 
-    const setCoreOpen = useGlobalData((s) => s.setCoreOpen);
     const setIsOpen = useGlobalData((s) => s.setIsOpen);
 
     return (
@@ -22,7 +21,6 @@ export default function PrimeTasksTile() {
 
                     <button onClick={() => {
                         setSelectedPage("DailyGoals");
-                        setCoreOpen(false);
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>
@@ -49,7 +47,6 @@ export default function PrimeTasksTile() {
 
                     <button onClick={() => {
                         setSelectedPage("DailyGoals");
-                        setCoreOpen(false);
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>

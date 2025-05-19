@@ -12,8 +12,6 @@ export default function MacroVaultTile() {
     const selectedPage = useGlobalData((s) => s.selectedPage);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const userProfile = useGlobalData((s) => s.userProfile);
-
-    const setCoreOpen = useGlobalData((s) => s.setCoreOpen);
     const setIsOpen = useGlobalData((s) => s.setIsOpen);
 
     return (
@@ -25,7 +23,6 @@ export default function MacroVaultTile() {
 
                     <button onClick={() => {
                         setSelectedPage("NutrientLog");
-                        setCoreOpen(false);
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>
@@ -52,7 +49,6 @@ export default function MacroVaultTile() {
 
                     <button onClick={() => {
                         setSelectedPage("NutrientLog");
-                        setCoreOpen(false);
                         setIsOpen(false);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                     }}>
