@@ -9,7 +9,6 @@ import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import LoginComponent from "./LoginPage"
-import LoginPage from "../../ArchivedComponents/LoginAndRegisterComponent"
 import RegisterComponent from "./RegisterPage"
 import AboutComponent from "./AboutPage"
 import InfoDexComponent from "../OverViewComponents/InfoDexPage"
