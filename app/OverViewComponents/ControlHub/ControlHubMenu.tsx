@@ -4,15 +4,6 @@ import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import { auth } from "@/lib/firebase";
 import { useRouter } from 'next/navigation';
 import { Lock, Rotate3d, ListChecks, Dumbbell, Utensils, Globe, LogOut } from 'lucide-react';
-import { useState, useEffect } from "react";
-import { FitnessGoalsModal } from "@/ArchivedComponents/Modals/MacroSettingsModal"
-import FitnessGoalsPageComponent from "@/app/OverViewComponents/Settings/MacroSettingsComponent"
-import { OverrideModal } from "@/ArchivedComponents/Modals/OverrideModal"
-import OverrideComponent from "@/app/OverViewComponents/Sync/OverrideComponent"
-import { BioModal } from "@/ArchivedComponents/Modals/BiometricsModal"
-import BiometricsComponent from "@/app/OverViewComponents/Settings/BiometricsComponent"
-import { CoreFeaturesModal } from "@/ArchivedComponents/Modals/CoreFeaturesModal"
-import CoreFeaturesComponent from "@/app/OverViewComponents/CoreTiles/CoreFeaturesComponent"
 import SyncSimTile from "@/app/OverViewComponents/FastLinks/SyncSimulatorButton"
 import UnlockTile from "@/app/OverViewComponents/FastLinks/UnlockPageButton"
 import CustomSettingsTile from "@/app/OverViewComponents/FastLinks/CustomSettings"
