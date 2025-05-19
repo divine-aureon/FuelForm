@@ -35,61 +35,64 @@ export default function EnergyBreakdown({ data }: EnergyBreakdownProps) {
   return (
     <>
 
-      <div className="h-32 relative w-full bg-[url('/images/menus/dawn.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
-         text-white text-3xl glowing-button mb-2">
-        <div className="absolute inset-0 pt-5 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
+      <div className="h-50 w-full bg-[url('/images/menus/dawn.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl 
+         text-white text-3xl glowing-button2 mb-2">
+        <div className=" h-50 inset-0 pt-5 p-3 flex-col items-center bg-indigo-500/30 justify-center text-center rounded-xl">
           <div className="text-center gap-2 pulse-glow ">Energy Breakdown</div>
           <h2 className="text-sm font-bold text-white">
             Each morning is a chance to recalibrate. Enter your truth and proceed with clarity.
           </h2>
+
+
+          <div className="flex items-center z-30 mt-3 justify-between px-14 ">
+
+            <button onClick={() => {
+              setSelectedPage("Macros");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}>
+              <div
+                className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex flex-col  hover:bg-indigo-300/50 text-center p-2">
+                <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                  Macros
+                  <Flame size={30} />
+                </div>
+              </div>
+
+            </button>
+
+            <button onClick={() => {
+              setSelectedPage("Vitamins");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}>
+              <div
+                className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex  hover:bg-indigo-300/50 flex-col text-center p-2">
+                <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                  Vitamin
+                  <Sprout size={30} />
+                </div>
+              </div>
+
+            </button>
+
+            <button onClick={() => {
+              setSelectedPage("Minerals");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}>
+              <div
+                className="bg-white/30 rounded-3xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 ">
+                <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                  Mineral
+                  <Atom size={30} />
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
 
       </div>
 
 
-      <div className="flex items-center justify-between px-14 ">
 
-        <button onClick={() => {
-          setSelectedPage("Macros");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}>
-          <div
-            className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex flex-col  hover:bg-indigo-300/50 text-center p-2">
-            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-              Macros
-              <Flame size={30} />
-            </div>
-          </div>
-
-        </button>
-
-        <button onClick={() => {
-          setSelectedPage("Vitamins");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}>
-          <div
-            className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex  hover:bg-indigo-300/50 flex-col text-center p-2">
-            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-              Vitamin
-              <Sprout size={30} />
-            </div>
-          </div>
-
-        </button>
-
-        <button onClick={() => {
-          setSelectedPage("Minerals");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}>
-          <div
-            className="bg-white/30 rounded-3xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 ">
-            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-              Mineral
-              <Atom size={30} />
-            </div>
-          </div>
-        </button>
-      </div>
 
 
 

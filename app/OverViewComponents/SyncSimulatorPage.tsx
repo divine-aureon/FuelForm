@@ -6,7 +6,7 @@ import EnergyBreakdown from "@/app/OverViewComponents/NutrientDisplay/EnergyBrea
 import VitaminBreakdown from "@/app/OverViewComponents/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/app/OverViewComponents/NutrientDisplay/MineralBreakdown"
 import useCoreData from "@/lib/hooks/CoreData";
-import NavLoad from "@/app/initializing/LoadingComponents/NavLoad";
+import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 import ControlHub from "./ControlHub/ControlHubBar";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"

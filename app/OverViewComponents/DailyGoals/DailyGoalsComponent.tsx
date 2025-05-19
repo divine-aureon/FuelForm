@@ -5,7 +5,7 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
 import useCoreData from "@/lib/hooks/CoreData";
-import NavLoad from "@/app/initializing/LoadingComponents/NavLoad";
+import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 import ControlHub from "../ControlHub/ControlHubBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Elements } from '@stripe/react-stripe-js';

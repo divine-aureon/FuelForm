@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import NavLoad from "@/app/initializing/LoadingComponents/NavLoad";
+import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 
 export default function PageFadeWrapper({ children }: { children: React.ReactNode }) {
   const [isMounted, setIsMounted] = useState(false);

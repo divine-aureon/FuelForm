@@ -5,25 +5,43 @@ import { motion, AnimatePresence } from "framer-motion";
 import useCoreData from "@/lib/hooks/CoreData";
 import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import NavLoad from "../../initializing/LoadingComponents/NavLoad";
+import NavLoad from "../../initializing/LoadingComponents/SystemLoad";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import useAuth from "@/lib/useAuth";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
+
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
+import { AllTypes, TypeManifest, UserProfile, FitnessSettingsData, LiftIndexData } from "@/app/initializing/Global/BodySyncManifest";
+import SystemLoad from "@/app/initializing/Global/SystemLoad";
+
 export default function LiftIndexComponent() {
-
-    const userProfile = useGlobalData((s) => s.userProfile);
-    const fitnessSettings = userProfile?.fitnessSettings;
-
-    const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
-    const liftIndex = useGlobalData((s) => s.liftIndex);
-    const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
-
 
 
     const { user } = useAuth();
+
+
+    const userProfile = useGlobalData((s) => s.userProfile) as UserProfile
+    const setUserProfile = useGlobalData((s) => s.setUserProfile);
+    const setConnectionReady = useGlobalData((s) => s.setConnectionReady)
+
+
+    useEffect(() => {
+        if (user?.uid) {
+            EstablishConnection(user?.uid);
+            setConnectionReady(true);
+        }
+    }, [user?.uid]);
+
+    const fitnessSettings = userProfile?.fitnessSettings ?? ({} as FitnessSettingsData);
+    const liftIndex = fitnessSettings?.liftIndex ?? ({} as LiftIndexData);
+
+    const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
+    // const liftIndex = useGlobalData((s) => s.liftIndex);
+    const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
+
 
     const router = useRouter();
 
@@ -42,9 +60,9 @@ export default function LiftIndexComponent() {
     const [profileName, setProfileName] = useState("");
 
 
-    const profile1 = fitnessSettings?.liftIndex?.[bodygroup]?.profile1;
-    const profile2 = fitnessSettings?.liftIndex?.[bodygroup]?.profile2;
-    const profile3 = fitnessSettings?.liftIndex?.[bodygroup]?.profile3;
+    const profile1 = liftIndex?.[bodygroup]?.profile1;
+    const profile2 = liftIndex?.[bodygroup]?.profile2;
+    const profile3 = liftIndex?.[bodygroup]?.profile3;
 
 
     const [movementLevels, setMovementLevels] = useState<any[]>([]);
@@ -180,9 +198,6 @@ export default function LiftIndexComponent() {
             }
         }
     }, [activeSplit, fitnessSettings?.currentSplit]);
-
-
-    if (!fitnessSettings?.currentSplit) return;
 
     return (
         <>
@@ -445,145 +460,143 @@ export default function LiftIndexComponent() {
 
                             <div className="p-2 mb-10 bg-white/30 backdrop-blur-sm text-white rounded-lg flex flex-col mb-20">
 
-                                <div className="text-white mb-2 justify-center flex">
+                             
 
-                                </div>
+                                    <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
+                                        Choose a {BodyGroupDisplayNames[bodygroup]} profile to edit  <br />
+                                        <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
+                                        {profileSlot && (
+                                            <p className="text-green-300 text-center font-semibold">
+                                                Proceed to Movement Selection
+                                            </p>)}
+                                        {!profileSlot && (
+                                            <p className="text-yellow-300 text-center font-semibold">
+                                                No profile selected
+                                            </p>)}
 
-                                <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
-
-
-                                    {profileSlot && (
-                                        <p className="text-green-300 text-center font-semibold">
-                                            Proceed to apply Liftindex to Profile
-                                        </p>)}
-                                    {!profileSlot && (
-                                        <p className="text-yellow-300 text-center font-semibold">
-                                            Choose a Profile Slot to Edit
-                                        </p>)}
-
-                                </div>
-
-                                <div className="grid grid-cols gap-2 left-0 ">
-                                    <div>
-
-                                        <div className="grid grid-cols gap-2 left-0 ">
-
-                                            <button
-                                                onClick={() => {
-                                                    setProfileSlot("profile1");
-                                                    handleMovementClick("profile1");
-                                                }}
-                                                className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile1" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                                Edit {BodyGroupDisplayNames[bodygroup]} Profile 1
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setProfileSlot("profile2");
-                                                    handleMovementClick("profile2");
-                                                }}
-                                                className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile2" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-
-                                                Edit {BodyGroupDisplayNames[bodygroup]} Profile 2
-                                            </button>
-
-                                            <button
-                                                onClick={() => {
-                                                    setProfileSlot("profile3");
-                                                    handleMovementClick("profile3");
-                                                }}
-                                                className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile3" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                                Edit {BodyGroupDisplayNames[bodygroup]} Profile 3
-                                            </button>
-
-
-
-                                        </div>
-
-                                        <input
-                                            type="text"
-                                            value={profileName}
-                                            onChange={(e) => setProfileName(e.target.value)}
-                                            placeholder="Enter a profile name"
-                                            className="w-full mt-4 mb-2 p-2 rounded bg-gray-800 text-white border border-indigo-400 placeholder-gray-500"
-                                        />
-
-                                        {movementLevels.map((level, index) => {
-                                            const availableOptions = getAvailableOptions(level);
-
-                                            return (
-                                                <select
-                                                    key={index}
-                                                    value={level}
-                                                    onChange={(e) => handleChange(e.target.value, index)}
-                                                    className="mb-2 w-full p-2 rounded bg-gray-800 text-white"
-                                                >
-                                                    <option value="">Choose a level</option>
-                                                    {availableOptions.map((option) => (
-                                                        <option key={option} value={option}>
-                                                            {option}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            );
-                                        })}
-
-
-                                        <button
-                                            onClick={() => setMovementLevels([...movementLevels, ""])}
-                                            className="mt-2 text-sm px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-500"
-                                        >
-                                            + Add Another
-                                        </button>
                                     </div>
 
+                                    <div className="grid grid-cols gap-2 left-0 ">
+                                        <div>
+
+                                            <div className="grid grid-cols gap-2 left-0 ">
+
+                                                <button
+                                                    onClick={() => {
+                                                        setProfileSlot("profile1");
+                                                        handleMovementClick("profile1");
+                                                    }}
+                                                    className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile1" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
+                                                    Edit {BodyGroupDisplayNames[bodygroup]}: {profile1?.name}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setProfileSlot("profile2");
+                                                        handleMovementClick("profile2");
+                                                    }}
+                                                    className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile2" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
+
+                                                    Edit {BodyGroupDisplayNames[bodygroup]}: {profile2?.name}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => {
+                                                        setProfileSlot("profile3");
+                                                        handleMovementClick("profile3");
+                                                    }}
+                                                    className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile3" ? "bg-indigo-300/50 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
+                                                    Edit {BodyGroupDisplayNames[bodygroup]}: {profile3?.name}
+                                                </button>
+
+
+
+                                            </div>
+
+                                            <input
+                                                type="text"
+                                                value={profileName}
+                                                onChange={(e) => setProfileName(e.target.value)}
+                                                placeholder="Enter a profile name"
+                                                className="w-full mt-4 mb-2 p-2 rounded bg-gray-800 text-white border border-indigo-400 placeholder-gray-500"
+                                            />
+
+                                            {movementLevels.map((level, index) => {
+                                                const availableOptions = getAvailableOptions(level);
+
+                                                return (
+                                                    <select
+                                                        key={index}
+                                                        value={level}
+                                                        onChange={(e) => handleChange(e.target.value, index)}
+                                                        className="mb-2 w-full p-2 rounded bg-gray-800 text-white"
+                                                    >
+                                                        <option value="">Choose a level</option>
+                                                        {availableOptions.map((option) => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                );
+                                            })}
+
+
+                                            <button
+                                                onClick={() => setMovementLevels([...movementLevels, ""])}
+                                                className="mt-2 text-sm px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-500"
+                                            >
+                                                + Add Another
+                                            </button>
+                                        </div>
 
 
 
 
-                                </div>
 
-                                <div className="flex px-12 pt-3 justify-center">
-                                    <button
-                                        disabled={!(activeSplit && bodygroup && profileSlot && profileName)}
-                                        className={`w-full text-md rounded-xl p-2 shadow transition-all duration-50
+                                    </div>
+
+                                    <div className="flex px-12 pt-3 justify-center">
+                                        <button
+                                            disabled={!(activeSplit && bodygroup && profileSlot && profileName)}
+                                            className={`w-full text-md rounded-xl p-2 shadow transition-all duration-50
                                      ${!(activeSplit && bodygroup && profileSlot && profileName) ? "bg-gray-800/80 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
-                                        onClick={async () => {
-                                            if (!user) return;
+                                            onClick={async () => {
+                                                if (!user) return;
 
-                                            const userRef = doc(db, "users", user.uid);
+                                                const userRef = doc(db, "users", user.uid);
 
-                                            // Set meta initialized
-                                            await setDoc(userRef, {
-                                                fitnessSettings: {
-                                                    liftIndex: {
-                                                        [bodygroup]: {
-                                                            [profileSlot]: {
-                                                                name: profileName,
-                                                                movements: movementLevels,
+                                                // Set meta initialized
+                                                await setDoc(userRef, {
+                                                    fitnessSettings: {
+                                                        liftIndex: {
+                                                            [bodygroup]: {
+                                                                [profileSlot]: {
+                                                                    name: profileName,
+                                                                    movements: movementLevels,
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            }, { merge: true });
-                                            setLiftIndex((prev) => ({
-                                                ...prev,
-                                                [bodygroup]: {
-                                                    ...prev[bodygroup],
-                                                    [profileSlot]: {
-                                                        name: profileName,
-                                                        movements: movementLevels,
+                                                }, { merge: true });
+                                                setLiftIndex((prev) => ({
+                                                    ...prev,
+                                                    [bodygroup]: {
+                                                        ...prev[bodygroup],
+                                                        [profileSlot]: {
+                                                            name: profileName,
+                                                            movements: movementLevels,
+                                                        },
                                                     },
-                                                },
-                                            }));
-                                            setSelectedSector2("newsession");
-                                        }}
-                                    >
-                                        Apply Chosen Lift Index to {profileSlot}?
-                                    </button>
+                                                }));
+                                                setSelectedSector2("newsession");
+                                            }}
+                                        >
+                                            Apply Chosen Lift Index
+                                        </button>
+
+                                    </div>
 
                                 </div>
-
-                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>

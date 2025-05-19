@@ -1,38 +1,60 @@
 "use client";
 
+
+import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
+import { AllTypes, TypeManifest, UserProfile } from "@/app/initializing/Global/BodySyncManifest";
+import SystemLoad from "@/app/initializing/Global/SystemLoad";
+
+
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { useRouter } from "next/navigation";
-
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import useAuth from "@/lib/useAuth";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+
 
 export default function CoreStackComponent() {
 
-    const userProfile = useGlobalData((s) => s.userProfile);
+
+    //CENTRAL INTELLIGENCE
+    const { user } = useAuth();
+
+    const userProfile = useGlobalData((s) => s.userProfile) as UserProfile//or some shit
+    const setConnectionReady = useGlobalData((s) => s.setConnectionReady)
+
+    const currentSplit = userProfile?.fitnessSettings?.currentSplit || "null";
+    const lastBodygroup = userProfile?.fitnessSettings?.lastBodygroup || "null";
+
+
+
+    useEffect(() => {
+        if (user?.uid) {
+            EstablishConnection(user?.uid);
+            setConnectionReady(true);
+        }
+    }, [user?.uid]);
+
+    const liftIndex = useGlobalData((s) => s.liftIndex);
+
+
     const setUserProfile = useGlobalData((s) => s.setUserProfile);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const activeSessionStatus = useGlobalData((s) => s.activeSessionStatus);
     const setActiveSessionStatus = useGlobalData((s) => s.setActiveSessionStatus);
-    const liftIndex = useGlobalData((s) => s.liftIndex);
+
 
     const setTemporaryFitnessSync = useGlobalData((s) => s.setTemporaryFitnessSync);
     const setWorkoutSessionData = useGlobalData((s) => s.setWorkoutSessionData); // read live
-
-    const { user } = useAuth();
-
-    const router = useRouter();
 
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const dateString = `${yyyy}-${mm}-${dd}`;
-
 
     const [activeSplit, setActiveSplit] = useState("");
     const [activeBodygroup, setActiveBodygroup] = useState("");
@@ -41,7 +63,6 @@ export default function CoreStackComponent() {
     const profile1 = liftIndex?.[activeBodygroup]?.profile1;
     const profile2 = liftIndex?.[activeBodygroup]?.profile2;
     const profile3 = liftIndex?.[activeBodygroup]?.profile3;
-
 
     //Workout selector view pages NEXT BACK BUTTONS/ 
 
@@ -99,7 +120,6 @@ export default function CoreStackComponent() {
         arms: "Arms",
     };
 
-    //NEW CURRENT ACTIVE SPLIT DETECTED
 
     //NEW CURRENT ACTIVE SPLIT DETECTED
     const [warningSeen, setWarningSeen] = useState(false)
@@ -137,10 +157,10 @@ export default function CoreStackComponent() {
     }, []);
 
 
-    if (!userProfile?.fitnessSettings?.currentSplit) return;
 
     return (
         <>
+            <SystemLoad />
             <ScrollLoad />
             <div>
                 <div className="relative z-0 h-32 bg-[url('/images/menus/register.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
@@ -174,7 +194,7 @@ export default function CoreStackComponent() {
                                 <div className="text-white mb-2 justify-center flex">
 
                                     <div className="w-full glowing-purple-button text-center rounded-xl">
-                                        Current Active Split: {SplitDisplayNames[userProfile?.fitnessSettings?.currentSplit]} <br />
+                                        Current Active Split: {SplitDisplayNames[currentSplit]} <br />
                                         <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
                                         {activeSplit && (
                                             <p className="text-green-300 text-center font-semibold">
@@ -247,7 +267,7 @@ export default function CoreStackComponent() {
 
                                                 <CircleAlert size={30} /> Warning <br />
                                             </div>
-                                            {SplitDisplayNames[activeSplit || "None"]} Will Overwrite Current Active Split {SplitDisplayNames[userProfile?.fitnessSettings?.currentSplit]} in UserProfile.
+                                            {SplitDisplayNames[activeSplit || "None"]} Will Overwrite Current Active Split {SplitDisplayNames[currentSplit]} in UserProfile.
                                             Are you sure you want to continue?
                                         </div>
                                         <button
@@ -338,7 +358,7 @@ export default function CoreStackComponent() {
 
 
                                 <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
-                                    Last Active Session: {BodyGroupDisplayNames[userProfile?.fitnessSettings?.lastBodygroup]} <br />
+                                    Last Active Session: {BodyGroupDisplayNames[lastBodygroup]} <br />
                                     <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
                                     {activeBodygroup && (
                                         <p className="text-green-300 text-center font-semibold">
@@ -493,9 +513,17 @@ export default function CoreStackComponent() {
                             <div className="p-2 mb-10 bg-white/30 backdrop-blur-sm text-white rounded-lg flex flex-col">
 
 
-                                <div className="text-white mb-2 justify-center flex">
-
-
+                                <div className="w-full glowing-purple-button text-center rounded-xl mb-2">
+                                    Choose a {BodyGroupDisplayNames[activeBodygroup]} Profile  <br />
+                                    <div className="bg-white/40 rounded-xl mx-24 my-1 pb-1"></div>
+                                    {activeProfile && (
+                                        <p className="text-green-300 text-center font-semibold">
+                                            Cleared for Tracking
+                                        </p>)}
+                                    {!activeProfile && (
+                                        <p className="text-yellow-300 text-center font-semibold">
+                                            No profile selected
+                                        </p>)}
 
                                 </div>
 
@@ -507,7 +535,7 @@ export default function CoreStackComponent() {
                                             handleMovementClick("profile1");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile1" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {activeBodygroup}:{profile1?.name}
+                                        Profile 1: {profile1?.name}
                                     </button>
                                     <button
                                         onClick={() => {
@@ -515,7 +543,7 @@ export default function CoreStackComponent() {
                                             handleMovementClick("profile2");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile2" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {activeBodygroup} {profile2?.name}
+                                        Profile 2: {profile2?.name}
                                     </button>
 
                                     <button
@@ -524,7 +552,7 @@ export default function CoreStackComponent() {
                                             handleMovementClick("profile3");
                                         }}
                                         className={`mb-2 p-2 w-full rounded-xl ${movementButton === "profile3" ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400" : "glowing-button"}`}>
-                                        {activeBodygroup} {profile3?.name}
+                                        Profile 3: {profile3?.name}
                                     </button>
 
 
@@ -534,8 +562,8 @@ export default function CoreStackComponent() {
                                 <div className="flex px-12 pt-3 justify-center">
                                     <button
                                         disabled={!(activeSplit && activeBodygroup && activeProfile)}
-                                        className={`w-full text-md rounded-xl p-6 shadow transition-all duration-50
-                                     ${!(activeSplit && activeBodygroup && activeProfile) ? "bg-gray-800 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
+                                        className={`w-full text-md rounded-xl p-2 shadow transition-all duration-50
+                                     ${!(activeSplit && activeBodygroup && activeProfile) ? "bg-gray-800/80 text-gray-400 cursor-not-allowed relative z-10 font-bold rounded-xl overflow-hidden border border-indigo-400" : "glowing-purple-button cursor-pointer"}`}
                                         onClick={async () => {
                                             if (!user) return;
 
@@ -573,7 +601,7 @@ export default function CoreStackComponent() {
 
 
                                     >
-                                        Have a good Workout!
+                                        Start Workout
                                     </button>
 
                                 </div>

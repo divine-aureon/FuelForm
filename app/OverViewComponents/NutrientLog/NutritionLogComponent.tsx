@@ -3,7 +3,7 @@
 import useProfile from "@/lib/hooks/ProfileData";
 import ControlHub from "../ControlHub/ControlHubBar";
 import { useState, useEffect } from 'react';
-import NavLoad from "@/app/initializing/LoadingComponents/NavLoad";
+import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 import useCoreData from "@/lib/hooks/CoreData";
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
 import ScrollLoad from "@/Backgrounds/ScrollLoad"

@@ -41,7 +41,7 @@ import { BuildEnergyData } from "../OverViewComponents/NutrientDisplay/BuildEner
 import { BuildVitaminData } from "../OverViewComponents/NutrientDisplay/BuildVitaminData";
 import { BuildMineralData } from "../OverViewComponents/NutrientDisplay/BuildMineralData";
 import useTodaysSync from '@/lib/hooks/TodaysSync';
-import NavLoad from "../initializing/LoadingComponents/NavLoad";
+import NavLoad from "../initializing/LoadingComponents/SystemLoad";
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
 
 //PULSE DROP COMPONENT
@@ -168,8 +168,8 @@ export default function CommandCenter() {
   //BACKGROUND MANAGMENT
   const GenderKey = userProfile?.gender || "None";
   const GenderBG: Record<string, string> = {
-    "male": "/images/greyscale/genderMALE.png",
-    "female": "/images/greyscale/genderFEMALE.png",
+    "male": "/images/greyscale/bodysyncmale2.png",
+    "female": "/images/greyscale/bodysyncfemale2.png",
   };
   const GenderBackgroundURL = GenderBG[GenderKey] ?? GenderBG["None"];
 
@@ -202,7 +202,7 @@ export default function CommandCenter() {
 
         <div className="z-0 scrollbar-hide">
           {/*PAGE ONE === BODYSYNC*/}
-          <div className=" w-full rounded-xl">
+          <div className="w-full rounded-xl">
             <AnimatePresence mode="wait">
               {pageView === "bodysync" && (
                 <motion.div
@@ -212,114 +212,119 @@ export default function CommandCenter() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}>
                   <>
-                    <div className="bg-[url('/images/greyscale/commandcenter.webp')] bg-cover bg-center bg-no-repeat rounded-xl">
-                      <div className=" bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl mb-2">
-                        <h2 className="text-4xl text-center font-bold text-white pulse-glow">Vital Systems Online</h2>
-                        <h2 className="text-md text-center font-bold text-white">
-                          Every sync refines the system. Every action shapes the form.
-                        </h2>
+                    <div className="grid place-items-center mb-2">
+                      <div className="max-w-xs bg-[url('/images/greyscale/commandcenter.webp')] bg-cover bg-center bg-no-repeat rounded-xl border border-indigo-400">
+                        <div className=" bg-[rgba(43,0,255,0.2)] inset-0 rounded-xl">
+                          <h2 className="text-4xl text-center font-bold text-white pulse-glow">Vital Systems Online</h2>
+                          <h2 className="text-md text-center font-bold text-white">
+                            Syncing {userProfile?.name}&apos;s<br />
+                            Biological Data
+                          </h2>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-[5fr_1fr] gap-4 h-full">
-                      {/*LARGE COLUMN*/}
-                      <div>
+                    <div className="grid place-items-center">
 
 
-                        <div className="">
+                      <div className="max-w-xs w-full">
 
-                          <div className="h-[500px] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2"
-                            style={{
-                              backgroundImage: `url('${GenderBackgroundURL}')`,
+                        <div className="h-[500px] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2"
+                          style={{
+                            backgroundImage: `url('${GenderBackgroundURL}')`,
 
-                            }}>
-
-
-                            <div className=" relative h-[500px]  bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
-                              <div className="absolute text-white top-0 left-0 w-full h-full">
+                          }}>
 
 
+                          <div className="h-[500px] bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
+                            <div className="relative h-[500px] ">
 
-                                <h2 className="text-left  ml-2 text-lg pulse-glow flex items-center">Biometrics{userProfile?.gender === 'male' ? (<Mars size={24} />) : (<Venus size={24} />)}</h2>
+
+                              <div className="absolute p-1 pr-5 pb-2 text-indigo-100 bg-white/20 rounded-xl ">
+                                <h2 className="text-left  ml-2 text-lg pulse-glow flex items-center">Biometrics</h2>
                                 <h2 className="text-left ml-2 text-xs">Age: {userProfile?.age} Years</h2>
+                                <h2 className="text-left ml-2 text-xs">Gender: {userProfile?.gender}</h2>
                                 <h2 className="text-left ml-2 text-xs">Height: {heightDisplay}</h2>
-                                <h2 className="text-left  ml-2 text-xs">Current Weight: {weightDisplay}</h2>
-                                <h2 className="text-left ml-2 text-xs pb-1">Calorie Goal: {userProfile?.nutritionSettings?.calorieGoal}Kcal</h2>
+                                <h2 className="text-left  ml-2 text-xs">Weight: {weightDisplay}</h2>
+                                <h2 className="text-left ml-2 text-xs pb-1">+/- Kcal: {userProfile?.nutritionSettings?.calorieGoal}Kcal</h2>
+                              </div>
 
+                              <div className="absolute text-indigo-100 bottom-0 left-0 pb-5">
+                                {userProfile?.gender === 'male' ? (<Mars size={40} />) : (<Venus size={40} />)}
+                              </div>
 
-
-                                <div className="flex justify-end pr-[5px] items-end h-full pb-[95px] ">
-                                  <button onClick={() => {
-                                    setSelectedPage("SyncReport");
-                                    window.scrollTo({ top: 0, behavior: "smooth" });
-                                  }}>
-                                    <div
-                                      className="bg-white/30 rounded-xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
-                                      <div className="flex leading-none text-sm items-center font-semibold" >
-                                        SyncReport
-                                        <Rotate3d size={30} />
-                                      </div>
+                              <div className="absolute bottom-0 right-0 mb-3 text-indigo-100">
+                                <button onClick={() => {
+                                  setSelectedPage("SyncReport");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}>
+                                  <div
+                                    className="bg-white/30 rounded-xl  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
+                                    <div className="flex leading-none text-sm items-center font-semibold" >
+                                      SyncReport
+                                      <Rotate3d size={30} />
                                     </div>
-                                  </button>
-                                </div>
+                                  </div>
+                                </button>
+                              </div>
+
+                              <div className="grid grid-cols-1 absolute top-0 right-0  text-indigo-100">
+
+
+
+                                <button onClick={() => {
+                                  setSelectedPage("Macros");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}>
+                                  <div
+                                    className="bg-white/30 rounded-3xl  border border-indigo-400 flex flex-col  hover:bg-indigo-300/50 text-center p-2 mb-2">
+                                    <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                                      Macros
+                                      <Flame size={30} />
+                                    </div>
+                                  </div>
+
+                                </button>
+
+                                <button onClick={() => {
+                                  setSelectedPage("Vitamins");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}>
+                                  <div
+                                    className="bg-white/30 rounded-3xl  border border-indigo-400 flex  hover:bg-indigo-300/50 flex-col text-center p-2 mb-2">
+                                    <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                                      Vitamin
+                                      <Sprout size={30} />
+                                    </div>
+                                  </div>
+
+                                </button>
+
+                                <button onClick={() => {
+                                  setSelectedPage("Minerals");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}>
+                                  <div
+                                    className="bg-white/30 rounded-3xl  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
+                                    <div className="flex leading-none text-sm items-center flex-col font-semibold" >
+                                      Mineral
+                                      <Atom size={30} />
+                                    </div>
+                                  </div>
+                                </button>
 
 
 
                               </div>
+
+
                             </div>
                           </div>
                         </div>
-
                       </div>
-                      {/*SMALL COLUMN*/}
-                      <div className="">
 
 
 
-                        <button onClick={() => {
-                          setSelectedPage("Macros");
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}>
-                          <div
-                            className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex flex-col  hover:bg-indigo-300/50 text-center p-2 mb-2">
-                            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-                              Macros
-                              <Flame size={30} />
-                            </div>
-                          </div>
-
-                        </button>
-
-                        <button onClick={() => {
-                          setSelectedPage("Vitamins");
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}>
-                          <div
-                            className="bg-white/30 rounded-3xl  border border-bg-indigo-300 flex  hover:bg-indigo-300/50 flex-col text-center p-2 mb-2">
-                            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-                              Vitamin
-                              <Sprout size={30} />
-                            </div>
-                          </div>
-
-                        </button>
-
-                        <button onClick={() => {
-                          setSelectedPage("Minerals");
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}>
-                          <div
-                            className="bg-white/30 rounded-3xl  border border-bg-indigo-300  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
-                            <div className="flex leading-none text-sm items-center flex-col font-semibold" >
-                              Mineral
-                              <Atom size={30} />
-                            </div>
-                          </div>
-                        </button>
-
-
-
-                      </div>
 
                     </div>
 

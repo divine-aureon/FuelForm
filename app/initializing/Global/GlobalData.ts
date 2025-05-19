@@ -26,21 +26,26 @@ type WorkoutSessionData = Record<
 >;
 
 interface GlobalData {
+    //CONNECTION GATE
+
+    connectionReady: boolean;
+    setConnectionReady: (value: boolean) => void;
+
 
     //USERID INFO
     userProfile: UserProfile | null;
     setUserProfile: (profile: UserProfile | ((prev: UserProfile | null) => UserProfile)) => void;
 
-    syncHistory: SyncData [] | null;
-    setSyncHistory: (data: SyncData[] | ((prev: SyncData []| null) => SyncData[] )) => void;
+    syncHistory: SyncData[] | null;
+    setSyncHistory: (data: SyncData[] | ((prev: SyncData[] | null) => SyncData[])) => void;
 
-    fitnessHistory: FitnessSyncData []| null;
-    setFitnessHistory: (data: FitnessSyncData[] | ((prev: FitnessSyncData [] | null) => FitnessSyncData [] )) => void;
+    fitnessHistory: FitnessSyncData[] | null;
+    setFitnessHistory: (data: FitnessSyncData[] | ((prev: FitnessSyncData[] | null) => FitnessSyncData[])) => void;
 
     latestSync: any | null;
     setLatestSync: (sync: any) => void;
 
-     latestFitnessSync: any | null;
+    latestFitnessSync: any | null;
     setLatestFitnessSync: (sync: any) => void;
 
     //FITNESS INFO
@@ -92,6 +97,11 @@ interface GlobalData {
 export const useGlobalData = create<GlobalData>()(
     persist(
         (set) => ({
+            //CONNECTION GATE READY SET GO
+            connectionReady: false,
+            setConnectionReady: (status: boolean) => set({ connectionReady: status }),
+
+
             //USERID INFO
             userProfile: null,
             setUserProfile: (profile) =>
@@ -100,14 +110,14 @@ export const useGlobalData = create<GlobalData>()(
                         typeof profile === "function" ? profile(state.userProfile) : profile,
                 })),
 
-                            syncHistory: null,
+            syncHistory: null,
             setSyncHistory: (data) =>
                 set((state) => ({
                     syncHistory:
                         typeof data === "function" ? data(state.syncHistory) : data,
                 })),
 
-                            fitnessHistory: null,
+            fitnessHistory: null,
             setFitnessHistory: (data) =>
                 set((state) => ({
                     fitnessHistory:
@@ -119,7 +129,7 @@ export const useGlobalData = create<GlobalData>()(
             latestSync: null,
             setLatestSync: (sync: any) => set({ latestSync: sync }),
 
-             latestFitnessSync: null,
+            latestFitnessSync: null,
             setLatestFitnessSync: (sync: any) => set({ latestFitnessSync: sync }),
 
             //FITNESS INFO
