@@ -16,58 +16,26 @@ export default function PrimeTasksTile() {
     return (
 
         <>
-            {userProfile?.isPaid ? (
-                <>
 
-                    <button onClick={() => {
-                        setSelectedPage("DailyGoals");
-                        setIsOpen(false);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}>
-                        <div className="w-full h-32 bg-[url('/images/greyscale/primetasks2.jpg')] bg-cover bg-center bg-no-repeat  glowing-button2">
-                            <div
+            <button onClick={() => {
+                setSelectedPage("DailyGoals");
+                setIsOpen(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }}>
+                <div className="w-full h-[100px] bg-[url('/images/greyscale/goals.jpg')] bg-cover bg-center bg-no-repeat  glowing-button2">
+                    <div
+                        className="w-full h-[100px] bg-[rgba(43,0,255,0.3)] hover:bg-[rgba(101,70,255,0.3)] h-[100px]  w-full rounded-xl py-4 leading-none justify-center flex flex-col items-center hover:bg-indigo-300/50 text-white shadow-md">
+                        <div className="flex leading-none justify-center flex-col items-center gap-1 font-semibold" >
+                            Daily<br />Goals<br />
+                            <ListChecks size={36} />
 
-                                className="w-full h-full bg-[rgba(43,0,255,0.3)] hover:bg-[rgba(101,70,255,0.3)] flex flex-col justify-center items-center text-center p-2">
-                                <div
-                                    className={`flex text-3xl items-center gap-2 font-semibold`} >
-                                    <ListChecks />
-                                    DailyGoals
-
-                                </div>
-                                <h2 className="text-md font-bold text-white">Define. Align. Execute.</h2>
-                            </div>
                         </div>
-                    </button>
-
-
-                </>
-            ) : (
-                <>
-
-
-                    <button onClick={() => {
-                        setSelectedPage("DailyGoals");
-                        setIsOpen(false);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}>
-                        <div className="w-full h-32 bg-[url('/images/greyscale/primetasks2.jpg')] bg-cover bg-center bg-no-repeat  glowing-button2">
-                            <div
-                                className="w-full h-full bg-[rgba(43,0,255,0.3)] hover:bg-[rgba(101,70,255,0.3)] flex flex-col justify-center items-center text-center p-2">
-                                <div
-                                    className={`flex text-3xl items-center gap-2 font-semibold`}>
-                                    <ListChecks />
-                                    DailyGoals
-
-                                </div>
-                                <h2 className="text-md font-bold text-white">Access Granted.</h2>
-                            </div>
-                        </div>
-                    </button>
+                    </div>
+                </div>
+            </button>
 
 
 
-                </>
-            )}
 
         </>
 

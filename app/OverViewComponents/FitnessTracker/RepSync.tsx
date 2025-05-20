@@ -709,6 +709,7 @@ export default function RepSync() {
               // Set meta initialized
               await setDoc(strengthDocRef, {
                 completed: true,
+                fitnessSync: true,
                 sessionData: cleanedWorkout,
                 EndTime: serverTimestamp(),
               }, { merge: true });

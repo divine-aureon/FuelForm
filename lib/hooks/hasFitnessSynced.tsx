@@ -7,8 +7,7 @@ import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 export default function useTodaysSync() {
   const { user } = useAuth();
 
-    const setHasDawnSyncedToday = useGlobalData((s) => s.setHasDawnSyncedToday);
-    const setHasDuskSyncedToday = useGlobalData((s) => s.setHasDuskSyncedToday);
+  const setHasFitnessSyncedToday = useGlobalData((s) => s.setHasFitnessSyncedToday);
 
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -20,23 +19,22 @@ export default function useTodaysSync() {
     if (!user?.uid) return;
 
     const fetchTodaySync = async () => {
-      const docRef = doc(db, "users", user.uid, "syncs", dateString);
+      const docRef = doc(db, "users", user.uid, "fitness", dateString);
       const docSnap = await getDoc(docRef);
-console.log("🗓️ Sync Date:", dateString);
+
+
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setHasDawnSyncedToday(data.dawnSync === true);
-        setHasDuskSyncedToday(data.duskSync === true);
 
+        setHasFitnessSyncedToday(data.fitnessSync === true);
 
       } else {
-        setHasDawnSyncedToday(false);
-        setHasDuskSyncedToday(false);
+        setHasFitnessSyncedToday(false);
       }
     };
 
     fetchTodaySync();
   }, [user?.uid, dateString]);
 
-  return  null;
+  return null;
 }

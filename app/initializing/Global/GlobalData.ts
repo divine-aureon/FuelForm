@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { UserProfile, SyncData, FitnessSyncData } from "@/lib/hooks/CoreData";
+import { Niconne } from 'next/font/google';
 
 type WorkoutSessionData = Record<
     string, // movement name
@@ -91,6 +92,23 @@ interface GlobalData {
     hasDuskSyncedToday: boolean;
     setHasDuskSyncedToday: (value: boolean) => void;
 
+    hasFitnessSyncedToday: boolean;
+    setHasFitnessSyncedToday: (value: boolean) => void;
+
+    //SYNC INFO
+    DawnPoints: number;
+    setDawnPoints: (value: number) => void;
+
+    DuskPoints: number;
+    setDuskPoints: (value: number) => void;
+
+    FitnessPoints: number;
+    setFitnessPoints: (value: number) => void;
+
+
+    resetGlobalData: () => void;
+
+
 
 }
 
@@ -180,9 +198,47 @@ export const useGlobalData = create<GlobalData>()(
             hasDuskSyncedToday: false,
             setHasDuskSyncedToday: (value) => set({ hasDuskSyncedToday: value }),
 
+            hasFitnessSyncedToday: false,
+            setHasFitnessSyncedToday: (value) => set({ hasFitnessSyncedToday: value }),
+
+            //SYNC INFO
+            DawnPoints: 0,
+            setDawnPoints: (value) => set({ DawnPoints: value }),
+
+            DuskPoints: 0,
+            setDuskPoints: (value) => set({ DuskPoints: value }),
+
+            FitnessPoints: 0,
+            setFitnessPoints: (value) => set({ DawnPoints: value }),
+
+            //RESET FUNCTION
+            resetGlobalData: () => set({           
+                liftIndex: {},
+                syncHistory: null,
+                hasDawnSyncedToday: false,
+                hasDuskSyncedToday: false,
+                hasFitnessSyncedToday: false,
+                DawnPoints: 0,
+                DuskPoints: 0,
+                FitnessPoints: 0,
+                fitnessHistory: null,
+                latestSync: null,
+                latestFitnessSync: null,
+                selectedSector2: "newsession",
+                pageDefault: "bodysync",
+                selectedPage: "bodysync",
+                isOpen: false,
+            }),
+
+
         }),
+
         {
             name: 'global-data',
         }
+
     )
+
 );
+
+

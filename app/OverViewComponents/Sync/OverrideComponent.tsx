@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { CircleAlert, CircleOff } from "lucide-react";
-import useTodaysSync from '@/lib/hooks/TodaysSync'
+import useTodaysSync from '@/lib/hooks/hasDawnDuskSynced'
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 export default function OverrideComponent() {

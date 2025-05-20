@@ -8,7 +8,7 @@ import { doc, getDoc, setDoc, collection, serverTimestamp } from "firebase/fires
 import useCoreData from "@/lib/hooks/CoreData";
 import useAuth from "@/lib/useAuth";
 import { CircleAlert, CircleOff } from "lucide-react";
-import TodaysSync from '@/lib/hooks/TodaysSync'
+import TodaysSync from '@/lib/hooks/hasDawnDuskSynced'
 import {
     Crown,
     Flame,

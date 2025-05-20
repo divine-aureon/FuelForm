@@ -40,7 +40,7 @@ import MineralBreakdown from "../OverViewComponents/NutrientDisplay/MineralBreak
 import { BuildEnergyData } from "../OverViewComponents/NutrientDisplay/BuildEnergyData";
 import { BuildVitaminData } from "../OverViewComponents/NutrientDisplay/BuildVitaminData";
 import { BuildMineralData } from "../OverViewComponents/NutrientDisplay/BuildMineralData";
-import useTodaysSync from '@/lib/hooks/TodaysSync';
+import useTodaysSync from '@/lib/hooks/hasDawnDuskSynced';
 import NavLoad from "../initializing/LoadingComponents/SystemLoad";
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
 
@@ -178,6 +178,17 @@ export default function CommandCenter() {
   useTodaysSync();
   const hasDawnSyncedToday = useGlobalData((s) => s.hasDawnSyncedToday);
   const hasDuskSyncedToday = useGlobalData((s) => s.hasDuskSyncedToday);
+  const hasFitnessSyncedToday = useGlobalData((s) => s.hasFitnessSyncedToday);
+
+  //DAILY SYNC PROGRESS BAR
+
+  const DawnPoints = hasDawnSyncedToday ? 1 : 0;
+  const DuskPoints = hasDuskSyncedToday ? 1 : 0;
+  const FitnessPoints = hasFitnessSyncedToday ? 1 : 0;
+
+  const TotalBarPoints = DawnPoints + DuskPoints + FitnessPoints | 0;
+
+  const percentage = (TotalBarPoints / 3) * 100;
 
 
   //THE VISUAL PAGE STARTS HERE
@@ -213,9 +224,9 @@ export default function CommandCenter() {
                   transition={{ duration: 0.2 }}>
                   <>
                     <div className="grid place-items-center mb-2">
-                      <div className="max-w-xs bg-[url('/images/greyscale/commandcenter.webp')] bg-cover bg-center bg-no-repeat rounded-xl border border-indigo-400">
+                      <div className=" bg-[url('/images/greyscale/commandcenter.webp')] bg-cover bg-center bg-no-repeat rounded-xl border border-indigo-400">
                         <div className=" bg-[rgba(43,0,255,0.2)] inset-0 rounded-xl">
-                          <h2 className="text-4xl text-center font-bold text-white pulse-glow">Vital Systems Online</h2>
+                          <h2 className="text-3xl text-center font-bold text-white pulse-glow px-3">Vital Systems Online</h2>
                           <h2 className="text-md text-center font-bold text-white">
                             Syncing {userProfile?.name}&apos;s<br />
                             Biological Data
@@ -229,55 +240,128 @@ export default function CommandCenter() {
 
                       <div className="max-w-xs w-full">
 
-                        <div className="h-[500px] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2"
+                        <div className="h-[550px] bg-cover bg-center bg-no-repeat rounded-xl glowing-button2"
                           style={{
                             backgroundImage: `url('${GenderBackgroundURL}')`,
 
                           }}>
 
+                          {/*BODYSYNC CONTAINER*/}
+                          <div className="h-[550px] bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
+                            {/*BEGIN TRANSMISSION*/}
+                            <div className="relative h-[530px] ">
 
-                          <div className="h-[500px] bg-[rgba(43,0,255,0.2)] inset-0 p-2 rounded-xl ">
-                            <div className="relative h-[500px] ">
 
 
-                              <div className="absolute p-1 pr-5 pb-2 text-indigo-100 bg-white/20 rounded-xl ">
-                                <h2 className="text-left  ml-2 text-lg pulse-glow flex items-center">Biometrics</h2>
-                                <h2 className="text-left ml-2 text-xs">Age: {userProfile?.age} Years</h2>
-                                <h2 className="text-left ml-2 text-xs">Gender: {userProfile?.gender}</h2>
-                                <h2 className="text-left ml-2 text-xs">Height: {heightDisplay}</h2>
-                                <h2 className="text-left  ml-2 text-xs">Weight: {weightDisplay}</h2>
-                                <h2 className="text-left ml-2 text-xs pb-1">+/- Kcal: {userProfile?.nutritionSettings?.calorieGoal}Kcal</h2>
+
+                              {/*BIOMETRICS*/}
+                              <button onClick={() => { setSelectedPage("biometrics"); }} >
+                                <div className="absolute bottom-0 left-0 text-indigo-100 bg-white/10 rounded-lg border border-indigo-100">
+
+                                  <div className="relative pl-3 pr-9 h-full pb-1">
+                                    <div className="absolute right-1 flex gap-2 ">
+
+                                      <h2><Fingerprint size={36} /></h2>
+                                    </div>
+                                    <h2 className="text-left text-lg pulse-glow flex text-left">Biometrics</h2>
+                                    <h2 className="text-left text-xs">Age: {userProfile?.age} Years</h2>
+                                    <h2 className="text-left text-xs">Height: {heightDisplay}</h2>
+                                    <h2 className="text-left  text-xs">Weight: {weightDisplay}</h2>
+                                    <h2 className="mt-1 text-center text-sm font-semibold pulse-glow ">Click to Modify</h2>
+                                  </div>
+
+                                </div>
+                              </button>
+                              {/*HAS SYNCED BAR*/}
+
+
+
+
+                              <div className="absolute  rounded-xl top-0 left-0 w-[75%] border border-indigo-300 overflow-hidden">
+                                <div className="relative rounded-xl text-left pl-3 pb-1 text-indigo-100 ">Daily Sync Progress</div>
+                                <div className="absolute inset-0 h-full rounded-xl bg-white/10 overflow-hidden">
+                                  <div
+                                    className="left-0 h-full bg-green-300/50 transition-all duration-1200"
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
                               </div>
 
-                              <div className="absolute text-indigo-100 bottom-0 left-0 pb-5">
+                              {/*MARS vs VENUS*/}
+                              <div className="absolute text-indigo-100 bottom-28 left-0">
                                 {userProfile?.gender === 'male' ? (<Mars size={40} />) : (<Venus size={40} />)}
+                                {DawnPoints}-{DuskPoints}-{FitnessPoints}-{percentage}-{TotalBarPoints}
                               </div>
 
-                              <div className="absolute bottom-0 right-0 mb-3 text-indigo-100">
+                              {/*BOTTOM RIGHT CORNER*/}
+                              <div className="absolute bottom-0 right-0 flex flex-col text-indigo-100">
+
+                                {userProfile?.isPaid ? (
+                                  <>
+
+                                    <button
+                                      onClick={() => {
+                                        setSelectedPage("nutrientsettings");
+                                      }}>
+
+                                      <div className="bg-white/20 rounded-lg  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col justify-betwen text-center backdrop-blur  py-1 pl-2 pr-1 mb-2">
+
+                                        <div className="flex justify-between">
+                                          <div className="flex leading-none text-sm items-center font-semibold" >
+                                            {userProfile?.nutritionSettings?.calorieGoal}Kcal</div>
+                                          <div><Flame size={30} /></div>
+                                        </div>
+
+                                      </div>
+                                    </button>
+
+                                  </>
+                                ) : (
+                                  <>
+
+
+                                    <button
+                                      disabled>
+                                      <div className="bg-white/20 rounded-lg cursor-default border border-indigo-400 flex flex-col justify-betwen text-center backdrop-blur  py-1 pl-2 pr-1">
+
+                                        <div className="flex justify-between">
+                                          <div className="flex leading-none text-sm items-center font-semibold" >
+                                            Kcal Goal</div>
+                                          <div><Lock size={30} /></div>
+                                        </div>
+
+                                      </div>
+                                    </button>
+
+                                  </>
+                                )}
+
                                 <button onClick={() => {
                                   setSelectedPage("SyncReport");
                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                 }}>
                                   <div
-                                    className="bg-white/30 rounded-xl  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
-                                    <div className="flex leading-none text-sm items-center font-semibold" >
-                                      SyncReport
-                                      <Rotate3d size={30} />
+                                    className="bg-white/20 rounded-lg  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col justify-between text-center py-1 pl-2 pr-1">
+
+                                    <div className="flex justify-between">
+                                      <div className="flex leading-none text-sm items-center font-semibold" >
+                                        Trends</div>
+                                      <div><Rotate3d size={30} /></div>
+
                                     </div>
+
                                   </div>
                                 </button>
                               </div>
 
                               <div className="grid grid-cols-1 absolute top-0 right-0  text-indigo-100">
-
-
-
+                                {/*NUTRIENT LINKS*/}
                                 <button onClick={() => {
                                   setSelectedPage("Macros");
                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                 }}>
                                   <div
-                                    className="bg-white/30 rounded-3xl  border border-indigo-400 flex flex-col  hover:bg-indigo-300/50 text-center p-2 mb-2">
+                                    className="bg-white/20 rounded-xl  border border-indigo-400 flex flex-col  hover:bg-indigo-300/50 text-center p-2 mb-2">
                                     <div className="flex leading-none text-sm items-center flex-col font-semibold" >
                                       Macros
                                       <Flame size={30} />
@@ -291,7 +375,7 @@ export default function CommandCenter() {
                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                 }}>
                                   <div
-                                    className="bg-white/30 rounded-3xl  border border-indigo-400 flex  hover:bg-indigo-300/50 flex-col text-center p-2 mb-2">
+                                    className="bg-white/20 rounded-xl  border border-indigo-400 flex  hover:bg-indigo-300/50 flex-col text-center p-2 mb-2">
                                     <div className="flex leading-none text-sm items-center flex-col font-semibold" >
                                       Vitamin
                                       <Sprout size={30} />
@@ -304,8 +388,7 @@ export default function CommandCenter() {
                                   setSelectedPage("Minerals");
                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                 }}>
-                                  <div
-                                    className="bg-white/30 rounded-3xl  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
+                                  <div className="bg-white/20 rounded-xl  border border-indigo-400  hover:bg-indigo-300/50 flex flex-col text-center p-2 mb-2">
                                     <div className="flex leading-none text-sm items-center flex-col font-semibold" >
                                       Mineral
                                       <Atom size={30} />
@@ -313,10 +396,8 @@ export default function CommandCenter() {
                                   </div>
                                 </button>
 
-
-
                               </div>
-
+                              {/*END TRANSMITTION*/}
 
                             </div>
                           </div>
@@ -674,13 +755,6 @@ export default function CommandCenter() {
                     <FitnessGoalsPageComponent />
                   </>
                 </motion.div>)}
-
-
-
-              FitnessGoalsPageComponent
-
-
-
 
             </AnimatePresence>
           </div>

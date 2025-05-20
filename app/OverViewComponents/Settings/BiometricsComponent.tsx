@@ -3,10 +3,11 @@ import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import type { User } from 'firebase/auth';
+import useAuth from '@/lib/useAuth';
 
 function toSafeString(value: any): string {
   if (typeof value === "string") return value;
@@ -16,204 +17,148 @@ function toSafeString(value: any): string {
 
 export default function BiometricsComponent() {
 
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.uid) {
+      EstablishConnection(user?.uid);
+    }
+  }, [user?.uid]);
+
   const userProfile = useGlobalData((s) => s.userProfile);
   const setUserProfile = useGlobalData((s) => s.setUserProfile);
+
+
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
-
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState("");
 
-  const [name, setName] = useState("");
-  const [birthMonth, setBirthMonth] = useState("");
-  const [birthDay, setBirthDay] = useState("");
-  const [birthYear, setBirthYear] = useState("");
-  const [gender, setGender] = useState("");
-  const [heightCm, setHeightCm] = useState("");
-  const [heightFeet, setHeightFeet] = useState("");
-  const [heightInches, setHeightInches] = useState("");
+  const [year, month, day] = (userProfile?.birthday || "--").split("-");
 
-  const [heightUnit, setHeightUnit] = useState("cm");
-  const [weightUnit, setWeightUnit] = useState("lbs");
+  const [name, setName] = useState(userProfile?.name);
+  const [birthMonth, setBirthMonth] = useState(month);
+  const [birthDay, setBirthDay] = useState(day);
+  const [birthYear, setBirthYear] = useState(year);
+  const [gender, setGender] = useState(userProfile?.gender);
+  const [height_cm, setHeight_cm] = useState(userProfile?.height_cm);
+  const [feet, setFeet] = useState(userProfile?.height_ft_in?.feet);
+  const [inches, setInches] = useState(userProfile?.height_ft_in?.inches);
 
-  const [originalName, setOriginalName] = useState("");
-  const [originalBirthYear, setOriginalBirthYear] = useState("");
-  const [originalBirthMonth, setOriginalBirthMonth] = useState("");
-  const [originalBirthDay, setOriginalBirthDay] = useState("");
-  const [originalGender, setOriginalGender] = useState("");
-  const [originalHeightUnit, setOriginalHeightUnit] = useState("cm");
-  const [originalHeightCm, setOriginalHeightCm] = useState("");
-  const [originalHeightFeet, setOriginalHeightFeet] = useState("");
-  const [originalHeightInches, setOriginalHeightInches] = useState("");
-  const [originalWeightUnit, setOriginalWeightUnit] = useState("lbs");
-
-  const router = useRouter();
-
-  const [delayDone, setDelayDone] = useState(false);
+  const [heightUnit, setHeightUnit] = useState(userProfile?.preferredHeightUnit);
+  const [weightUnit, setWeightUnit] = useState(userProfile?.preferredWeightUnit);
 
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setName(data.name || "");
-
-          const [year, month, day] = (data.birthday || "--").split("-");
-          setBirthYear(year || "");
-          setBirthMonth(month || "");
-          setBirthDay(day || "");
-          setGender(data.gender || "");
-          setHeightUnit(data.preferredHeightUnit || "cm");
-          setHeightCm(data.height_cm || "");
-          setHeightFeet(data.height_ft_in?.feet || ""); // ✅ safer now
-          setHeightInches(data.height_ft_in?.inches || "");
-          setWeightUnit(data.preferredWeightUnit || "lbs");
-          setOriginalName(data.name || "");
-          setOriginalBirthYear(year || "");
-          setOriginalBirthMonth(month || "");
-          setOriginalBirthDay(day || "");
-          setOriginalGender(data.gender || "");
-          setOriginalHeightUnit(data.preferredHeightUnit || "cm");
-          setOriginalHeightCm(data.height_cm || "");
-          setOriginalHeightFeet(data.height_ft_in?.feet || "");
-          setOriginalHeightInches(data.height_ft_in?.inches || "");
-          setOriginalWeightUnit(data.preferredWeightUnit || "lbs");
-        }
-        setLoading(false);
-      } else {
-        router.push("/login");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
-  const handleSave = async () => {
-    if (!user) return;
-
-    setSaving(true);
-    setError("");
-    setStatus("success");
-
-    try {
-      let finalFeet = "";
-      let finalInches = "";
-      let finalCm = "";
-
-      if (heightUnit === "ft") {
-        const feetStr = toSafeString(heightFeet);
-        const inchesStr = toSafeString(heightInches);
-
-        finalFeet = feetStr.trim() === "" ? originalHeightFeet : feetStr;
-        finalInches = inchesStr.trim() === "" ? originalHeightInches : inchesStr;
-      }
-
-      if (heightUnit === "cm") {
-        const cmStr = toSafeString(heightCm);
-        finalCm = cmStr.trim() === "" ? originalHeightCm : cmStr;
-      }
-
-      const updates: any = {};
-
-      // Only save fields that can be edited in Biometrics
-      if (name !== originalName) updates.name = name;
-
-      if (birthYear !== originalBirthYear || birthMonth !== originalBirthMonth || birthDay !== originalBirthDay) {
-        updates.birthday = `${birthYear}-${birthMonth.padStart(2, "0")}-${birthDay.padStart(2, "0")}`;
-      }
-
-      // 🧠 Calculate age directly from birth values
-      const birthY = Number(birthYear);
-      const birthM = Number(birthMonth);
-      const birthD = Number(birthDay);
-      const today = new Date();
-
-      let age = today.getFullYear() - birthY;
-      const monthDiff = today.getMonth() + 1 - birthM;
-      const dayDiff = today.getDate() - birthD;
-
-      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-      }
-
-      updates.age = age
+  const [String_height_cm, setString_Height_cm] = useState(toSafeString(height_cm));
+  const [String_feet, setString_Feet] = useState(toSafeString(feet));
+  const [String_inches, setString_Inches] = useState(toSafeString(inches));
 
 
-      if (gender !== originalGender) updates.gender = gender;
 
-      if (heightUnit !== originalHeightUnit) updates.preferredHeightUnit = heightUnit;
 
-      if (weightUnit !== originalWeightUnit) {
-        updates.preferredWeightUnit = weightUnit;
-      }
 
-      if (heightUnit === "ft") {
-        if (finalFeet !== originalHeightFeet || finalInches !== originalHeightInches) {
-          const calculatedHeightCm = parseInt(finalFeet, 10) * 30.48 + parseInt(finalInches, 10) * 2.54;
 
-          updates.height_ft_in = {
-            feet: parseInt(finalFeet, 10) || 0,
-            inches: parseInt(finalInches, 10) || 0,
-          };
 
-          updates.height_cm = calculatedHeightCm; // 🔥 Always store cm too
-        }
-      }
 
-      if (heightUnit === "cm") {
-        if (parseFloat(finalCm) !== parseFloat(originalHeightCm)) {
-          const cmValue = parseFloat(finalCm);
 
-          const totalInches = cmValue / 2.54;
-          const feet = Math.floor(totalInches / 12);
-          const inches = Math.round(totalInches % 12); // 🔥 round to nearest inch
 
-          updates.height_cm = cmValue; // 🔥 always store cm
-          updates.height_ft_in = {    // 🔥 auto-calculate feet/inches too
-            feet: feet,
-            inches: inches,
-          };
-        }
-      }
 
-      if (Object.keys(updates).length > 0) {
-        await updateDoc(doc(db, "users", user.uid), updates);
-        EstablishConnection(user?.uid);
-      } else {
-      }
+  const handleSubmit = async (e: React.FormEvent) => {
 
-      setSuccess(true);
-    } catch (err) {
-      console.error(err);
-      setError("failure");
+    e.preventDefault();
+
+    const FinalBirthday = `${birthYear}-${birthMonth.padStart(2, "0")}-${birthDay.padStart(2, "0")}`;
+    // 🧠 Calculate age directly from birth values
+    const birthY = Number(birthYear);
+    const birthM = Number(birthMonth);
+    const birthD = Number(birthDay);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthY;
+    const monthDiff = today.getMonth() + 1 - birthM;
+    const dayDiff = today.getDate() - birthD;
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
     }
 
-    setSaving(false);
+
+    //const calculatedHeightCm = parseInt(finalFeet, 10) * 30.48 + parseInt(finalInches, 10) * 2.54;
+    let final_feet = 0;
+    let final_inches = 0;
+    let final_height_cm = 0;
+
+    if (heightUnit === "cm") {
+
+      const Number_height_cm = parseInt(String_height_cm, 10) || 0
+
+      const Height_cm_conversion_Inches = Number_height_cm / 2.54;
+      final_feet = Math.floor(Height_cm_conversion_Inches / 12);
+      final_inches = Math.round(Height_cm_conversion_Inches % 12);
+
+      final_height_cm = Number_height_cm
+
+    }
+
+
+    if (heightUnit === "ft/in") {
+
+      const Number_feet = parseInt(String_feet, 10) || 0
+      const Number_inches = parseInt(String_inches, 10) || 0
+
+      const Height_inches_conversion_inches = (Number_feet * 12) + Number_inches
+
+      final_height_cm = Height_inches_conversion_inches * 2.54;
+
+      final_feet = Number_feet
+      final_inches = Number_inches
+
+    }
+
+
+    const userId = auth.currentUser!.uid;
+    const userRef = doc(db, "users", userId,);
+
+    try {
+      await setDoc(userRef, {
+        name,
+        birthday: FinalBirthday,
+        age,
+        preferredHeightUnit: heightUnit,
+        preferredWeightUnit: weightUnit,
+        gender,
+        height_cm: final_height_cm,
+        height_ft_in: {
+          feet: final_feet,
+          inches: final_inches,
+        }
+
+      }, { merge: true });
+
+      if (user?.uid) {
+        await EstablishConnection(user.uid);
+      }
+
+      setStatus("success");
+    } catch (error) {
+      setStatus("failiure");
+    }
   };
 
   useEffect(() => {
     if (status === "success") {
       const timeout = setTimeout(() => {
-
-        setIsOpen(false);
         setSelectedPage("bodysync");
-        //window.location.reload(); // hard refresh
-      }, 0); // optional delay (1 second)
+      }, 0);
 
       return () => clearTimeout(timeout);
     }
-  }, [status, router]);
+  }, [status]);
 
 
   return (
@@ -259,7 +204,6 @@ export default function BiometricsComponent() {
         </p>
         <div className="flex gap-2 mb-2">
           <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className="w-full p-2 rounded bg-gray-800/70 text-white">
-
             <option value="">Month</option>
             {[...Array(12)].map((_, i) => {
               const month = (i + 1).toString().padStart(2, "0");
@@ -292,7 +236,7 @@ export default function BiometricsComponent() {
           className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white"
         >
           <option value="cm">Centimeters (cm)</option>
-          <option value="ft">Feet & Inches</option>
+          <option value="ft/in">Feet & Inches</option>
         </select>
 
         <select
@@ -303,6 +247,8 @@ export default function BiometricsComponent() {
           <option value="lbs">Pounds (lbs)</option>
           <option value="kg">Kilograms (kg)</option>
         </select>
+
+
         <p className="text-white font-semibold text-lg">
           Set Height ({heightUnit === "cm" ? "cm" : "ft/in"})
         </p>
@@ -311,8 +257,8 @@ export default function BiometricsComponent() {
           <input
             type="number"
             placeholder={`Height (${heightUnit})`}
-            value={heightCm}
-            onChange={(e) => setHeightCm(e.target.value)}
+            value={String_height_cm}
+            onChange={(e) => setString_Height_cm(e.target.value)}
             className="w-full p-2 rounded bg-gray-800/70 text-white"
             min="30"
             max="280"
@@ -322,16 +268,16 @@ export default function BiometricsComponent() {
             <input
               type="number"
               placeholder="Feet"
-              value={heightFeet}
-              onChange={(e) => setHeightFeet(e.target.value)}
+              value={String_feet}
+              onChange={(e) => setString_Feet(e.target.value)}
               className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
               min="0"
             />
             <input
               type="number"
               placeholder="Inches"
-              value={heightInches}
-              onChange={(e) => setHeightInches(e.target.value)}
+              value={String_inches}
+              onChange={(e) => setString_Inches(e.target.value)}
               className="w-1/2 p-2 rounded bg-gray-800/70 text-white"
               min="0"
               max="11"
@@ -341,7 +287,7 @@ export default function BiometricsComponent() {
         <div className="fixed bottom-16 px-2 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
 
           <button
-            onClick={handleSave}
+            onClick={handleSubmit}
             className="max-w-md w-full bg-white text-xl text-black px-4 py-4 rounded-xl font-semibold hover:bg-gray-300 transition glowing-button"
             disabled={saving}
           >

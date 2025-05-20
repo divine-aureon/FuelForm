@@ -57,7 +57,6 @@ export default function DawnSyncComponent() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            console.log("Debug Profile:");
             if (!user?.uid) return;
             const { recoveryTDEE, recoveryMacros, vitamins, minerals } = calculateRecoveryFuel({
                 weight_lbs,
