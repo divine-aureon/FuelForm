@@ -290,7 +290,6 @@ export default function CommandCenter() {
                               {/*MARS vs VENUS*/}
                               <div className="absolute text-indigo-100 bottom-28 left-0">
                                 {userProfile?.gender === 'male' ? (<Mars size={40} />) : (<Venus size={40} />)}
-                                {DawnPoints}-{DuskPoints}-{FitnessPoints}-{percentage}-{TotalBarPoints}
                               </div>
 
                               {/*BOTTOM RIGHT CORNER*/}
