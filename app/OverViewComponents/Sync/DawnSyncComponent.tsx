@@ -1,5 +1,8 @@
 'use client';
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
@@ -13,7 +16,10 @@ export default function DawnSyncComponent() {
     const { user } = useAuth();
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const userProfile = useGlobalData((s) => s.userProfile);
+           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+
+      const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
 
     const [weight_lbs, setWeightLbs] = useState("");
@@ -105,7 +111,7 @@ export default function DawnSyncComponent() {
         if (status === "success") {
 
             const timeout = setTimeout(() => {
-                window.location.reload(); // hard refresh
+          router.push('/initializing');
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);

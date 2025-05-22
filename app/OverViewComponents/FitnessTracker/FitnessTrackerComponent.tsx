@@ -1,5 +1,8 @@
 "use client";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile, LiftIndexData, FitnessSettingsData } from "../../initializing/Global/BodySyncManifest"
+
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
@@ -9,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { loadStripe } from '@stripe/stripe-js';
 import CoreStackComponent from "./WorkoutBuilderComponent"
 import LiftIndexComponent from "./LiftProfileComponent"
+import FitHistoryComponent from "./FitHistoryComponent"
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
 import Link from 'next/link';
 
@@ -19,8 +23,23 @@ export default function StrengthArchive() {
 
   const { user } = useAuth();
 
-  const userProfile = useGlobalData((s) => s.userProfile);
+  const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+  const userProfile = userProfileSTORE
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+
+
+  const fitnessSettings = userProfile?.fitnessSettings ?? ({} as FitnessSettingsData);
+  const liftIndex = fitnessSettings?.liftIndex ?? ({} as LiftIndexData);
+
+  const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
+
+  useEffect(() => {
+    if (userProfile?.fitnessSettings?.liftIndex) {
+      setLiftIndex(userProfile.fitnessSettings.liftIndex);
+    }
+  }, [userProfile?.fitnessSettings?.liftIndex]);
+
+
   //DATA INPUT
 
   const today = new Date();
@@ -41,17 +60,8 @@ export default function StrengthArchive() {
   };
 
   //SELECTED VIEW BAR/ 
-  
-  const setLiftIndex = useGlobalData((s) => s.setLiftIndex);
 
-useEffect(() => {
-  const liftIndex = userProfile?.fitnessSettings?.liftIndex;
-  if (liftIndex) {
-    setLiftIndex(liftIndex);
-  }
-}, [userProfile]);
-
-    const selectedSector2 = useGlobalData((s) => s.selectedSector2);
+  const selectedSector2 = useGlobalData((s) => s.selectedSector2);
   const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
 
   const pageView = selectedSector2 || "newsession";
@@ -163,17 +173,7 @@ useEffect(() => {
                     </div>
                   </div>
 
-                  <div className="p-2 mb-10 bg-white/30 backdrop-blur-sm text-white rounded-lg flex flex-col">
-                    <div className="p-2 items-center rounded-lg shadow bg-indigo-300/50 text-white">
-                      <div className="place-self-center text-2xl font-semibold pulse-glow">View Past Workouts</div>
-                    </div>
-
-                    <div className="text-white text-md text-center p-3">
-                      Soon youll be able to view past workouts — a detailed history of your training sessions.
-                      This lets you track progress over time, review personal records, and reflect on your
-                      performance patterns to help optimize your next session.
-                    </div>
-                  </div>
+                  <FitHistoryComponent />
 
                 </motion.div>
               )}

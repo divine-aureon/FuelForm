@@ -1,35 +1,22 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, collection, serverTimestamp } from "firebase/firestore";
-import useCoreData from "@/lib/hooks/CoreData";
-import useAuth from "@/lib/useAuth";
-import { CircleAlert, CircleOff } from "lucide-react";
-import TodaysSync from '@/lib/hooks/hasDawnDuskSynced'
-import {
-    Crown,
-    Flame,
-    Zap,
-    Star,
-    Shield,
-    Atom,
-    Heart,
-    Bird
-} from 'lucide-react';
-import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
-
-
 
 export default function FitnessGoalsPageComponent() {
 
     const router = useRouter();
     const [status, setStatus] = useState("");
-    const userProfile = useGlobalData((s) => s.userProfile);
-      const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+
+    const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+
+    const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -70,7 +57,7 @@ export default function FitnessGoalsPageComponent() {
     useEffect(() => {
         if (status === "success") {
             const timeout = setTimeout(() => {
-                window.location.reload(); // hard refresh
+                router.push('/initializing');
             }, 0);
 
             return () => clearTimeout(timeout);

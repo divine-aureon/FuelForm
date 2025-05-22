@@ -1,12 +1,16 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 import PrimeTasksTile from "@/app/OverViewComponents/CoreTiles/DailyGoalsButton"
 import StrengthArchiveTile from "@/app/OverViewComponents/CoreTiles/StrengthArchiveButton"
 import MacroVaultTile from "@/app/OverViewComponents/CoreTiles/NutritionLogButton"
 
 export default function CoreFeaturesComponent() {
 
-    const userProfile = useGlobalData((s) => s.userProfile);
+       const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
     if (typeof userProfile?.isPaid !== 'boolean') return;
 

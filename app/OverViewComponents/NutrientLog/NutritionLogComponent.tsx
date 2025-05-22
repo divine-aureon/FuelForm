@@ -3,27 +3,18 @@
 import useProfile from "@/lib/hooks/ProfileData";
 import ControlHub from "../ControlHub/ControlHubBar";
 import { useState, useEffect } from 'react';
-import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 import useCoreData from "@/lib/hooks/CoreData";
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 
 export default function NutritionLog() {
 
-  const userProfile = useGlobalData((s) => s.userProfile);
-
-  const customSettings = userProfile?.customSettings;
-
-
-  const { profile, loading } = useProfile();
-  const isPaidUser = profile?.isPaid ?? null;
-
-
-
-  if (typeof isPaidUser !== 'boolean') {
-    return;
-  }
+        const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
   return (
     <>

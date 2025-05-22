@@ -7,6 +7,7 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 declare global {
@@ -84,7 +85,7 @@ export default function LoginComponent() {
         const userData = userDoc.data();
 
         setLoading(true); // 🧠 Start the NavLoad
-        router.push('/overview');
+        router.push('/initializing');
       }
     } catch (err: any) {
       setError(err.message || "Something went wrong.");

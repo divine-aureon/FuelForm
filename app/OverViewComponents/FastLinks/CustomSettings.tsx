@@ -8,11 +8,13 @@ import SettingsPageComponent from "@/app/OverViewComponents/Settings/CustomSetti
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 export default function CustomSettingsTile() {
-  const userProfile = useGlobalData((s) => s.userProfile);
+         const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
 

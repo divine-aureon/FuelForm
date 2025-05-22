@@ -1,8 +1,4 @@
 'use client';
-
-import useCoreData from "@/lib/hooks/CoreData";
-
-
 export function BuildVitaminData(latestSync: any) {
 
     const vitamins = latestSync?.vitamins || [];

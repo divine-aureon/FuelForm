@@ -7,18 +7,25 @@ import useAuth from '@/lib/useAuth'
 import useCoreData from "@/lib/hooks/CoreData";
 import { BellRing, Rocket } from 'lucide-react';
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 export default function BirthdayDrop() {
-
+    const { user } = useAuth();
 
     const [HappyBirthday, setHappyBirthday] = useState(false)
     const [HappyBirthdayMessage, setHappyBirthdayMessage] = useState(false)
     const [HappyBirthdayPopUp, setHappyBirthdayPopUp] = useState(false)
-    const userProfile = useGlobalData((s) => s.userProfile);
-    const birthday = userProfile?.birthday as string
 
-    const { user } = useAuth();
+
+          const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+
+    
+    const birthday = userProfile?.birthday as string;
+
+
 
     useEffect(() => {
 

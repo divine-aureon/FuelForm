@@ -1,5 +1,7 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 import React from "react";
 import { useEffect, useState } from 'react';
 import useAuth from '@/lib/useAuth';
@@ -11,7 +13,7 @@ import ScrollLoad from "@/Backgrounds/ScrollLoad"
 
 export default function SyncReport() {
 
-  const userProfile = useGlobalData((s) => s.userProfile);
+  const userProfile = useGlobalData().userProfile as UserProfile;
 
   //USER PROFILE INFO
   const { user } = useAuth();
@@ -99,7 +101,7 @@ export default function SyncReport() {
 
   const chartWeightData = [...filteredSyncArray].reverse();
 
- //SLEEP HOURS ARRAY//
+  //SLEEP HOURS ARRAY//
 
   const [selectedSleepMonth, setSelectedSleepMonth] = useState("All");
 
@@ -136,7 +138,7 @@ export default function SyncReport() {
 
 
 
-//STEPS ARRAY//
+  //STEPS ARRAY//
 
   const [selectedStepsMonth, setSelectedStepsMonth] = useState("All");
 
@@ -170,7 +172,7 @@ export default function SyncReport() {
 
   const chartStepData = [...filteredStepSyncArray].reverse();
 
- //EXERCISE MINUTES ARRAY//
+  //EXERCISE MINUTES ARRAY//
 
   const [selectedMinutesMonth, setSelectedMinutesMonth] = useState("All");
 
@@ -205,7 +207,7 @@ export default function SyncReport() {
   const chartMinuteData = [...filteredMinutesSyncArray].reverse();
 
 
-//SELECTED VIEW BAR//
+  //SELECTED VIEW BAR//
 
   type StatView =
     | "steps"
@@ -246,9 +248,6 @@ export default function SyncReport() {
       : "glowing-button";
   };
 
-  if (typeof userProfile?.isPaid !== 'boolean') {
-    return;
-  }
 
   return (
     <>

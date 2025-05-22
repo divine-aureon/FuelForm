@@ -1,11 +1,9 @@
 "use client";
 
 
+import { getGlobalDataState }  from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
-import { AllTypes, TypeManifest, UserProfile } from "@/app/initializing/Global/BodySyncManifest";
-import SystemLoad from "@/app/initializing/Global/SystemLoad";
-
+import { AllTypes, TypeManifest, UserProfile , LiftIndexData , FitnessSettingsData } from "@/app/initializing/Global/BodySyncManifest";
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,25 +21,15 @@ export default function CoreStackComponent() {
     //CENTRAL INTELLIGENCE
     const { user } = useAuth();
 
-    const userProfile = useGlobalData((s) => s.userProfile) as UserProfile//or some shit
-    const setConnectionReady = useGlobalData((s) => s.setConnectionReady)
+          const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
     const currentSplit = userProfile?.fitnessSettings?.currentSplit || "null";
     const lastBodygroup = userProfile?.fitnessSettings?.lastBodygroup || "null";
 
-
-
-    useEffect(() => {
-        if (user?.uid) {
-            EstablishConnection(user?.uid);
-            setConnectionReady(true);
-        }
-    }, [user?.uid]);
-
     const liftIndex = useGlobalData((s) => s.liftIndex);
 
 
-    const setUserProfile = useGlobalData((s) => s.setUserProfile);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const activeSessionStatus = useGlobalData((s) => s.activeSessionStatus);
     const setActiveSessionStatus = useGlobalData((s) => s.setActiveSessionStatus);
@@ -160,7 +148,6 @@ export default function CoreStackComponent() {
 
     return (
         <>
-            <SystemLoad />
             <ScrollLoad />
             <div>
                 <div className="relative z-0 h-32 bg-[url('/images/menus/register.webp')] bg-cover bg-center bg-no-repeat rounded-2xl border 
@@ -329,7 +316,7 @@ export default function CoreStackComponent() {
                                                     }, { merge: true });
                                                     setActiveSessionWarningSeen(false);
                                                     setActiveSessionStatus(false);
-                                                    setWorkoutSessionData({});
+                                                    setWorkoutSessionData({ movements: [] });
 
                                                 }}
                                                 className="mb-2 p-2 w-full rounded-xl glowing-button">

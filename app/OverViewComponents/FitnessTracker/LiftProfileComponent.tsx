@@ -5,17 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import useCoreData from "@/lib/hooks/CoreData";
 import { CircleAlert, CircleCheckBig } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import NavLoad from "../../initializing/LoadingComponents/SystemLoad";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import useAuth from "@/lib/useAuth";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
-
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
 import { AllTypes, TypeManifest, UserProfile, FitnessSettingsData, LiftIndexData } from "@/app/initializing/Global/BodySyncManifest";
-import SystemLoad from "@/app/initializing/Global/SystemLoad";
 
 export default function LiftIndexComponent() {
 
@@ -23,17 +20,8 @@ export default function LiftIndexComponent() {
     const { user } = useAuth();
 
 
-    const userProfile = useGlobalData((s) => s.userProfile) as UserProfile
-    const setUserProfile = useGlobalData((s) => s.setUserProfile);
-    const setConnectionReady = useGlobalData((s) => s.setConnectionReady)
-
-
-    useEffect(() => {
-        if (user?.uid) {
-            EstablishConnection(user?.uid);
-            setConnectionReady(true);
-        }
-    }, [user?.uid]);
+        const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
     const fitnessSettings = userProfile?.fitnessSettings ?? ({} as FitnessSettingsData);
     const liftIndex = fitnessSettings?.liftIndex ?? ({} as LiftIndexData);

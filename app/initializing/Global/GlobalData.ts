@@ -1,126 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { UserProfile, SyncData, FitnessSyncData } from "@/lib/hooks/CoreData";
+import type { GlobalSTATE } from "../../initializing/Global/BodySyncManifest"
 import { Niconne } from 'next/font/google';
 
-type WorkoutSessionData = Record<
-    string, // movement name
-    Record<
-        string, // set key (set1, set2)
-        {
-            reps?: number;
-            liftWeight_lbs?: number;
-            liftWeight_kg?: number;
-            locked?: boolean;
-            dropset?: boolean;
-            dropsets?: Record<
-                string, // drop key (drop1, drop2)
-                {
-                    reps?: number;
-                    liftWeight_lbs?: number;
-                    liftWeight_kg?: number;
-                    locked?: boolean;
-                }
-            >;
-        }
-    >
->;
 
-interface GlobalData {
-    //CONNECTION GATE
-
-    connectionReady: boolean;
-    setConnectionReady: (value: boolean) => void;
-
-
-    //USERID INFO
-    userProfile: UserProfile | null;
-    setUserProfile: (profile: UserProfile | ((prev: UserProfile | null) => UserProfile)) => void;
-
-    syncHistory: SyncData[] | null;
-    setSyncHistory: (data: SyncData[] | ((prev: SyncData[] | null) => SyncData[])) => void;
-
-    fitnessHistory: FitnessSyncData[] | null;
-    setFitnessHistory: (data: FitnessSyncData[] | ((prev: FitnessSyncData[] | null) => FitnessSyncData[])) => void;
-
-    latestSync: any | null;
-    setLatestSync: (sync: any) => void;
-
-    latestFitnessSync: any | null;
-    setLatestFitnessSync: (sync: any) => void;
-
-    //FITNESS INFO
-    temporaryFitnessSync: any | null;
-    setTemporaryFitnessSync: (data: {
-        profileSlot: string;
-        bodygroup: string;
-    }) => void;
-
-    workoutSessionData: WorkoutSessionData;
-    setWorkoutSessionData: (
-        updater: WorkoutSessionData | ((prev: WorkoutSessionData) => WorkoutSessionData)
-    ) => void;
-
-    activeSessionStatus: boolean;
-    setActiveSessionStatus: (value: boolean) => void;
-
-    liftIndex: Record<string, any>;
-    setLiftIndex: (
-        value: Record<string, any> | ((prev: Record<string, any>) => Record<string, any>)
-    ) => void;
-
-    //OVERVIEW INFO
-    selectedSector2: string;
-    setSelectedSector2: (value: string) => void;
-
-    pageDefault: string;
-    selectedPage: string;
-    setSelectedPage: (value: string) => void;
-
-    HomeDefault: string;
-    selectedHomePage: string;
-    setSelectedHomePage: (value: string) => void;
-
-    //CONTROL HUB INFO
-    isOpen: boolean;
-    setIsOpen: (value: boolean) => void;
-
-    //SYNC INFO
-    hasDawnSyncedToday: boolean;
-    setHasDawnSyncedToday: (value: boolean) => void;
-
-    hasDuskSyncedToday: boolean;
-    setHasDuskSyncedToday: (value: boolean) => void;
-
-    hasFitnessSyncedToday: boolean;
-    setHasFitnessSyncedToday: (value: boolean) => void;
-
-    //SYNC INFO
-    DawnPoints: number;
-    setDawnPoints: (value: number) => void;
-
-    DuskPoints: number;
-    setDuskPoints: (value: number) => void;
-
-    FitnessPoints: number;
-    setFitnessPoints: (value: number) => void;
-
-
-    resetGlobalData: () => void;
-
-
-
-}
-
-export const useGlobalData = create<GlobalData>()(
+export const useGlobalData = create<GlobalSTATE>()(
     persist(
         (set) => ({
             //CONNECTION GATE READY SET GO
-            connectionReady: false,
-            setConnectionReady: (status: boolean) => set({ connectionReady: status }),
-
-
-            //USERID INFO
             userProfile: null,
             setUserProfile: (profile) =>
                 set((state) => ({
@@ -135,13 +23,12 @@ export const useGlobalData = create<GlobalData>()(
                         typeof data === "function" ? data(state.syncHistory) : data,
                 })),
 
-            fitnessHistory: null,
-            setFitnessHistory: (data) =>
-                set((state) => ({
-                    fitnessHistory:
-                        typeof data === "function" ? data(state.fitnessHistory) : data,
-                })),
+            fitnessHistory: {} as { [date: string]: FitnessSyncData },
 
+            setFitnessHistory: (data: { [date: string]: FitnessSyncData } | ((prev: { [date: string]: FitnessSyncData }) => { [date: string]: FitnessSyncData })) =>
+                set((state) => ({
+                    fitnessHistory: typeof data === "function" ? data(state.fitnessHistory) : data,
+                })),
 
 
             latestSync: null,
@@ -149,6 +36,7 @@ export const useGlobalData = create<GlobalData>()(
 
             latestFitnessSync: null,
             setLatestFitnessSync: (sync: any) => set({ latestFitnessSync: sync }),
+
 
             //FITNESS INFO
             activeSessionStatus: false,
@@ -158,7 +46,15 @@ export const useGlobalData = create<GlobalData>()(
             setTemporaryFitnessSync: (fitnessSync: { profileSlot: string; bodygroup: string }) =>
                 set({ temporaryFitnessSync: fitnessSync }),
 
-            workoutSessionData: {},
+            liftIndex: {},
+            setLiftIndex: (value) =>
+                set((state) => ({
+                    liftIndex: typeof value === "function" ? value(state.liftIndex) : value,
+                })),
+
+            workoutSessionData: {
+                movements: [],
+            },
             setWorkoutSessionData: (updater) =>
                 set((state) => ({
                     workoutSessionData:
@@ -167,15 +63,9 @@ export const useGlobalData = create<GlobalData>()(
                             : updater,
                 })),
 
+                
             selectedSector2: "newsession",
             setSelectedSector2: (value: string) => set({ selectedSector2: value }),
-
-            liftIndex: {},
-            setLiftIndex: (value) =>
-                set((state) => ({
-                    liftIndex: typeof value === "function" ? value(state.liftIndex) : value,
-                })),
-
 
             //OVERVIEW INFO
             pageDefault: "bodysync",
@@ -210,26 +100,6 @@ export const useGlobalData = create<GlobalData>()(
 
             FitnessPoints: 0,
             setFitnessPoints: (value) => set({ DawnPoints: value }),
-
-            //RESET FUNCTION
-            resetGlobalData: () => set({           
-                liftIndex: {},
-                syncHistory: null,
-                hasDawnSyncedToday: false,
-                hasDuskSyncedToday: false,
-                hasFitnessSyncedToday: false,
-                DawnPoints: 0,
-                DuskPoints: 0,
-                FitnessPoints: 0,
-                fitnessHistory: null,
-                latestSync: null,
-                latestFitnessSync: null,
-                selectedSector2: "newsession",
-                pageDefault: "bodysync",
-                selectedPage: "bodysync",
-                isOpen: false,
-            }),
-
 
         }),
 

@@ -1,4 +1,7 @@
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 import { AutoClamp } from "@/lib/hooks/AutoClamp";
 import { ListChecks } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +14,8 @@ export default function MacroVaultTile() {
 
     const selectedPage = useGlobalData((s) => s.selectedPage);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
-    const userProfile = useGlobalData((s) => s.userProfile);
+           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
     const setIsOpen = useGlobalData((s) => s.setIsOpen);
 
     return (

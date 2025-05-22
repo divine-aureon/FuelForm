@@ -1,4 +1,6 @@
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
 import { Lock, Dumbbell } from "lucide-react";
 
 
@@ -6,7 +8,8 @@ export default function StrengthArchiveTile() {
 
     const selectedPage = useGlobalData((s) => s.selectedPage);
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
-    const userProfile = useGlobalData((s) => s.userProfile);
+           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
     const setSelectedSector2 = useGlobalData((s) => s.setSelectedSector2);
 
 

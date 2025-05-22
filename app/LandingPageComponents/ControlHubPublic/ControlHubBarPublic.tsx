@@ -1,4 +1,5 @@
 "use client";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from 'react';
@@ -17,7 +18,8 @@ import {
 
 export default function NavPortalPublic() {
 
-  const userProfile = useGlobalData((s) => s.userProfile);
+         const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
   const setSelectedHomePage = useGlobalData((s) => s.setSelectedHomePage);

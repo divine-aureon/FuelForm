@@ -1,6 +1,9 @@
 'use client';
 
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../initializing/Global/BodySyncManifest"
+
 import ControlHub from "./ControlHub/ControlHubBar";
 import { useState, useEffect } from "react";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
@@ -8,12 +11,8 @@ import ScrollLoad from "@/Backgrounds/ScrollLoad"
 export default function Crowns() {
 
 
-  const userProfile = useGlobalData((s) => s.userProfile);
-
-
-  const isPaidUser = userProfile?.isPaid ?? null;
-
-  if (typeof isPaidUser !== 'boolean') return;
+        const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
   return (
     <>

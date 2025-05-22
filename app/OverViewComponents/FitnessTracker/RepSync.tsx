@@ -4,22 +4,22 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
-import useCoreData from "@/lib/hooks/CoreData";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
-import { loadStripe } from '@stripe/stripe-js';
-import { CircleAlert, CircleCheckBig } from 'lucide-react';
-import Link from 'next/link';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import { Sun, Moon, Lock, Sprout, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, ListChecks, StepForward, StepBack } from "lucide-react";
+import RecentWorkoutsModal from "../../OverViewComponents/FitnessTracker/RecentWorkoutsModal"
+import { AllTypes, TypeManifest, UserProfile, WorkoutSessionData, SetEntry, MovementEntry } from "@/app/initializing/Global/BodySyncManifest";
+
+
 
 
 
 export default function RepSync() {
 
-  const router = useRouter();
-  const userProfile = useGlobalData((s) => s.userProfile);
+  const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+  const userProfile = userProfileSTORE
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
   const activeSessionStatus = useGlobalData((s) => s.activeSessionStatus);
   const setActiveSessionStatus = useGlobalData((s) => s.setActiveSessionStatus);
@@ -38,6 +38,8 @@ export default function RepSync() {
 
 
   const TodaysWorkout: string[] = liftIndex?.[selectedBodygroup]?.[selectedProfile]?.movements ?? [];
+
+
 
 
 
@@ -75,8 +77,6 @@ export default function RepSync() {
 
 
 
-
-
   const fitnessSettings = userProfile?.fitnessSettings;
   const currentSplit = fitnessSettings?.currentSplit;
   const bodygroup = fitnessSettings?.lastBodygroup;
@@ -84,6 +84,7 @@ export default function RepSync() {
   //inialization steps
 
   const { user } = useAuth();
+
 
   //DATA INPUT
 
@@ -100,7 +101,6 @@ export default function RepSync() {
     id: string;
     name: string;
   };
-
 
   const SplitDisplayNames: { [key: string]: string } = {
     pushpulllegs: "Push-Pull-Legs",
@@ -146,204 +146,113 @@ export default function RepSync() {
   };
 
   const initializeWorkoutSession = (movementNames: string[]) => {
-    const newSession: WorkoutSessionData = {};
+    const newSession: WorkoutSessionData = {
+      movements: [],
+    };
 
     movementNames.forEach((movementName) => {
-      newSession[movementName] = {
-        set1: {
-          reps: undefined,
-          liftWeight_lbs: undefined,
-          liftWeight_kg: undefined,
-          locked: false,
-        },
-      };
+      newSession.movements.push({
+        name: movementName,
+        sets: [
+          {
+            setId: "set1",
+            reps: 0,
+            liftWeight_lbs: 0,
+            liftWeight_kg: 0,
+            locked: false,
+          },
+        ],
+      });
     });
 
     setWorkoutSessionData(newSession);
   };
 
-
   useEffect(() => {
     if (
       TodaysWorkout?.length > 0 &&
-      Object.keys(workoutSessionData).length === 0
+      workoutSessionData.movements.length === 0
     ) {
       initializeWorkoutSession(TodaysWorkout);
     }
   }, [TodaysWorkout]);
 
-  const [movementLogs, setMovementLogs] = useState<MovementLog[]>([]);
-
-
-
-
-
-  //setWorkoutSessionData(movementLogs);
-
-  type SetEntry = {
-    liftWeight_lbs: number | undefined;
-    liftWeight_kg: number | undefined;
-    reps: number | undefined;
-    locked: boolean;
-    dropset: boolean;
-    dropsets: {
-      [dropKey: string]: {
-        liftWeight_lbs: number | undefined;
-        liftWeight_kg: number | undefined;
-        reps: number | undefined;
-        locked: boolean;
-      };
-    };
-  };
-
-  type DropSetEntry = SetEntry["dropsets"][string];
-
-  type MovementLog = {
-    name: string;
-    setRecords: {
-      [setKey: number]: {
-        liftWeight_lbs: number;
-        liftWeight_kg: number;
-        reps: number;
-        locked: boolean;
-        dropset: boolean;
-        dropsets: {
-          [dropKey: number]: {
-            liftWeight_lbs: number;
-            liftWeight_kg: number;
-            reps: number;
-            locked: boolean;
-          };
-        };
-      };
-    };
-  };
-
-  type WorkoutSessionData = Record<
-    string,
-    Record<
-      string,
-      {
-        reps?: number;
-        liftWeight_lbs?: number;
-        liftWeight_kg?: number;
-        locked?: boolean;
-      }
-    >
-  >;
-
-  const unifiedSessionMap: Record<
-    string, // movement name
-    {
-      type: "set" | "drop";
-      setKey: string;
-      dropKey?: string;
-      data: SetEntry | SetEntry["dropsets"][string];
-    }[]
-  > = {};
 
   TodaysWorkout.forEach((movementName) => {
-    const movementData = workoutSessionData?.[movementName] as Record<string, SetEntry>;
-    if (!movementData) return;
+    const movementData = workoutSessionData.movements.find(
+      (m: MovementEntry) => m.name === movementName
+    );
 
-    const unifiedList: {
-      type: "set" | "drop";
-      setKey: string;
-      dropKey?: string;
-      data: SetEntry | SetEntry["dropsets"][string];
-    }[] = [];
+    if (!movementData) {
+      console.log("Not found:", movementName);
+      return;
+    }
 
-    Object.entries(movementData).forEach(([setKey, setInfo]) => {
-      unifiedList.push({
-        type: "set",
-        setKey,
-        data: setInfo,
-      });
-
-      // Only process dropsets if they exist and are objects
-      if (setInfo.dropsets && typeof setInfo.dropsets === "object") {
-        Object.entries(setInfo.dropsets).forEach(([dropKey, dropInfo]) => {
-          unifiedList.push({
-            type: "drop",
-            setKey,
-            dropKey,
-            data: dropInfo,
-          });
-        });
-      }
-    });
-
-    unifiedSessionMap[movementName] = unifiedList;
+    // Use movementData.sets...
   });
 
-
-  const [addSet, setAddSet] = useState<any[]>([]);
-
-  const handleChange = (value: string, index: number) => {
-    const updated = [...addSet];
-    updated[index] = value;
-    setAddSet(updated);
-  };
-
-
-  const addSetToMovement = (movementName: string) => {
+  const handleAddSet = (movementName: string) => {
     setWorkoutSessionData((prev) => {
-      const existing = prev[movementName] ?? {};
-      const currentSetKeys = Object.keys(existing).filter((key) =>
-        key.startsWith("set")
-      );
+      const updated = { ...prev };
+      const movement = updated.movements.find((m) => m.name === movementName);
+      if (!movement) return prev;
 
-      const nextSetNumber = currentSetKeys.length + 1;
-      const newSetKey = `set${nextSetNumber}`;
+      //const nextSetNumber = movement.sets.length + 1;
+      const nextSetNumber = movement.sets.filter((s) => !s.isDropset).length + 1;
 
-      return {
-        ...prev,
-        [movementName]: {
-          ...existing,
-          [newSetKey]: {
-            reps: undefined,
-            liftWeight_lbs: undefined,
-            liftWeight_kg: undefined,
-            locked: false,
-            dropset: false,
-            dropsets: {}, // ← important!
-          },
-        },
-      };
+      const newSetId = `set${nextSetNumber}`;
+
+      movement.sets.push({
+        setId: newSetId,
+        reps: 0,
+        liftWeight_lbs: 0,
+        liftWeight_kg: 0,
+        locked: false,
+      });
+
+      return updated;
+    });
+  };
+  const addDropSetToSet = (movementName: string, parentSetId: string) => {
+    setWorkoutSessionData((prev) => {
+      const updated = { ...prev };
+    const movement = updated.movements.find((m) => m.name === movementName);
+    if (!movement) return prev;
+
+    // Only count main sets for parent ID
+    const mainSets = movement.sets.filter((s) => !s.isDropset);
+    const lastMainSet = mainSets[mainSets.length - 1];
+    if (!lastMainSet) return prev;
+
+      const dropCount = movement.sets.filter(
+        (s) => s.isDropset && s.parentSetId === parentSetId
+      ).length;
+
+      const newDropId = `${parentSetId}_dropset${dropCount + 1}`;
+
+      movement.sets.push({
+        setId: newDropId,
+        isDropset: true,
+        parentSetId,
+        reps: 0,
+        liftWeight_lbs: 0,
+        liftWeight_kg: 0,
+        locked: false,
+      });
+
+      return updated;
     });
   };
 
-  const addDropSetToSet = (movementName: string, setKey: string) => {
-    setWorkoutSessionData((prev) => {
-      const currentSet = prev[movementName]?.[setKey] ?? {};
-      const currentDropSets = currentSet.dropsets ?? {};
-      const nextDropKey = `drop${Object.keys(currentDropSets).length + 1}`;
 
-      return {
-        ...prev,
-        [movementName]: {
-          ...prev[movementName],
-          [setKey]: {
-            ...currentSet,
-            dropset: true,
-            dropsets: {
-              ...currentDropSets,
-              [nextDropKey]: {
-                reps: undefined,
-                liftWeight_lbs: undefined,
-                liftWeight_kg: undefined,
-                locked: false,
-              },
-            },
-          },
-        },
-      };
-    });
-  };
+  const [showModal, setShowModal] = useState(false);
+
 
   return (
-    <>
+    <div>
+
       <ScrollLoad />
+      <RecentWorkoutsModal isWorkoutsOpen={showModal} onWorkoutsClose={() => setShowModal(false)} />
       <div>
         <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
         border-white/30 shadow-xl text-white text-3xl glowing-button mb-2">
@@ -354,10 +263,11 @@ export default function RepSync() {
             </h2>
           </div>
         </div>
+
+
       </div>
 
       <div className="bg-white/30 backdrop-blur-sm rounded-xl p-4 mb-2">
-
         <div className="text-ls font-bold text-white">
           Instructions:
         </div>
@@ -369,39 +279,38 @@ export default function RepSync() {
       <div className="flex flex-col backdrop-blur-sm">
 
         {TodaysWorkout.map((movementName, index) => {
-
-          const movementData = workoutSessionData?.[movementName] ?? {};
-
-
-          const currentSetKeys = Object.keys(workoutSessionData[movementName] ?? {}).filter((key) =>
-            key.startsWith("set")
+          const movementData = workoutSessionData.movements.find(
+            (m: MovementEntry) => m.name === movementName
           );
 
-          const lastSetKey = currentSetKeys[currentSetKeys.length - 1];
+          if (!movementData) return null;
+
+          const lastSet = movementData.sets.filter((s: SetEntry) => !s.isDropset).at(-1);
+          const lastSetId = lastSet?.setId ?? "";
 
 
           return (
-            <div key={index} className="text-xl bg-white/30 rounded-xl p-4 mb-2 ">
-
+            <div key={index} className="text-xl bg-white/30 rounded-xl p-4 mb-2">
               {movementName}
               <div className="bg-white/30 p-1 mt-1 rounded-xl"></div>
 
 
-              {unifiedSessionMap[movementName]?.map((item, index) => {
+              {/* 🔽 Your custom buttons, styling, inputs, dropdowns go here */}
+              {/* They will now live inside this return block as expected */}
 
-                if (item.type === "set") {
 
-                  const info = item.data as SetEntry;
 
-                  const reps = info.reps ?? "";
-                  const liftWeight_lbs = info.liftWeight_lbs ?? "";
-                  const liftWeight_kg = info.liftWeight_kg ?? "";
-                  const locked = info.locked ?? false;
+              {movementData.sets.map((set: SetEntry, index: number) => {
+                const reps = set.reps ?? "";
+                const liftWeight_lbs = set.liftWeight_lbs ?? "";
+                const liftWeight_kg = set.liftWeight_kg ?? "";
+                const locked = set.locked ?? false;
 
+                if (!set.isDropset) {
                   return (
                     <>
                       <div className="grid grid-cols-[4fr_1fr] gap-4">
-                        <div className="grid grid-cols-2 gap-4 mt-2 ">
+                        <div className="grid grid-cols-2 gap-4 mt-2">
                           <div>
                             <p className="text-sm text-white font-semibold mb-1">
                               Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
@@ -417,17 +326,17 @@ export default function RepSync() {
                                 }
                                 onChange={(e) => {
                                   const value = parseFloat(e.target.value);
-                                  setWorkoutSessionData((prev) => ({
-                                    ...prev,
-                                    [movementName]: {
-                                      ...prev[movementName],
-                                      [item.setKey]: {
-                                        ...prev[movementName]?.[item.setKey],
-                                        liftWeight_lbs: preferredWeightUnit === "lbs" ? Number(value) : Number(value) * 2.2,
-                                        liftWeight_kg: preferredWeightUnit === "kg" ? Number(value) : Number(value) * 0.45,
-                                      },
-                                    },
-                                  }));
+                                  setWorkoutSessionData((prev) => {
+                                    const updated = { ...prev };
+                                    const movement = updated.movements.find((m) => m.name === movementName);
+                                    if (!movement) return prev;
+                                    const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                    if (!targetSet) return prev;
+
+                                    targetSet.liftWeight_lbs = preferredWeightUnit === "lbs" ? value : value * 2.2;
+                                    targetSet.liftWeight_kg = preferredWeightUnit === "kg" ? value : value * 0.45;
+                                    return updated;
+                                  });
                                 }}
                                 placeholder="Weight"
                                 className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
@@ -445,16 +354,16 @@ export default function RepSync() {
                                 value={reps === undefined ? "" : reps}
                                 onChange={(e) => {
                                   const value = parseInt(e.target.value);
-                                  setWorkoutSessionData((prev) => ({
-                                    ...prev,
-                                    [movementName]: {
-                                      ...prev[movementName],
-                                      [item.setKey]: {
-                                        ...prev[movementName]?.[item.setKey],
-                                        reps: value,
-                                      },
-                                    },
-                                  }));
+                                  setWorkoutSessionData((prev) => {
+                                    const updated = { ...prev };
+                                    const movement = updated.movements.find((m) => m.name === movementName);
+                                    if (!movement) return prev;
+                                    const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                    if (!targetSet) return prev;
+
+                                    targetSet.reps = value;
+                                    return updated;
+                                  });
                                 }}
                                 placeholder="Reps"
                                 className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
@@ -466,19 +375,19 @@ export default function RepSync() {
                         <div className="flex justify-center items-center">
                           <button
                             onClick={() => {
-                              setWorkoutSessionData((prev) => ({
-                                ...prev,
-                                [movementName]: {
-                                  ...prev[movementName],
-                                  [item.setKey]: {
-                                    ...prev[movementName]?.[item.setKey],
-                                    liftWeight_lbs: Number(liftWeight_lbs),
-                                    liftWeight_kg: Number(liftWeight_kg),
-                                    reps: Number(reps),
-                                    locked: !locked,
-                                  },
-                                },
-                              }));
+                              setWorkoutSessionData((prev) => {
+                                const updated = { ...prev };
+                                const movement = updated.movements.find((m) => m.name === movementName);
+                                if (!movement) return prev;
+                                const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                if (!targetSet) return prev;
+
+                                targetSet.liftWeight_lbs = Number(liftWeight_lbs);
+                                targetSet.liftWeight_kg = Number(liftWeight_kg);
+                                targetSet.reps = Number(reps);
+                                targetSet.locked = !locked;
+                                return updated;
+                              });
                             }}
                             className={`flex rounded-2xl p-3 justify-center items-center ${locked
                               ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
@@ -488,65 +397,47 @@ export default function RepSync() {
                             <Lock size={24} />
                           </button>
                         </div>
-
                       </div>
                     </>
                   );
-                }
-                else if (item.type === "drop") {
-
-                  const dropInfo = item.data as DropSetEntry;
-
-                  const dropReps = dropInfo.reps ?? "";
-                  const dropLbs = dropInfo.liftWeight_lbs ?? "";
-                  const dropKg = dropInfo.liftWeight_kg ?? "";
-                  const dropLocked = dropInfo.locked ?? false;
+                } else {
 
                   return (
 
-                    <div key={item.dropKey!} className="mt-2 p-2 bg-white/10 rounded-lg">
+                    <div key={set.setId} className="mt-2 p-2 bg-white/10 rounded-lg">
                       <p className="text-sm text-indigo-300 font-semibold mb-1">
-                        {item.dropKey!.toUpperCase()}
+                        {set.setId.toUpperCase()}
                       </p>
-                      {/* reps & weight inputs just like the main ones */}
-
 
                       <div className="grid grid-cols-[4fr_1fr] gap-4">
-                        <div className="grid grid-cols-2 gap-4 mt-2 ">
+                        <div className="grid grid-cols-2 gap-4 mt-2">
                           <div>
                             <p className="text-sm text-white font-semibold mb-1">
                               Weight ({preferredWeightUnit === "kg" ? "kg" : "lbs"})
                               <input
-                                disabled={dropLocked}
+                                disabled={set.locked}
                                 type="number"
                                 step="0.1"
                                 min="0"
                                 value={
                                   preferredWeightUnit === "lbs"
-                                    ? dropInfo.liftWeight_lbs === undefined ? "" : dropLbs
-                                    : dropInfo.liftWeight_kg === undefined ? "" : dropKg
+                                    ? set.liftWeight_lbs ?? ""
+                                    : set.liftWeight_kg ?? ""
                                 }
                                 onChange={(e) => {
                                   const value = parseFloat(e.target.value);
-                                  setWorkoutSessionData((prev) => ({
-                                    ...prev,
-                                    [movementName]: {
-                                      ...prev[movementName],
-                                      [item.setKey]: {
-                                        ...prev[movementName]?.[item.setKey],
-                                        dropsets: {
-                                          ...prev[movementName]?.[item.setKey]?.dropsets,
-                                          [item.dropKey!]: {
-                                            ...prev[movementName]?.[item.setKey]?.dropsets?.[item.dropKey!],
-                                            liftWeight_lbs: preferredWeightUnit === "lbs" ? Number(value) : Number(value) * 2.2,
-                                            liftWeight_kg: preferredWeightUnit === "kg" ? Number(value) : Number(value) * 0.45,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  }));
+                                  setWorkoutSessionData((prev) => {
+                                    const updated = { ...prev };
+                                    const movement = updated.movements.find((m) => m.name === movementName);
+                                    if (!movement) return prev;
+                                    const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                    if (!targetSet) return prev;
 
+                                    targetSet.liftWeight_lbs = preferredWeightUnit === "lbs" ? value : value * 2.2;
+                                    targetSet.liftWeight_kg = preferredWeightUnit === "kg" ? value : value * 0.45;
 
+                                    return updated;
+                                  });
                                 }}
                                 placeholder="Weight"
                                 className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
@@ -556,30 +447,24 @@ export default function RepSync() {
 
                           <div>
                             <p className="text-sm text-white font-semibold mb-1">
-                              Set
+                              Reps
                               <input
-                                disabled={dropLocked}
+                                disabled={set.locked}
                                 type="number"
                                 min="0"
-                                value={dropReps === undefined ? "" : dropReps}
+                                value={set.reps ?? ""}
                                 onChange={(e) => {
                                   const value = parseInt(e.target.value);
-                                  setWorkoutSessionData((prev) => ({
-                                    ...prev,
-                                    [movementName]: {
-                                      ...prev[movementName],
-                                      [item.setKey]: {
-                                        ...prev[movementName]?.[item.setKey],
-                                        dropsets: {
-                                          ...prev[movementName]?.[item.setKey]?.dropsets,
-                                          [item.dropKey!]: {
-                                            ...prev[movementName]?.[item.setKey]?.dropsets?.[item.dropKey!],
-                                            reps: value,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  }));
+                                  setWorkoutSessionData((prev) => {
+                                    const updated = { ...prev };
+                                    const movement = updated.movements.find((m) => m.name === movementName);
+                                    if (!movement) return prev;
+                                    const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                    if (!targetSet) return prev;
+
+                                    targetSet.reps = value;
+                                    return updated;
+                                  });
                                 }}
                                 placeholder="Reps"
                                 className="w-full p-2 mb-2 rounded bg-gray-800/70 text-white border-none focus:outline-none appearance-none"
@@ -591,28 +476,18 @@ export default function RepSync() {
                         <div className="flex justify-center items-center">
                           <button
                             onClick={() => {
-                              setWorkoutSessionData((prev) => ({
-                                ...prev,
-                                [movementName]: {
-                                  ...prev[movementName],
-                                  [item.setKey]: {
-                                    ...prev[movementName]?.[item.setKey],
-                                    dropsets: {
-                                      ...prev[movementName]?.[item.setKey]?.dropsets,
-                                      [item.dropKey!]: {
-                                        ...prev[movementName]?.[item.setKey]?.dropsets?.[item.dropKey!],
-                                        liftWeight_lbs: Number(dropLbs),
-                                        liftWeight_kg: Number(dropKg),
-                                        reps: Number(dropReps),
-                                        locked: !dropLocked,
-                                      },
-                                    },
-                                  },
-                                },
-                              }));
-                            }}
+                              setWorkoutSessionData((prev) => {
+                                const updated = { ...prev };
+                                const movement = updated.movements.find((m) => m.name === movementName);
+                                if (!movement) return prev;
+                                const targetSet = movement.sets.find((s) => s.setId === set.setId);
+                                if (!targetSet) return prev;
 
-                            className={`flex rounded-2xl p-3 justify-center items-center ${dropLocked
+                                targetSet.locked = !targetSet.locked;
+                                return updated;
+                              });
+                            }}
+                            className={`flex rounded-2xl p-3 justify-center items-center ${set.locked
                               ? "bg-indigo-300/70 relative z-10 text-white font-bold px-4 py-2 rounded-xl overflow-hidden border border-indigo-400"
                               : "glowing-button"
                               }`}
@@ -620,114 +495,100 @@ export default function RepSync() {
                             <Lock size={24} />
                           </button>
                         </div>
-
                       </div>
 
 
+
+
                     </div>
+
                   );
+
 
                 }
 
-
-
               })}
-
               <div className="grid grid-cols-[4fr_1fr] gap-4">
                 <div className="grid grid-cols-2 gap-4 mt-2 ">
                   <>
-                    <button onClick={() => addDropSetToSet(movementName, lastSetKey)}
+                    <button onClick={() => addDropSetToSet(movementName, lastSetId)}
                       className="w-full mt-2 px-4 py-2 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-500 w-fit">
                       + Add Drop Set
                     </button>
 
-                    <button
-                      onClick={() => addSetToMovement(movementName)}
-                      className="w-full mt-2 px-4 py-2 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-500 w-fit"
-                    >
+                    <button onClick={() => handleAddSet(movementData.name)}
+                      className="w-full mt-2 px-4 py-2 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-500 w-fit">
                       + Add Set
                     </button>
                   </>
                 </div>
               </div>
-
-            </div>
-
+            </div >
           );
         })}
-      </div>
 
+        <div className="bg-white/30 rounded-xl p-4 mb-20">
+          <div className="grid grid-cols-[4fr_1fr] gap-4 px-4 pb-4 ">
+            <div>
+              In order to Sync your workout, please ensure you have locked in all of your sets using the lock function.
+            </div>
+            <div className="flex bg-white/30 rounded-2xl p-3 justify-center items-center"><Lock size={32} /></div>
 
-
-
-      <div className="bg-white/30 rounded-xl p-4 mb-20">
-        <div className="grid grid-cols-[4fr_1fr] gap-4 px-4 pb-4 ">
-          <div>
-            In order to Sync your workout, please ensure you have locked in all of your sets using the lock function.
           </div>
-          <div className="flex bg-white/30 rounded-2xl p-3 justify-center items-center"><Lock size={32} /></div>
+          <div className="flex px-12 justify-center">
+            <button
+
+              className="w-full text-md rounded-xl p-6 shadow transition-all duration-50 glowing-purple-button cursor-pointer"
+              onClick={async () => {
+                if (!user) return;
+
+                const userRef = doc(db, "users", user.uid);
+
+                // Set meta initialized
+                await setDoc(userRef, {
+                  fitnessSettings: {
+                    activeSession: false,
+                  },
+                }, { merge: true });
+
+                const fitRef = collection(db, "users", user.uid, "fitness");
+                const fitDocRef = doc(fitRef, dateString);
+
+                const cleanedWorkout: WorkoutSessionData = {
+                  movements: workoutSessionData.movements.map((movement: MovementEntry) => ({
+                    name: movement.name,
+                    sets: movement.sets.filter((set: SetEntry) => set.locked),
+                  })).filter((m: MovementEntry) => m.sets.length > 0)
+                };
+
+                // Set meta initialized
+                await setDoc(fitDocRef, {
+                  completed: true,
+                  fitnessSync: true,
+                  sessionData: cleanedWorkout,
+                  EndTime: serverTimestamp(),
+                }, { merge: true });
+
+                window.location.reload();
+                setSelectedPage("BodySync");
+                setActiveSessionStatus(false);
+                setWorkoutSessionData({ movements: [] });
+              }}
+            >
+              Submit RepSync
+            </button>
+          </div>
+
 
         </div>
-        <div className="flex px-12 justify-center">
-          <button
 
-            className="w-full text-md rounded-xl p-6 shadow transition-all duration-50 glowing-purple-button cursor-pointer"
-            onClick={async () => {
-              if (!user) return;
-
-              const userRef = doc(db, "users", user.uid);
-
-              // Set meta initialized
-              await setDoc(userRef, {
-                fitnessSettings: {
-                  activeSession: false,
-                },
-              }, { merge: true });
-
-              const strengthRef = collection(db, "users", user.uid, "fitness");
-              const strengthDocRef = doc(strengthRef, dateString);
-
-              const cleanedWorkout: WorkoutSessionData = {};
-
-              Object.entries(workoutSessionData).forEach(([movementName, sets]) => {
-                const filteredSets: any = {};
-
-                Object.entries(sets).forEach(([setKey, setData]) => {
-                  const typedSetData = setData as SetEntry;
-                  if (typedSetData.locked) {
-                    filteredSets[setKey] = setData;
-                  }
-                });
-
-                if (Object.keys(filteredSets).length > 0) {
-                  cleanedWorkout[movementName] = filteredSets;
-                }
-              });
-
-
-
-              // Set meta initialized
-              await setDoc(strengthDocRef, {
-                completed: true,
-                fitnessSync: true,
-                sessionData: cleanedWorkout,
-                EndTime: serverTimestamp(),
-              }, { merge: true });
-
-              window.location.reload();
-              setSelectedPage("BodySync");
-              setActiveSessionStatus(false);
-              setWorkoutSessionData({});
-            }}
-          >
-            Submit RepSync
-          </button>
-        </div>
-
-
-
+        <button
+          onClick={() => setShowModal(true)}
+          className="fixed bottom-0 w-full max-w-md text-center text-lg rounded-xl glowing-purple-button text-white"
+        >Reference History
+        </button>
       </div>
-    </>
+    </div>
   );
-
 }
+

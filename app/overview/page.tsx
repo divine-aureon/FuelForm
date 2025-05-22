@@ -1,7 +1,8 @@
 'use client';
 //DUAL STATES DATABASE & GLOBALDATA ACCISABILITY
-import { useGlobalData } from "../initializing/Global/GlobalData";
-import { EstablishConnection } from "../initializing/Global/EstablishConnection";
+import { getGlobalDataState } from "../initializing/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../initializing/Global/BodySyncManifest"
 
 //MISC..
 import { useState, useEffect } from "react";
@@ -18,7 +19,9 @@ import { Sun, Moon, Lock, Sprout, CircleCheckBig, Rotate3d, CircleArrowLeft, Cir
 import DawnSyncComponent from "../OverViewComponents/Sync/DawnSyncComponent";
 import DuskSyncComponent from "../OverViewComponents/Sync/DuskSyncComponent";
 import ControlHub from "../OverViewComponents/ControlHub/ControlHubBar";
-import SyncReport from "../OverViewComponents/SyncReportsPage";
+import SyncReport from "../OverViewComponents/SyncReport/SyncReportsPage";
+import SyncReportNEW from "../OverViewComponents/SyncReport/SyncReportsPageNEW";
+import SyncReportStartup from "../OverViewComponents/SyncReport/SyncReportStartup";
 import SyncSimulator from "../OverViewComponents/SyncSimulatorPage";
 import Crowns from "../OverViewComponents/CrownsPage";
 import InfoDex from "../OverViewComponents/InfoDexPage";
@@ -41,8 +44,8 @@ import { BuildEnergyData } from "../OverViewComponents/NutrientDisplay/BuildEner
 import { BuildVitaminData } from "../OverViewComponents/NutrientDisplay/BuildVitaminData";
 import { BuildMineralData } from "../OverViewComponents/NutrientDisplay/BuildMineralData";
 import useTodaysSync from '@/lib/hooks/hasDawnDuskSynced';
-import NavLoad from "../initializing/LoadingComponents/SystemLoad";
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
+import NavLoad from "../initializing/LoadingComponents/NavLoad"
 
 //PULSE DROP COMPONENT
 import BirthdayDrop from "../OverViewComponents/PulseDrops/BirthdayDrop";
@@ -55,35 +58,30 @@ export default function CommandCenter() {
   //CENTRAL INTELLIGENCE
   const { user } = useAuth();
 
-  const userProfile = useGlobalData((s) => s.userProfile);
 
-  useEffect(() => {
-    if (user?.uid) {
-      EstablishConnection(user?.uid);
-    }
-  }, [user?.uid]);
+  const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+  const userProfile = userProfileSTORE;
+  const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
+  const latestSync = latestSyncSTORE;
+
+  //const setUserProfile = useGlobalData((s) => s.setUserProfile);
+
+  //useEffect(() => {
+  // setUserProfile(userProfileSTORE as UserProfile);
+  //}, []);
 
   ///END NOTE
 
-  const setUserProfile = useGlobalData((s) => s.setUserProfile);
-  const setLatestSync = useGlobalData((s) => s.setLatestSync);
-  const setLatestFitnessSync = useGlobalData((s) => s.setLatestFitnessSync);
-  const setSyncHistory = useGlobalData.getState().setSyncHistory;
-  const setFitnessHistory = useGlobalData.getState().setFitnessHistory;
+  useEffect(() => {
+    if (user && userProfile) {
+      ensureDefaultsExist(user.uid, userProfile);
+    }
+  }, [user, userProfile]);
 
 
-  //useEffect(() => {
-  //  if (latestSync) {
-  //    setLatestSync(latestSync);
-  //  }
-  // }, [latestSync]);
 
 
-  //useEffect(() => {
-  //  if (user && userProfile) {
-  //    ensureDefaultsExist(user.uid, userProfile);
-  //   }
-  //}, [user, userProfile]);
+
 
   const LucideIconMap: Record<string, React.ElementType> = {
     Atom: Atom,
@@ -128,13 +126,13 @@ export default function CommandCenter() {
 
 
   //NUTRIENT PANEL DISPLAYS
-  const EnergyData = BuildEnergyData(userProfile?.latestSync);
-  const Nutrient_V = BuildVitaminData(userProfile?.latestSync);
-  const Nutrient_M = BuildMineralData(userProfile?.latestSync);
+  const EnergyData = BuildEnergyData(latestSync);
+  const Nutrient_V = BuildVitaminData(latestSync);
+  const Nutrient_M = BuildMineralData(latestSync);
 
 
   // COMMAND CENTER PAGE SECTION MANAGEMENT
-  const pageDefault = useGlobalData.getState().pageDefault;
+  const pageDefault = useGlobalData((s) => s.pageDefault);
 
   useEffect(() => {
     setSelectedPage(pageDefault);
@@ -196,9 +194,10 @@ export default function CommandCenter() {
     <>
       <ScrollLoad />
       <NavLoad />
-      <PageFadeWrapper>
 
-        <BirthdayDrop />
+      <PageFadeWrapper>
+        {/*<BirthdayDrop />*/}
+
         <PulseDropEngine />
 
         <div
@@ -487,7 +486,7 @@ export default function CommandCenter() {
                   transition={{ duration: 0.2 }}>
                   <>
 
-                    <SyncReport />
+                    <SyncReportStartup />
 
                   </>
                 </motion.div>)}

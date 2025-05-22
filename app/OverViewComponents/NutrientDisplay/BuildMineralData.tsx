@@ -1,7 +1,5 @@
 'use client';
 
-import useCoreData from "@/lib/hooks/CoreData";
-
 
 export function BuildMineralData(latestSync: any) {
 

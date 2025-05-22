@@ -1,6 +1,8 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
@@ -18,16 +20,12 @@ function toSafeString(value: any): string {
 export default function BiometricsComponent() {
 
   const { user } = useAuth();
+  const router = useRouter();
 
-  useEffect(() => {
-    if (user?.uid) {
-      EstablishConnection(user?.uid);
-    }
-  }, [user?.uid]);
-
-  const userProfile = useGlobalData((s) => s.userProfile);
+      const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
   const setUserProfile = useGlobalData((s) => s.setUserProfile);
-
+  const setUserProfileSTORE = getGlobalDataState().setUserProfileSTORE;
 
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);
@@ -57,15 +55,6 @@ export default function BiometricsComponent() {
   const [String_height_cm, setString_Height_cm] = useState(toSafeString(height_cm));
   const [String_feet, setString_Feet] = useState(toSafeString(feet));
   const [String_inches, setString_Inches] = useState(toSafeString(inches));
-
-
-
-
-
-
-
-
-
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,25 +129,23 @@ export default function BiometricsComponent() {
 
       }, { merge: true });
 
-      if (user?.uid) {
-        await EstablishConnection(user.uid);
-      }
-
       setStatus("success");
+
     } catch (error) {
       setStatus("failiure");
     }
   };
 
+
   useEffect(() => {
     if (status === "success") {
       const timeout = setTimeout(() => {
-        setSelectedPage("bodysync");
+        router.push('/initializing');
       }, 0);
 
       return () => clearTimeout(timeout);
     }
-  }, [status]);
+  }, [status , router]);
 
 
   return (

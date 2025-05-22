@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 declare global {
@@ -291,7 +292,7 @@ export default function RegisterComponent() {
       });
 
       setLoading(true);
-      router.push('/overview');
+      router.push('/initializing');
 
     } catch (err: any) {
       setError(err.message || "Something went wrong.");

@@ -5,22 +5,9 @@ import { calculateRecoveryFuel, calculateActiveFuel } from "@/lib/FusionCore";
 import EnergyBreakdown from "@/app/OverViewComponents/NutrientDisplay/EnergyBreakdown"
 import VitaminBreakdown from "@/app/OverViewComponents/NutrientDisplay/VitaminBreakdown"
 import MineralBreakdown from "@/app/OverViewComponents/NutrientDisplay/MineralBreakdown"
-import useCoreData from "@/lib/hooks/CoreData";
-import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
-import ControlHub from "./ControlHub/ControlHubBar";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
-import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-
 
 export default function SyncSimulator() {
-
-
-    const userProfile = useGlobalData((s) => s.userProfile);
-
-    const isPaidUser = userProfile?.isPaid ?? null;
-    const customSettings = userProfile?.customSettings;
-
 
     const resultRef = useRef<HTMLDivElement>(null);
 
@@ -90,10 +77,6 @@ export default function SyncSimulator() {
             calorieGoal: Number(calorieGoal),
         });
 
-        console.log("🧠 recovery.vitamins", recovery.vitamins);
-        console.log("🧠 active.vitamins", active.vitamins);
-
-
 
         const activeMap = active.activeMacros?.reduce((acc: Record<string, string>, item: any) => {
             acc[item.name] = item.value;
@@ -157,176 +140,171 @@ export default function SyncSimulator() {
         }, 100);
     };
 
-    if (typeof isPaidUser !== 'boolean') return;
-
     return (
         <main className="rounded-lg mb-12 p-0">
             <ScrollLoad />
-                <div className="rounded-xl overflow-hidden mb-2 ">
-                    <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
-                        <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
-                            Sync Simulator</h1>
-                        <h2 className="text-lg flex justify-center p-2">
-                            Sync Simulator lets you test how FuelForms FusionCore calculates your calories
-                            and macros based on your Biometrics, steps, and exercise.
-                        </h2>
-                    </div>
+            <div className="rounded-xl overflow-hidden mb-2 ">
+                <div className="absolute inset-0 glowing-button bg-[url('/images/menus/syncsim.jpg')] bg-cover bg-center bg-no-repeat w-full bg-blue-300/10 rounded-xl p-2">
+                    <h1 className="text-4xl flex justify-center font-bold pulse-glow p-2">
+                        Sync Simulator</h1>
+                    <h2 className="text-lg flex justify-center p-2">
+                        Sync Simulator lets you test how FuelForms FusionCore calculates your calories
+                        and macros based on your Biometrics, steps, and exercise.
+                    </h2>
                 </div>
-                <div className="relative text-center bg-white/30 p-4 rounded-xl">
+            </div>
+            <div className="relative text-center bg-white/30 p-4 rounded-xl">
 
-                    {/* Inputs */}
-                    <div className="flex flex-col text-md text-white gap-2 w-full">
-                        <select value={preferredWeightUnit}
-                            onChange={(e) => setpreferredWeightUnit(e.target.value as "lbs" | "kg")}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
-                            <option value="lbs">Weight Unit(lbs)</option>
-                            <option value="kg">Weight Unit(kg)</option>
+                {/* Inputs */}
+                <div className="flex flex-col text-md text-white gap-2 w-full">
+                    <select value={preferredWeightUnit}
+                        onChange={(e) => setpreferredWeightUnit(e.target.value as "lbs" | "kg")}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
+                        <option value="lbs">Weight Unit(lbs)</option>
+                        <option value="kg">Weight Unit(kg)</option>
 
-                        </select>
+                    </select>
 
-                        {preferredWeightUnit === "lbs" ? (
-                            <input
-                                type="text"
-                                placeholder="(lbs)"
-                                value={weight_lbs}
-                                onChange={(e) => handleWeightChange(e.target.value)}
-                                className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                placeholder="(kg)"
-                                value={weight_kg}
-                                onChange={(e) => handleWeightChange(e.target.value)}
-                                className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                            />
-                        )}
-                        <select value={preferredHeightUnit}
-                            onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
-                            <option value="cm">Height Unit(cm)</option>
-                            <option value="ft_in">Height Unit(ft/in)</option>
-
-                        </select>
-
-                        {preferredHeightUnit === "cm" ? (
-                            <input
-                                type="text"
-                                placeholder="(cm)"
-                                value={height_cm}
-                                onChange={(e) => setHeight_cm(e.target.value)}
-                                className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                            />
-                        ) : (
-
-                            <div className="flex space-x-2">
-                                <input
-                                    type="number"
-                                    placeholder="(Feet)"
-                                    value={feet}
-                                    onChange={(e) => {
-                                        setFeet(e.target.value);
-                                        handleFeetInchesChange(e.target.value, feet);
-                                    }}
-                                    className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="(Inches)"
-                                    value={inches}
-                                    onChange={(e) => {
-                                        setInches(e.target.value);
-                                        handleFeetInchesChange(e.target.value, inches);
-                                    }}
-                                    onBlur={() => {
-                                        const num = parseInt(inches);
-                                        if (isNaN(num)) return;
-
-                                        const clamped = Math.min(Math.max(num, 0), 11); // clamps to 0–11
-                                        setInches(clamped.toString());
-                                    }}
-                                    className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                                />
-                            </div>
-
-                        )}
+                    {preferredWeightUnit === "lbs" ? (
                         <input
                             type="text"
-                            placeholder="Age"
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
+                            placeholder="(lbs)"
+                            value={weight_lbs}
+                            onChange={(e) => handleWeightChange(e.target.value)}
                             className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                         />
-                        <select
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                        >
-                            <option value="">Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
+                    ) : (
                         <input
                             type="text"
-                            placeholder="Steps"
-                            value={steps}
-                            onChange={(e) => setSteps(e.target.value)}
+                            placeholder="(kg)"
+                            value={weight_kg}
+                            onChange={(e) => handleWeightChange(e.target.value)}
                             className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
                         />
-                        <input
-                            type="text"
-                            placeholder="Exercise Minutes"
-                            value={exerciseMinutes}
-                            onChange={(e) => setExerciseMinutes(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                        />
-                        <select
-                            value={exerciseIntensity}
-                            onChange={(e) => setExerciseIntensity(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                        >
-                            <option value="low">Low</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="high">High</option>
-                        </select>
-                        <select
-                            value={calorieGoal}
-                            onChange={(e) => setCalorieGoal(e.target.value)}
-                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
-                        >
-                            <option value="">-/+ Calories Adjustment</option>
-                            {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (
-                                <option key={kcal} value={kcal}>
-                                    {kcal} kcal
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Button */}
-
-                    <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
-                        <button
-                            onClick={handleCalculate}
-                            className="text-2xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
-                        >
-                            Generate Nutrient Blueprint!
-                        </button>
-                    </div>
-
-                    {/* Outputs */}
-
-                    {calculated && (
-                        <div ref={resultRef}>
-                            <EnergyBreakdown data={EnergyData} />
-                            <VitaminBreakdown Vitamins={Nutrient_V} />
-                            <MineralBreakdown minerals={Nutrient_M} />
-                        </div>
                     )}
+                    <select value={preferredHeightUnit}
+                        onChange={(e) => setpreferredHeightUnit(e.target.value as "cm" | "ft_in")}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70">
+                        <option value="cm">Height Unit(cm)</option>
+                        <option value="ft_in">Height Unit(ft/in)</option>
+
+                    </select>
+
+                    {preferredHeightUnit === "cm" ? (
+                        <input
+                            type="text"
+                            placeholder="(cm)"
+                            value={height_cm}
+                            onChange={(e) => setHeight_cm(e.target.value)}
+                            className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                        />
+                    ) : (
+
+                        <div className="flex space-x-2">
+                            <input
+                                type="number"
+                                placeholder="(Feet)"
+                                value={feet}
+                                onChange={(e) => {
+                                    setFeet(e.target.value);
+                                    handleFeetInchesChange(e.target.value, feet);
+                                }}
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                            />
+                            <input
+                                type="number"
+                                placeholder="(Inches)"
+                                value={inches}
+                                onChange={(e) => {
+                                    setInches(e.target.value);
+                                    handleFeetInchesChange(e.target.value, inches);
+                                }}
+                                onBlur={() => {
+                                    const num = parseInt(inches);
+                                    if (isNaN(num)) return;
+
+                                    const clamped = Math.min(Math.max(num, 0), 11); // clamps to 0–11
+                                    setInches(clamped.toString());
+                                }}
+                                className="p-2 w-full placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                            />
+                        </div>
+
+                    )}
+                    <input
+                        type="text"
+                        placeholder="Age"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    />
+                    <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    >
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <input
+                        type="text"
+                        placeholder="Steps"
+                        value={steps}
+                        onChange={(e) => setSteps(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Exercise Minutes"
+                        value={exerciseMinutes}
+                        onChange={(e) => setExerciseMinutes(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    />
+                    <select
+                        value={exerciseIntensity}
+                        onChange={(e) => setExerciseIntensity(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    >
+                        <option value="low">Low</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="high">High</option>
+                    </select>
+                    <select
+                        value={calorieGoal}
+                        onChange={(e) => setCalorieGoal(e.target.value)}
+                        className="p-2 placeholder-white rounded-lg focus:outline-indigo-300 focus:border-indigo-300 bg-gray-800/70"
+                    >
+                        <option value="">-/+ Calories Adjustment</option>
+                        {["500", "400", "300", "200", "100", "0", "-100", "-200", "-300", "-400", "-500"].map((kcal) => (
+                            <option key={kcal} value={kcal}>
+                                {kcal} kcal
+                            </option>
+                        ))}
+                    </select>
                 </div>
-                <footer className="pt-4 pb-2">
-                    <ControlHub />
-                </footer>
+
+                {/* Button */}
+
+                <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center z-30">
+                    <button
+                        onClick={handleCalculate}
+                        className="text-2xl bg-white text-black px-4 py-3 w-full rounded-lg font-semibold glowing-button"
+                    >
+                        Generate Nutrient Blueprint!
+                    </button>
+                </div>
+
+                {/* Outputs */}
+
+                {calculated && (
+                    <div ref={resultRef}>
+                        <EnergyBreakdown data={EnergyData} />
+                        <VitaminBreakdown Vitamins={Nutrient_V} />
+                        <MineralBreakdown minerals={Nutrient_M} />
+                    </div>
+                )}
+            </div>
         </main >
     );
 }

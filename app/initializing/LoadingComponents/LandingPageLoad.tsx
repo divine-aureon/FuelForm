@@ -2,6 +2,7 @@
 import CoreData from "@/lib/hooks/CoreData"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 export default function LoadingComponent() {

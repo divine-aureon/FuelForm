@@ -1,24 +1,28 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import useCoreData from "@/lib/hooks/CoreData";
 import { doc, getDoc, collection } from "firebase/firestore";
 import { subDays, format } from "date-fns";
 import { db } from "@/lib/firebase"; // adjust if needed
 import { useState, useEffect } from "react";
 import useAuth from '@/lib/useAuth';
 import { getDocs, limit, orderBy, query, where } from "firebase/firestore";
+import { UserProfile } from "@/app/initializing/Global/BodySyncManifest";
 
 export function BuildEnergyData(latestSync: any) {
 
     const { user } = useAuth();
+
 
     const recoveryTDEE = latestSync?.recoveryTDEE;
     const activeTDEE = latestSync?.activeTDEE;
     const activeMacros = latestSync?.activeMacros || [];
     const recoveryMacros = latestSync?.recoveryMacros || [];
 
-    const { userProfile } = useCoreData();
-    console.log("⚡ CoreData userProfile:", userProfile);
+    const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+
+
 
     const active = activeMacros?.reduce((acc: Record<string, string>, item: any) => {
         acc[item.name] = item.value;

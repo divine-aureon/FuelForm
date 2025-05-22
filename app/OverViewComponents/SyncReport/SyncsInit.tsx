@@ -5,7 +5,7 @@ import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreI
 import { doc, getDoc, collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // assuming this is your Firestore instance
 import useAuth from '@/lib/useAuth';
-import type { UserProfile, SyncData, SyncDataWithID } from "../initializing/Global/BodySyncManifest"
+import type { UserProfile, SyncData, SyncDataWithID } from "../../initializing/Global/BodySyncManifest"
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 
 export default function Loading() {

@@ -1,12 +1,13 @@
 'use client';
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db, } from "@/lib/firebase";
 import { doc, setDoc, collection, serverTimestamp } from "firebase/firestore";
 import { calculateActiveFuel } from "@/lib/FusionCore";
-import useCoreData from "@/lib/hooks/CoreData";
 import { Listbox } from '@headlessui/react'
 
 
@@ -14,7 +15,9 @@ const intensityOptions = ["None", "Light", "Moderate", "High"]
 
 export default function DuskSyncComponent() {
 
-    const userProfile = useGlobalData((s) => s.userProfile);
+           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+       const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     
     const router = useRouter();
     const [status, setStatus] = useState("");
@@ -84,7 +87,7 @@ export default function DuskSyncComponent() {
     useEffect(() => {
         if (status === "success") {
             const timeout = setTimeout(() => {
-                window.location.reload(); // hard refresh
+                   router.push('/initializing');
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);

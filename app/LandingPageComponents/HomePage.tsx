@@ -7,19 +7,18 @@ import NavPortalPublic from "./ControlHubPublic/ControlHubBarPublic"
 import HomeLoad from "@/app/initializing/LoadingComponents/HomeLoad";
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
 import { motion, AnimatePresence } from "framer-motion";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import LoginComponent from "./LoginPage"
 import RegisterComponent from "./RegisterPage"
 import AboutComponent from "./AboutPage"
-import InfoDexComponent from "../OverViewComponents/InfoDexPage"
+import InfoDexPublic from "../LandingPageComponents/InfoDexPublicPage"
 import UnlockPage from "../OverViewComponents/CustomerPortal/UnlockPageComponent"
 import SourcesComponent from "./SourcesPage"
 
 export default function HomeComp() {
 
-
-    const HomeDefault = useGlobalData.getState().HomeDefault;
-
+    const HomeDefault = useGlobalData((s) => s.HomeDefault);
     useEffect(() => {
         setSelectedHomePage(HomeDefault);
     }, []);
@@ -187,7 +186,7 @@ export default function HomeComp() {
                                     transition={{ duration: 0.4 }}>
 
 
-                                    <InfoDexComponent />
+                                    <InfoDexPublic />
                                 </motion.div>
                             )}
 

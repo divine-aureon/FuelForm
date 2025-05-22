@@ -1,5 +1,7 @@
 
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
 import { AutoClamp } from "@/lib/hooks/AutoClamp";
 import { ListChecks } from "lucide-react";
 import Link from "next/link";
@@ -17,8 +19,9 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
 
 export default function UnlockTile() {
-  const userProfile = useGlobalData((s) => s.userProfile);
-  const isPaid = useGlobalData((s) => s.userProfile?.isPaid);
+         const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+
 
   const selectedPage = useGlobalData((s) => s.selectedPage);
   const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
@@ -29,7 +32,7 @@ export default function UnlockTile() {
   return (
 
     <>
-      {isPaid ? (
+      {userProfile?.isPaid ? (
         <>
           <Link href="billing.stripe.com/p/login/eVa8x80MQ5PmgPmdQQ"
 

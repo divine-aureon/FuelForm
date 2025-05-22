@@ -5,14 +5,15 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, where, Timestamp } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
 import useCoreData from "@/lib/hooks/CoreData";
-import NavLoad from "@/app/initializing/LoadingComponents/SystemLoad";
 import ControlHub from "../ControlHub/ControlHubBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
+import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 
 
@@ -23,7 +24,8 @@ export default function DailyGoals() {
   //inialization steps
 
   const { user } = useAuth();
-  const userProfile = useGlobalData((s) => s.userProfile);
+         const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
 
   const isPaidUser = userProfile?.isPaid ?? null;
 

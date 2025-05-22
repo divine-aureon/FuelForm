@@ -1,54 +1,167 @@
-export type SetEntry = {
-  liftWeight_lbs: number | undefined;
-  liftWeight_kg: number | undefined;
-  reps: number | undefined;
-  locked: boolean;
-  dropset: boolean;
-  dropsets: {
-    [dropKey: string]: {
-      liftWeight_lbs: number | undefined;
-      liftWeight_kg: number | undefined;
-      reps: number | undefined;
-      locked: boolean;
-    };
-  };
+export type GlobalSTORE = {
+
+  //USERID INFO
+  userProfileSTORE: UserProfile | null;
+  setUserProfileSTORE: (profile: UserProfile | ((prev: UserProfile | null) => UserProfile)) => void;
+
+  syncHistorySTORE: SyncData[] | null;
+  setSyncHistorySTORE: (data: SyncData[] | ((prev: SyncData[] | null) => SyncData[])) => void;
+
+  fitnessHistorySTORE: {};
+  setFitnessHistorySTORE: (data: { [date: string]: FitnessSyncData }) => void;
+
+  latestSyncSTORE: any | null;
+  setLatestSyncSTORE: (sync: any) => void;
+
+  latestFitnessSyncSTORE: any | null;
+  setLatestFitnessSyncSTORE: (sync: any) => void;
+
 };
 
- export type DropSetEntry = SetEntry["dropsets"][string];
+export type SyncDataWithID = SyncData & { id: string };
 
-export   type WorkoutSessionData = Record<
-    string,
-    Record<
-      string,
-      {
-        reps?: number;
-        liftWeight_lbs?: number;
-        liftWeight_kg?: number;
-        locked?: boolean;
-      }
-    >
-  >;
+export type GlobalSTATE = {
 
-  export type MovementLog = {
-    name: string;
-    setRecords: {
-      [setKey: number]: {
-        liftWeight_lbs: number;
-        liftWeight_kg: number;
-        reps: number;
-        locked: boolean;
-        dropset: boolean;
-        dropsets: {
-          [dropKey: number]: {
-            liftWeight_lbs: number;
-            liftWeight_kg: number;
-            reps: number;
-            locked: boolean;
-          };
+  //USERID INFO
+  userProfile: UserProfile | null;
+  setUserProfile: (profile: UserProfile | ((prev: UserProfile | null) => UserProfile)) => void;
+
+  syncHistory: SyncData[] | null;
+  setSyncHistory: (data: SyncData[] | ((prev: SyncData[] | null) => SyncData[])) => void;
+
+  fitnessHistory: {};
+  setFitnessHistory: (data: { [date: string]: FitnessSyncData }) => void;
+
+  latestSync: any | null;
+  setLatestSync: (sync: any) => void;
+
+  latestFitnessSync: any | null;
+  setLatestFitnessSync: (sync: any) => void;
+
+
+  //FITNESS INFO
+  temporaryFitnessSync: any | null;
+  setTemporaryFitnessSync: (data: {
+    profileSlot: string;
+    bodygroup: string;
+  }) => void;
+
+  liftIndex: Record<string, any>;
+  setLiftIndex: (
+    value: Record<string, any> | ((prev: Record<string, any>) => Record<string, any>)
+  ) => void;
+
+  workoutSessionData: WorkoutSessionData;
+  setWorkoutSessionData: (
+    updater: WorkoutSessionData | ((prev: WorkoutSessionData) => WorkoutSessionData)
+  ) => void;
+
+  activeSessionStatus: boolean;
+  setActiveSessionStatus: (value: boolean) => void;
+
+  //OVERVIEW INFO
+  selectedSector2: string;
+  setSelectedSector2: (value: string) => void;
+
+  pageDefault: string;
+  selectedPage: string;
+  setSelectedPage: (value: string) => void;
+
+  HomeDefault: string;
+  selectedHomePage: string;
+  setSelectedHomePage: (value: string) => void;
+
+  //CONTROL HUB INFO
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+
+  //SYNC INFO
+  hasDawnSyncedToday: boolean;
+  setHasDawnSyncedToday: (value: boolean) => void;
+
+  hasDuskSyncedToday: boolean;
+  setHasDuskSyncedToday: (value: boolean) => void;
+
+  hasFitnessSyncedToday: boolean;
+  setHasFitnessSyncedToday: (value: boolean) => void;
+
+  //SYNC INFO
+  DawnPoints: number;
+  setDawnPoints: (value: number) => void;
+
+  DuskPoints: number;
+  setDuskPoints: (value: number) => void;
+
+  FitnessPoints: number;
+  setFitnessPoints: (value: number) => void;
+
+};
+
+//WORKOUT DATABASE
+export type WorkoutSessionData = {
+  movements: MovementEntry[];
+}
+
+export type MovementEntry = {
+  name: string;
+  sets: SetEntry[];
+}
+
+export type SetEntry = {
+  setId: string;
+  reps: number;
+  liftWeight_lbs?: number;
+  liftWeight_kg?: number;
+  isDropset?: boolean;
+  parentSetId?: string;
+  locked?: boolean;
+}
+////////
+
+type WorkoutSessionData2 = Record<
+  string, // movement name
+  Record<
+    string, // set key (set1, set2)
+    {
+      reps?: number;
+      liftWeight_lbs?: number;
+      liftWeight_kg?: number;
+      locked?: boolean;
+      dropset?: boolean;
+      dropsets?: Record<
+        string, // drop key (drop1, drop2)
+        {
+          reps?: number;
+          liftWeight_lbs?: number;
+          liftWeight_kg?: number;
+          locked?: boolean;
+        }
+      >;
+    }
+  >
+>;
+
+
+export type MovementLog = {
+  name: string;
+  setRecords: {
+    [setKey: number]: {
+      liftWeight_lbs: number;
+      liftWeight_kg: number;
+      reps: number;
+      locked: boolean;
+      dropset: boolean;
+      dropsets: {
+        [dropKey: number]: {
+          liftWeight_lbs: number;
+          liftWeight_kg: number;
+          reps: number;
+          locked: boolean;
         };
       };
     };
   };
+};
 
 //LATEST SYNC
 export type SyncData = {
@@ -68,7 +181,7 @@ export type SyncData = {
   dawnTimestamp?: any;
   duskTimestamp?: any;
   timestamp?: any;
-}
+};
 
 //LATEST FITNESS SYNC
 export type FitnessSyncData = {
@@ -78,30 +191,57 @@ export type FitnessSyncData = {
   completed: boolean;
   StartTime: any;
   EndTime: any;
-  sessionData: any;
-}
+  sessionData: SessionData;
+};
 
-export type GoalSyncData ={
+export type SessionData = {
+  [movementName: string]: {
+    [setKey: string]: SetEntry;
+  };
+};
+
+export type SetEntry2 = {
+  liftWeight_lbs: number | undefined;
+  liftWeight_kg: number | undefined;
+  reps: number | undefined;
+  locked: boolean;
+  dropset: boolean;
+  dropsets: {
+    [dropKey: string]: DropSetEntry;
+  };
+};
+
+export type DropSetEntry = {
+  liftWeight_lbs: number | undefined;
+  liftWeight_kg: number | undefined;
+  reps: number | undefined;
+  locked: boolean;
+};
+
+
+
+
+export type GoalSyncData = {
   liftWeight_lbs: number;
   liftWeight_kg: number;
   movements: any[];
-}
+};
 
-export type NutritionSyncData={
+export type NutritionSyncData = {
   liftWeight_lbs: number;
   liftWeight_kg: number;
   movements: any[];
-}
+};
 
 //CUSTOM SETTINGS
-export type CustomSettingsData= {
+export type CustomSettingsData = {
   background: string;
   navIcon: string;
   lightMode: boolean;
-}
+};
 
 //FITNESSETTINGS
-export type FitnessSettingsData= {
+export type FitnessSettingsData = {
   currentSplit: string;
   lastBodygroup: string;
   fitnessToken: boolean;
@@ -109,52 +249,52 @@ export type FitnessSettingsData= {
   totalWorkouts: number;
   totalPRs: number;
   liftIndex: LiftIndexData;
-}
+};
 
 export type LiftIndexData = {
   [bodygroup: string]: BodygroupProfile;
-}
+};
 
 //LIFT PROFILE INFO
-export type Profile= {
+export type Profile = {
   name: string;
   movements: string[];
-}
+};
 
 //BODYGROUP PROFILE INFO
-export type BodygroupProfile ={
+export type BodygroupProfile = {
   profile1?: Profile;
   profile2?: Profile;
   profile3?: Profile;
 }
 
 //DAILY GOAL SETTINGS
-export type DailyGoalSettingsData ={
+export type DailyGoalSettingsData = {
   dailyGoalToken: boolean;
-}
+};
 
 //NUTRITION SETTINGS
-export type NutritionSettingsData ={
+export type NutritionSettingsData = {
   calorieGoal: number;
   nutritionToken: boolean;
-}
+};
 //PULSE DROP SETTINGS
-export type PulseMemoryData ={
+export type PulseMemoryData = {
   v1_welcomeDrop: boolean;
   v2_updateDrop1: boolean;
   Thanks4UpgradeDrop: boolean;
-}
+};
 
-export type PulseSettingsData= {
+export type PulseSettingsData = {
   pulseMemory: PulseMemoryData;
   receivePulseDrops: boolean;
   tutorialDrops: boolean;
   motivationDrops: boolean;
   humourDrops: boolean;
-}
+};
 
 // THE ONE AND ONLY USER PROFILE
-export type UserProfile ={
+export type UserProfile = {
   name: string;
   age: number;
   email: string;
@@ -185,7 +325,7 @@ export type UserProfile ={
   //COLLECTIONS
   latestSync?: SyncData;
   latestFitnessSync?: FitnessSyncData;
-}
+};
 
 
 export type AllTypes = {

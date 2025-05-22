@@ -1,5 +1,8 @@
 "use client";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 import { useState, useEffect } from "react";
 import ControlHubMenu from './ControlHubMenu';
 import { Crown, Flame, Zap, Star, Shield, Atom, Heart, Bird } from 'lucide-react';
@@ -12,8 +15,8 @@ export default function ControlHub() {
     setIsOpen(next);
   };
 
-
-  const userProfile = useGlobalData((s) => s.userProfile);
+  const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+  const userProfile = userProfileSTORE
 
   const LucideIconMap: Record<string, React.ElementType> = {
     Atom: Atom,

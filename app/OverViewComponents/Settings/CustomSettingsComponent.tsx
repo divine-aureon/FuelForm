@@ -1,18 +1,24 @@
 'use client';
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import useAuth from "@/lib/useAuth";
-import useCoreData from "@/lib/hooks/CoreData";
-import { EstablishConnection } from "../../initializing/Global/EstablishConnection";
+
+
 
 
 
 
 export default function SettingsPageComponent() {
-    const userProfile = useGlobalData((s) => s.userProfile);
+
+        const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfile = userProfileSTORE
+    const setUserProfile = useGlobalData((s) => s.setUserProfile);
 
     const router = useRouter();
     const [status, setStatus] = useState("");
@@ -51,7 +57,7 @@ export default function SettingsPageComponent() {
         if (status === "success") {
             const timeout = setTimeout(() => {
 
-                window.location.reload(); // hard refresh
+                router.push('/initializing');
             }, 0);
 
             return () => clearTimeout(timeout);
