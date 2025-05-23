@@ -1,6 +1,6 @@
 "use client";
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from 'react';
 import NavMenuPublic from './ControlHubMenuPublic';

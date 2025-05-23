@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Fingerprint } from 'lucide-react';
 import NavPortalPublic from "./ControlHubPublic/ControlHubBarPublic"
-import HomeLoad from "@/app/initializing/LoadingComponents/HomeLoad";
+import HomeLoad from "@/app/LoadingComponents/HomeLoad";
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
 import { motion, AnimatePresence } from "framer-motion";
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 import LoginComponent from "./LoginPage"
 import RegisterComponent from "./RegisterPage"
 import AboutComponent from "./AboutPage"

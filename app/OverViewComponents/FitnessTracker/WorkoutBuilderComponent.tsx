@@ -1,9 +1,9 @@
 "use client";
 
 
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { AllTypes, TypeManifest, UserProfile, LiftIndexData, FitnessSettingsData } from "@/app/initializing/Global/BodySyncManifest";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile, LiftIndexData, FitnessSettingsData } from "@/app/Global/BodySyncManifest";
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -43,6 +43,10 @@ export default function CoreStackComponent() {
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const dateString = `${yyyy}-${mm}-${dd}`;
+
+    //QUARTER STRING
+    const quarter = Math.floor((parseInt(mm) - 1) / 3) + 1;
+    const quarterString = `Q${quarter}-${yyyy}`;
 
     const [activeSplit, setActiveSplit] = useState("");
     const [activeBodygroup, setActiveBodygroup] = useState("");
@@ -306,14 +310,40 @@ export default function CoreStackComponent() {
                                                         },
                                                     }, { merge: true });
 
-                                                    const strengthRef = collection(db, "users", user.uid, "fitness");
-                                                    const strengthDocRef = doc(strengthRef, dateString);
+                                                    const quarterDocRef = doc(db, "users", user.uid, "fitness", quarterString);
 
-                                                    // Set meta initialized
-                                                    await setDoc(strengthDocRef, {
-                                                        completed: false,
-                                                        EndTime: serverTimestamp(),
-                                                    }, { merge: true });
+                                                    await setDoc(
+                                                        quarterDocRef,
+                                                        {
+                                                            [dateString]: {
+                                                                id: dateString,
+                                                                quarterId: quarterString,
+
+                                                                completed: false,
+                                                                EndTime: serverTimestamp(),
+                                                            }
+                                                        },
+                                                        { merge: true }
+                                                    );
+
+
+
+                                                    const setFitnessHistorySTORE = getGlobalDataState().setFitnessHistorySTORE;
+                                                    const fitnessHistorySTORE = getGlobalDataState().fitnessHistorySTORE;
+                                                    const latestHistory = fitnessHistorySTORE?.[dateString];
+                                                    const { [dateString as keyof typeof fitnessHistorySTORE]: _, ...restOfHistory } = fitnessHistorySTORE;
+
+                                                    setFitnessHistorySTORE({
+                                                        ...restOfHistory,
+                                                        [dateString as keyof typeof fitnessHistorySTORE]: {
+                                                            ...latestHistory,
+                                                            completed: false,
+                                                            EndTime: serverTimestamp(),
+                                                        }
+                                                    });
+
+
+
                                                     setActiveSessionWarningSeen(false);
                                                     setActiveSessionStatus(false);
                                                     setWorkoutSessionData({ movements: [] });
@@ -554,6 +584,7 @@ export default function CoreStackComponent() {
                                         onClick={async () => {
                                             if (!user) return;
 
+
                                             const userRef = doc(db, "users", user.uid);
 
                                             // Set meta initialized
@@ -566,17 +597,24 @@ export default function CoreStackComponent() {
                                                 },
                                             }, { merge: true });
 
-                                            const strengthRef = collection(db, "users", user.uid, "fitness");
-                                            const strengthDocRef = doc(strengthRef, dateString);
+                                            const quarterDocRef = doc(db, "users", user.uid, "fitness", quarterString);
 
-                                            // Set meta initialized
-                                            await setDoc(strengthDocRef, {
-                                                split: activeSplit,
-                                                bodygroup: activeBodygroup,
-                                                whichProfile: activeProfile,
-                                                completed: false,
-                                                StartTime: serverTimestamp(),
-                                            }, { merge: true });
+                                            await setDoc(
+                                                quarterDocRef,
+                                                {
+                                                    [dateString]: {
+                                                        id: dateString,
+                                                        quarterId: quarterString,
+
+                                                        split: activeSplit,
+                                                        bodygroup: activeBodygroup,
+                                                        whichProfile: activeProfile,
+                                                        completed: false,
+                                                        StartTime: serverTimestamp(),
+                                                    }
+                                                },
+                                                { merge: true }
+                                            );
 
 
                                             const setLatestFitnessSyncSTORE = getGlobalDataState().setLatestFitnessSyncSTORE;
@@ -589,6 +627,25 @@ export default function CoreStackComponent() {
                                                 completed: false,
                                                 StartTime: serverTimestamp(),
                                             });
+
+
+                                            const setFitnessHistorySTORE = getGlobalDataState().setFitnessHistorySTORE;
+                                            const fitnessHistorySTORE = getGlobalDataState().fitnessHistorySTORE;
+                                            const latestHistory = fitnessHistorySTORE?.[dateString];
+                                            const { [dateString as keyof typeof fitnessHistorySTORE]: _, ...restOfHistory } = fitnessHistorySTORE;
+
+                                            setFitnessHistorySTORE({
+                                                ...fitnessHistorySTORE,
+                                                [dateString as keyof typeof fitnessHistorySTORE]: {
+                                                    id: dateString,
+                                                    split: activeSplit,
+                                                    bodygroup: activeBodygroup,
+                                                    whichProfile: activeProfile,
+                                                    completed: false,
+                                                    StartTime: serverTimestamp(),
+                                                }
+                                            }
+                                            );
 
                                             setSelectedPage("RepSync");
                                             setActiveSessionStatus(true);

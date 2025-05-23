@@ -1,7 +1,7 @@
 'use client';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../../Global/BodySyncManifest"
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -57,7 +57,7 @@ export default function SettingsPageComponent() {
         if (status === "success") {
             const timeout = setTimeout(() => {
 
-                router.push('/initializing');
+                router.push('/syncing');
             }, 0);
 
             return () => clearTimeout(timeout);

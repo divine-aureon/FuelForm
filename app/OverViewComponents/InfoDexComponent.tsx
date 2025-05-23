@@ -8,9 +8,9 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import CancelButton from "@/app/OverViewComponents/CustomerPortal/CancelButton"
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../Global/BodySyncManifest"
 
 export default function InfoDexComponent() {
 

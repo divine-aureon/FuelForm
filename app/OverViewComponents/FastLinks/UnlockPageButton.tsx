@@ -1,7 +1,7 @@
 
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import type { UserProfile } from "../../Global/BodySyncManifest"
 import { AutoClamp } from "@/lib/hooks/AutoClamp";
 import { ListChecks } from "lucide-react";
 import Link from "next/link";

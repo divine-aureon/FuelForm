@@ -7,8 +7,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 
 declare global {
   interface Window {
@@ -137,6 +137,7 @@ export default function RegisterComponent() {
         height_ft_in: { feet: finalFeet, inches: finalInches },
         age,
         isPaid: false,
+        token: false,
         createdAt: serverTimestamp(),
         customSettings: {
           background: "NeuralLink",
@@ -292,7 +293,7 @@ export default function RegisterComponent() {
       });
 
       setLoading(true);
-      router.push('/initializing');
+      router.push('/syncing');
 
     } catch (err: any) {
       setError(err.message || "Something went wrong.");

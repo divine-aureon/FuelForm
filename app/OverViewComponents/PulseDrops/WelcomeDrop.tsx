@@ -3,9 +3,9 @@ import { updateDoc, doc, setDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import useAuth from '@/lib/useAuth'
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState  } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../../Global/BodySyncManifest"
 
 export default function WelcomeDrop() {
            const userProfileSTORE = getGlobalDataState().userProfileSTORE;

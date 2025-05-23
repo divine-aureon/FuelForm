@@ -6,11 +6,11 @@ import { collection, getDocs, getDoc, addDoc, setDoc, updateDoc, doc, query, whe
 import useAuth from "@/lib/useAuth";
 import { useRouter } from "next/navigation";
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 import { Sun, Moon, Lock, Sprout, Rotate3d, CircleArrowLeft, CircleArrowRight, SmilePlus, Dumbbell, Utensils, ListChecks, StepForward, StepBack } from "lucide-react";
 import RecentWorkoutsModal from "../../OverViewComponents/FitnessTracker/RecentWorkoutsModal"
-import { AllTypes, TypeManifest, UserProfile, WorkoutSessionData, SetEntry, MovementEntry } from "@/app/initializing/Global/BodySyncManifest";
+import { UserProfile, WorkoutSessionData, SetEntry, MovementEntry } from "@/app/Global/BodySyncManifest";
 
 
 
@@ -94,6 +94,9 @@ export default function RepSync() {
   const dd = String(today.getDate()).padStart(2, "0");
   const dateString = `${yyyy}-${mm}-${dd}`;
 
+  //QUARTER STRING
+  const quarter = Math.floor((parseInt(mm) - 1) / 3) + 1;
+  const quarterString = `Q${quarter}-${yyyy}`;
 
   //check split steps
 
@@ -551,8 +554,10 @@ export default function RepSync() {
                   },
                 }, { merge: true });
 
-                const fitRef = collection(db, "users", user.uid, "fitness");
-                const fitDocRef = doc(fitRef, dateString);
+
+
+                const quarterDocRef = doc(db, "users", user.uid, "fitness", quarterString);
+
 
                 const cleanedWorkout: WorkoutSessionData = {
                   movements: workoutSessionData.movements.map((movement: MovementEntry) => ({
@@ -561,23 +566,51 @@ export default function RepSync() {
                   })).filter((m: MovementEntry) => m.sets.length > 0)
                 };
 
-                // Set meta initialized
-                await setDoc(fitDocRef, {
-                  completed: true,
-                  fitnessSync: true,
-                  sessionData: cleanedWorkout,
-                  EndTime: serverTimestamp(),
-                }, { merge: true });
+                await setDoc(
+                  quarterDocRef,
+                  {
+                    [dateString]: {
+                      id: dateString,
+                      quarterId: quarterString,
+
+                      completed: true,
+                      fitnessSync: true,
+                      sessionData: cleanedWorkout,
+                      EndTime: serverTimestamp(),
+                    }
+                  },
+                  { merge: true }
+                );
 
                 const setLatestFitnessSyncSTORE = getGlobalDataState().setLatestFitnessSyncSTORE;
                 const latest = getGlobalDataState().latestFitnessSyncSTORE;
 
                 setLatestFitnessSyncSTORE({
                   ...latest,
+                  id: dateString,
+                  quarterId: quarterString,
                   completed: true,
                   fitnessSync: true,
                   sessionData: cleanedWorkout,
                   EndTime: serverTimestamp(),
+                });
+
+                const setFitnessHistorySTORE = getGlobalDataState().setFitnessHistorySTORE;
+                const fitnessHistorySTORE = getGlobalDataState().fitnessHistorySTORE;
+                const latestHistory = fitnessHistorySTORE?.[dateString];
+                const { [dateString as keyof typeof fitnessHistorySTORE]: _, ...restOfHistory } = fitnessHistorySTORE;
+
+                setFitnessHistorySTORE({
+                  ...restOfHistory,
+                  [dateString as keyof typeof fitnessHistorySTORE]: {
+                    ...latestHistory,
+                    id: dateString,
+                    quarterId: quarterString,
+                    completed: true,
+                    fitnessSync: true,
+                    sessionData: cleanedWorkout,
+                    EndTime: serverTimestamp(),
+                  }
                 });
 
                 window.location.reload();

@@ -1,8 +1,8 @@
 'use client';
 //DUAL STATES DATABASE & GLOBALDATA ACCISABILITY
-import { getGlobalDataState } from "../initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import type { UserProfile } from "../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "../Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import type { UserProfile } from "../Global/BodySyncManifest"
 
 //MISC..
 import { useState, useEffect } from "react";
@@ -19,9 +19,7 @@ import { Sun, Moon, Lock, Sprout, CircleCheckBig, Rotate3d, CircleArrowLeft, Cir
 import DawnSyncComponent from "../OverViewComponents/Sync/DawnSyncComponent";
 import DuskSyncComponent from "../OverViewComponents/Sync/DuskSyncComponent";
 import ControlHub from "../OverViewComponents/ControlHub/ControlHubBar";
-import SyncReport from "../OverViewComponents/SyncReport/SyncReportsPage";
-import SyncReportNEW from "../OverViewComponents/SyncReport/SyncReportsPageNEW";
-import SyncReportStartup from "../OverViewComponents/SyncReport/SyncReportStartup";
+import SyncReportNEW from "../OverViewComponents/SyncReport/SyncReportsPage";
 import SyncSimulator from "../OverViewComponents/SyncSimulatorPage";
 import Crowns from "../OverViewComponents/CrownsPage";
 import InfoDex from "../OverViewComponents/InfoDexPage";
@@ -47,8 +45,8 @@ import useDawnSyncPoints from '@/app/OverViewComponents/Sync/hasDawnSynced';
 import useDuskSyncPoints from '@/app/OverViewComponents/Sync/hasDuskSynced';
 import useFitnessSyncPoints from '@/app/OverViewComponents/Sync/hasFitnessSynced';
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
-import NavLoad from "../initializing/LoadingComponents/NavLoad"
-import SystemInit from "../initializing/LoadingComponents/SystemInit"
+import NavLoad from "../LoadingComponents/NavLoad"
+import SystemInit from "../LoadingComponents/SystemInit"
 
 //PULSE DROP COMPONENT
 import BirthdayDrop from "../OverViewComponents/PulseDrops/BirthdayDrop";
@@ -485,7 +483,7 @@ console.warn("USER PROFILE:", getGlobalDataState().userProfileSTORE);
                   transition={{ duration: 0.2 }}>
                   <>
 
-                    <SyncReportStartup />
+                    <SyncReportNEW />
 
                   </>
                 </motion.div>)}

@@ -1,10 +1,13 @@
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 import { format } from "date-fns";
+import FitHistoryComponent from "./FitHistoryComponent"
 
 export default function RecentWorkoutsModal({ isWorkoutsOpen, onWorkoutsClose }: { isWorkoutsOpen: boolean; onWorkoutsClose: () => void }) {
 
-    const fitnessHistory = useGlobalData((s) => s.fitnessHistory); // full fitness collection from ZenState
+    const fitnessHistorySTORE = getGlobalDataState().fitnessHistorySTORE;
+
+    const fitnessHistory = fitnessHistorySTORE;
 
     const recentSessions = Object.entries(fitnessHistory || {})
         .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
@@ -20,33 +23,7 @@ export default function RecentWorkoutsModal({ isWorkoutsOpen, onWorkoutsClose }:
                     <button onClick={onWorkoutsClose} className="text-sm hover:underline text-white/60">Close</button>
                 </div>
 
-                {recentSessions.map(([date, session]: any) => (
-                    <div key={date} className="mb-4">
-                        <h3 className="text-lg font-semibold">{format(new Date(date), "MMM d, yyyy")}</h3>
-                        {Object.entries(session)
-                            .filter(([key]) => ![
-                                "split",
-                                "completed",
-                                "fitnessSync",
-                                "StartTime",
-                                "EndTime",
-                                "whichProfile",
-                                "bodygroup"
-                            ].includes(key))
-                            .map(([movement, sets]: any) => (
-                                <div key={movement} className="ml-2 mt-1">
-                                    <p className="font-semibold">{movement}</p>
-                                    {Object.entries(sets).map(([setKey, setData]: any) => (
-                                        <p key={setKey} className="text-sm ml-2">
-                                            Set {setKey}: {setData.reps} reps @ {setData.liftWeight_lbs} lbs
-                                            {setData.locked && " (Locked)"}
-                                        </p>
-                                    ))}
-                                </div>
-                            ))}
-
-                    </div>
-                ))}
+                <FitHistoryComponent />
             </div>
         </div>
     );

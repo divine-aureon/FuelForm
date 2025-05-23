@@ -1,13 +1,13 @@
 'use client';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 import { doc, getDoc, collection } from "firebase/firestore";
 import { subDays, format } from "date-fns";
 import { db } from "@/lib/firebase"; // adjust if needed
 import { useState, useEffect } from "react";
 import useAuth from '@/lib/useAuth';
 import { getDocs, limit, orderBy, query, where } from "firebase/firestore";
-import { UserProfile } from "@/app/initializing/Global/BodySyncManifest";
+import { UserProfile } from "@/app/Global/BodySyncManifest";
 
 export function BuildEnergyData(latestSync: any) {
 

@@ -1,7 +1,7 @@
 'use client';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../../Global/BodySyncManifest"
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,6 +20,10 @@ export default function DuskSyncComponent() {
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
     const setLatestSyncSTORE = getGlobalDataState().setLatestSyncSTORE;
     const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
+
+    const setSyncHistorySTORE = getGlobalDataState().setSyncHistorySTORE;
+    const syncHistorySTORE = getGlobalDataState().syncHistorySTORE;
+
     const latestSync = latestSyncSTORE;
 
     const router = useRouter();
@@ -35,6 +39,10 @@ export default function DuskSyncComponent() {
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const dateString = `${yyyy}-${mm}-${dd}`;
+
+    //QUARTER STRING
+    const quarter = Math.floor((parseInt(mm) - 1) / 3) + 1;
+    const quarterString = `Q${quarter}-${yyyy}`;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,24 +70,38 @@ export default function DuskSyncComponent() {
                 });
 
             const userId = auth.currentUser!.uid;
-            const syncRef = collection(db, "users", userId, "syncs");
-            const syncDocRef = doc(syncRef, dateString);
+            const quarterDocRef = doc(db, "users", userId, "syncs", quarterString);
 
-            await setDoc(syncDocRef, {
-                steps: parsedSteps,
-                exerciseMinutes: parsedExerciseMinutes,
-                exerciseIntensity: exerciseIntensity.toLowerCase(),
-                vitamins,
-                minerals,
-                activeMacros,
-                activeTDEE,
-                duskSync: true,
-                duskTimestamp: serverTimestamp(),
-                timestamp: serverTimestamp(),
-            }, { merge: true });
+
+
+            await setDoc(
+                quarterDocRef,
+                {
+                    [dateString]: {
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        steps: parsedSteps,
+                        exerciseMinutes: parsedExerciseMinutes,
+                        exerciseIntensity: exerciseIntensity.toLowerCase(),
+                        vitamins,
+                        minerals,
+                        activeMacros,
+                        activeTDEE,
+                        duskSync: true,
+                        duskTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual"
+                    }
+                },
+                { merge: true }
+            );
+
             const latest = getGlobalDataState().latestSyncSTORE;
-            //const isToday = latestSync?.timestamp?.toISOString().startsWith(dateString);
-            //const isToday = latestSync?.timestamp?.toDate?.().toISOString().startsWith(dateString);
+            const latestHistory = syncHistorySTORE?.[dateString];
+            const { [dateString as keyof typeof syncHistorySTORE]: _, ...restOfHistory } = syncHistorySTORE;
+
 
             const isToday = latestSync?.id === dateString;
 
@@ -87,21 +109,9 @@ export default function DuskSyncComponent() {
                 // ✅ Safe to merge into today's sync
                 setLatestSyncSTORE({
                     ...latest,
-                    steps: parsedSteps,
-                    exerciseMinutes: parsedExerciseMinutes,
-                    exerciseIntensity: exerciseIntensity.toLowerCase(),
-                    vitamins,
-                    minerals,
-                    activeMacros,
-                    activeTDEE,
-                    duskSync: true,
-                    duskTimestamp: serverTimestamp(),
-                    timestamp: serverTimestamp(),
-                });
-            } else {
-                // 🚨 Not today's sync — don't merge. Just create a new object.
-                const newTodaySync = {
                     id: dateString,
+                    quarterId: quarterString,
+
                     steps: parsedSteps,
                     exerciseMinutes: parsedExerciseMinutes,
                     exerciseIntensity: exerciseIntensity.toLowerCase(),
@@ -111,10 +121,76 @@ export default function DuskSyncComponent() {
                     activeTDEE,
                     duskSync: true,
                     duskTimestamp: serverTimestamp(),
-                    timestamp: serverTimestamp(),
-                };
 
-                setLatestSyncSTORE(newTodaySync);
+                    updatedAt: serverTimestamp(),
+                    token: "manual"
+                });
+
+                setSyncHistorySTORE({
+                    ...restOfHistory,
+                    [dateString as keyof typeof syncHistorySTORE]: {
+                        ...latestHistory,
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        steps: parsedSteps,
+                        exerciseMinutes: parsedExerciseMinutes,
+                        exerciseIntensity: exerciseIntensity.toLowerCase(),
+                        vitamins,
+                        minerals,
+                        activeMacros,
+                        activeTDEE,
+                        duskSync: true,
+                        duskTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual"
+                    }
+                }
+                );
+
+            } else {
+
+                // 🚨 Not today's sync — don't merge. Just create a new object.
+                setLatestSyncSTORE({
+                    id: dateString,
+                    quarterId: quarterString,
+
+                    steps: parsedSteps,
+                    exerciseMinutes: parsedExerciseMinutes,
+                    exerciseIntensity: exerciseIntensity.toLowerCase(),
+                    vitamins,
+                    minerals,
+                    activeMacros,
+                    activeTDEE,
+                    duskSync: true,
+                    duskTimestamp: serverTimestamp(),
+
+                    updatedAt: serverTimestamp(),
+                    token: "manual"
+                });
+
+                setSyncHistorySTORE({
+                    ...syncHistorySTORE,
+                    [dateString as keyof typeof syncHistorySTORE]: {
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        steps: parsedSteps,
+                        exerciseMinutes: parsedExerciseMinutes,
+                        exerciseIntensity: exerciseIntensity.toLowerCase(),
+                        vitamins,
+                        minerals,
+                        activeMacros,
+                        activeTDEE,
+                        duskSync: true,
+                        duskTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual"
+                    }
+                }
+                );
             }
 
 
@@ -128,7 +204,7 @@ export default function DuskSyncComponent() {
     useEffect(() => {
         if (status === "success") {
             const timeout = setTimeout(() => {
-                //router.push('/initializing');
+                //router.push('');
                 setSelectedPage("bodysync");
             }, 0); // optional delay (1 second)
 

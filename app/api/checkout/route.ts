@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       allow_promotion_codes: true,
-      success_url: 'https://www.bodysync.online/initializing',
+      success_url: 'https://www.bodysync.online/syncing',
       cancel_url: 'https://www.bodysync.online/overview',
       metadata: {
         userId: uid

@@ -4,9 +4,9 @@ import { db } from '@/lib/firebase'
 import useAuth from '@/lib/useAuth'
 import useCoreData from "@/lib/hooks/CoreData";
 import PageFadeWrapper from "@/Backgrounds/PageFadeWrapper"
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState  } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../../Global/BodySyncManifest"
 
 export default function UpdateDrop1() {
 

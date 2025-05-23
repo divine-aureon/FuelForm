@@ -2,9 +2,9 @@
 import CoreData from "@/lib/hooks/CoreData"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState  } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import type { UserProfile } from "../../Global/BodySyncManifest"
 
 export default function LoadingComponent() {
 

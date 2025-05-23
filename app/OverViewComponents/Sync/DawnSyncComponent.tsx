@@ -1,8 +1,8 @@
 'use client';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
 
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import type { UserProfile, SyncData } from "../../initializing/Global/BodySyncManifest"
+import { useGlobalData } from "@/app/Global/GlobalData";
+import type { UserProfile, SyncData } from "../../Global/BodySyncManifest"
 
 
 import { useState, useEffect } from "react";
@@ -20,8 +20,13 @@ export default function DawnSyncComponent() {
     const [status, setStatus] = useState("");
     const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
+
     const setLatestSyncSTORE = getGlobalDataState().setLatestSyncSTORE;
     const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
+
+    const setSyncHistorySTORE = getGlobalDataState().setSyncHistorySTORE;
+    const syncHistorySTORE = getGlobalDataState().syncHistorySTORE;
+
     const latestSync = latestSyncSTORE;
 
     const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
@@ -41,6 +46,10 @@ export default function DawnSyncComponent() {
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const dateString = `${yyyy}-${mm}-${dd}`;
+
+    //QUARTER STRING
+    const quarter = Math.floor((parseInt(mm) - 1) / 3) + 1;
+    const quarterString = `Q${quarter}-${yyyy}`;
 
     const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -80,47 +89,43 @@ export default function DawnSyncComponent() {
 
             const userId = auth.currentUser!.uid;
             const userRef = doc(db, "users", user.uid);
-            const syncRef = collection(db, "users", userId, "syncs");
-            const syncDocRef = doc(syncRef, dateString);
+            const quarterDocRef = doc(db, "users", userId, "syncs", quarterString);
 
-            await setDoc(syncDocRef, {
-                weight_lbs,
-                weight_kg,
-                recoveryMacros,
-                vitamins,
-                minerals,
-                recoveryTDEE,
-                sleepQuality: sleepQuality || null,
-                sleepDuration: sleepDuration || null,
-                dawnSync: true,
-                dawnTimestamp: serverTimestamp(),
-                timestamp: serverTimestamp(),
-            }, { merge: true });
+            await setDoc(
+                quarterDocRef,
+                {
+                    [dateString]: {
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        weight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                        weight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
+                        recoveryMacros,
+                        vitamins,
+                        minerals,
+                        recoveryTDEE,
+                        sleepQuality: parseFloat(sleepQuality) || null,
+                        sleepDuration: parseFloat(sleepDuration) || null,
+                        dawnSync: true,
+                        dawnTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual",
+                    }
+                },
+                { merge: true }
+            );
 
             await setDoc(userRef, {
-                lastKnownWeight_lbs: weight_lbs,
-                lastKnownWeight_kg: weight_kg,
+                lastKnownWeight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                lastKnownWeight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
             }, { merge: true });
 
 
-            setLatestSyncSTORE({
-                ...getGlobalDataState().latestSyncSTORE,
-                weight_lbs,
-                weight_kg,
-                recoveryMacros,
-                vitamins,
-                minerals,
-                recoveryTDEE,
-                sleepQuality: sleepQuality || null,
-                sleepDuration: sleepDuration || null,
-                dawnSync: true,
-                dawnTimestamp: serverTimestamp(),
-                timestamp: serverTimestamp(),
-            });
-
             const latest = getGlobalDataState().latestSyncSTORE;
-            //const isToday2 = latestSync?.timestamp?.toISOString().startsWith(dateString);
-            // const isToday = latestSync?.timestamp?.toDate?.().toISOString().startsWith(dateString);
+            const latestHistory = syncHistorySTORE?.[dateString];
+            const { [dateString as keyof typeof syncHistorySTORE]: _, ...restOfHistory } = syncHistorySTORE;
+
 
             const isToday = latestSync?.id === dateString;
 
@@ -128,36 +133,91 @@ export default function DawnSyncComponent() {
                 // ✅ Safe to merge into today's sync
                 setLatestSyncSTORE({
                     ...latest,
-                    weight_lbs,
-                    weight_kg,
+                    id: dateString,
+                    quarterId: quarterString,
+
+                    weight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                    weight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
                     recoveryMacros,
                     vitamins,
                     minerals,
                     recoveryTDEE,
-                    sleepQuality: sleepQuality || null,
-                    sleepDuration: sleepDuration || null,
+                    sleepQuality: parseFloat(sleepQuality) || null,
+                    sleepDuration: parseFloat(sleepDuration) || null,
                     dawnSync: true,
                     dawnTimestamp: serverTimestamp(),
-                    timestamp: serverTimestamp(),
+
+                    updatedAt: serverTimestamp(),
+                    token: "manual",
                 });
+
+                setSyncHistorySTORE({
+                    ...restOfHistory,
+                    [dateString as keyof typeof syncHistorySTORE]: {
+                        ...latestHistory,
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        weight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                        weight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
+                        recoveryMacros,
+                        vitamins,
+                        minerals,
+                        recoveryTDEE,
+                        sleepQuality: parseFloat(sleepQuality) || null,
+                        sleepDuration: parseFloat(sleepDuration) || null,
+                        dawnSync: true,
+                        dawnTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual",
+                    }
+                }
+                );
+
             } else {
                 // 🚨 Not today's sync — don't merge. Just create a new object.
-                const newTodaySync = {
+                setLatestSyncSTORE({
                     id: dateString,
-                    weight_lbs,
-                    weight_kg,
+                    quarterId: quarterString,
+
+                    weight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                    weight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
                     recoveryMacros,
                     vitamins,
                     minerals,
                     recoveryTDEE,
-                    sleepQuality: sleepQuality || null,
-                    sleepDuration: sleepDuration || null,
+                    sleepQuality: parseFloat(sleepQuality) || null,
+                    sleepDuration: parseFloat(sleepDuration) || null,
                     dawnSync: true,
                     dawnTimestamp: serverTimestamp(),
-                    timestamp: serverTimestamp(),
-                };
 
-                setLatestSyncSTORE(newTodaySync);
+                    updatedAt: serverTimestamp(),
+                    token: "manual",
+                });
+
+                setSyncHistorySTORE({
+                    ...syncHistorySTORE,
+                    [dateString as keyof typeof syncHistorySTORE]: {
+                        id: dateString,
+                        quarterId: quarterString,
+
+                        weight_lbs: Math.round(parseFloat(weight_lbs) * 100) / 100,
+                        weight_kg: Math.round(parseFloat(weight_kg) * 100) / 100,
+                        recoveryMacros,
+                        vitamins,
+                        minerals,
+                        recoveryTDEE,
+                        sleepQuality: parseFloat(sleepQuality) || null,
+                        sleepDuration: parseFloat(sleepDuration) || null,
+                        dawnSync: true,
+                        dawnTimestamp: serverTimestamp(),
+
+                        updatedAt: serverTimestamp(),
+                        token: "manual",
+                    }
+                }
+                );
             }
 
 
@@ -174,7 +234,7 @@ export default function DawnSyncComponent() {
         if (status === "success") {
 
             const timeout = setTimeout(() => {
-                //router.push('/initializing');
+                //router.push('');
                 setSelectedPage("bodysync");
             }, 0); // optional delay (1 second)
 

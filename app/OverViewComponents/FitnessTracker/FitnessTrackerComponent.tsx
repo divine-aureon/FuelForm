@@ -1,7 +1,7 @@
 "use client";
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import type { UserProfile, LiftIndexData, FitnessSettingsData } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import type { UserProfile, LiftIndexData, FitnessSettingsData } from "../../Global/BodySyncManifest"
 
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
@@ -163,7 +163,7 @@ export default function StrengthArchive() {
                 >
                   <div>
                     <div className="relative h-32 bg-[url('/images/menus/strength2.jpg')] bg-cover bg-center bg-no-repeat rounded-2xl border 
-        border-white/30 shadow-xl text-white text-5xl glowing-button mb-2">
+        border-white/30 shadow-xl text-white text-5xl glowing-button mb-4 ">
                       <div className="absolute flex flex-col pb-2 items-center bg-indigo-500/30 justify-center inset-0 text-center rounded-xl">
                         <div className="flex items-center gap-2 pulse-glow">Fitness History</div>
                         <h2 className="text-lg font-bold text-white">

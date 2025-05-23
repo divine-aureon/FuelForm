@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { CircleAlert, CircleOff } from "lucide-react";
 import useTodaysSync from '@/app/OverViewComponents/Sync/hasDawnSynced'
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 
 export default function OverrideComponent() {
 

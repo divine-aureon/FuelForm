@@ -1,7 +1,7 @@
 'use client';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile, SyncsFlatMap } from "../../Global/BodySyncManifest"
 import React from "react";
 import { useEffect, useState } from 'react';
 import useAuth from '@/lib/useAuth';
@@ -11,43 +11,24 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollLoad from "@/Backgrounds/ScrollLoad"
 
-export default function SyncReport() {
-
-  const userProfile = useGlobalData().userProfile as UserProfile;
+export default function SyncReportNEW() {
 
   //USER PROFILE INFO
-  const { user } = useAuth();
+
   const [stats, setStats] = useState<any>(null);
 
+  const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+  const profile = userProfileSTORE;
+
+  const syncHistorySTORE = getGlobalDataState().syncHistorySTORE;
+  const syncs = syncHistorySTORE;
+
+
   useEffect(() => {
-    if (!user) return;
+    if (!syncs) return;
+    setStats({ profile: profile, syncs: syncs, });
+  }, []);
 
-    const fetchStats = async () => {
-      const userRef = doc(db, 'users', user.uid);
-      const syncsRef = collection(db, 'users', user.uid, 'syncs');
-
-      const [profileSnap, syncsSnap] = await Promise.all([
-        getDoc(userRef),
-        getDocs(syncsRef),
-      ]);
-
-      const profileData = profileSnap.exists() ? profileSnap.data() : null;
-
-      const allSyncs = syncsSnap.docs.map(doc => ({
-        id: doc.id,           // e.g., "2025-05-03"
-        date: doc.id,         // same as id; this is your date
-        ...doc.data(),        // spread the rest (weight, TDEE, etc)
-      }))
-        .sort((a, b) => b.date.localeCompare(a.date)); // Newest to oldest
-
-      setStats({
-        profile: profileData,
-        syncs: allSyncs,
-      });
-    };
-
-    fetchStats();
-  }, [user]);
 
   //WEIGHT ARRAY//
 
@@ -63,23 +44,27 @@ export default function SyncReport() {
 
   type SyncEntry = {
     date: string;
-    weight: string | number;
+    weight: number | null;
     unit: string;
   };
 
-  const SyncArray: SyncEntry[] = stats?.syncs?.map((sync: any) => ({
-    date: sync.id,
-    weight:
-      weightUnit === "lbs"
-        ? Number(sync.weight_lbs) && !isNaN(Number(sync.weight_lbs))
-          ? Number(Number(sync.weight_lbs).toFixed(1))
-          : "[n/a]"
-        : Number(sync.weight_kg) && !isNaN(Number(sync.weight_kg))
-          ? Number(Number(sync.weight_kg).toFixed(1))
-          : "[n/a]",
-    unit: weightUnit,
+  const rawSyncArray = Object.values(stats?.syncs || {}) as { id: string }[];
 
-  }));
+  const SyncArray: SyncEntry[] = rawSyncArray
+    .sort((a, b) => b.id.localeCompare(a.id))
+    .map((sync: any) => ({
+      date: sync.id,
+      weight:
+        weightUnit === "lbs"
+          ? typeof sync.weight_lbs === "number"
+            ? Number(sync.weight_lbs.toFixed(1))
+            : null
+          : typeof sync.weight_kg === "number"
+            ? Number(sync.weight_kg.toFixed(1))
+            : null,
+      unit: weightUnit,
+    }));
+
 
   const weightValues = (SyncArray || [])
     .filter(entry => typeof entry.weight === "number")
@@ -99,7 +84,20 @@ export default function SyncReport() {
     ? [...new Set(SyncArray.map(entry => entry.date.slice(0, 7)))]
     : [];
 
-  const chartWeightData = [...filteredSyncArray].reverse();
+  const reverseWeightArray = [...filteredSyncArray].reverse();
+
+  let lastWeight: number | null = null;
+  const filledWeightArray = reverseWeightArray.map(entry => {
+    if (entry.weight === null) {
+      return { ...entry, weight: lastWeight };
+    } else {
+      lastWeight = entry.weight;
+      return entry;
+    }
+  });
+
+
+
 
   //SLEEP HOURS ARRAY//
 
@@ -110,10 +108,16 @@ export default function SyncReport() {
     sleepDuration: string | number;
   };
 
-  const SleepSyncArray: SleepSyncEntry[] = stats?.syncs?.map((sync: any) => ({
-    date: sync.id,
-    sleepDuration: Number(sync.sleepDuration) ?? 0,
-  }));
+  const rawSleepArray = Object.values(stats?.syncs || {}) as { id: string; sleepDuration?: number }[];
+
+  const SleepSyncArray: SleepSyncEntry[] = rawSleepArray
+    .sort((a, b) => b.id.localeCompare(a.id)) // Oldest → Newest
+    .map((sync) => ({
+      date: sync.id,
+      sleepDuration: typeof sync.sleepDuration === "number" ? sync.sleepDuration : 0,
+    }));
+
+
 
   const sleepValues = (SleepSyncArray || [])
     .filter(entry => typeof entry.sleepDuration === "number")
@@ -133,8 +137,8 @@ export default function SyncReport() {
     ? [...new Set(SleepSyncArray.map(entry => entry.date.slice(0, 7)))]
     : [];
 
-  const chartSleepData = [...filteredSleepSyncArray].reverse();
 
+  const reverseSleepArray = [...filteredSleepSyncArray].reverse();
 
 
 
@@ -147,10 +151,16 @@ export default function SyncReport() {
     steps: string | number;
   };
 
-  const StepSyncArray: StepSyncEntry[] = stats?.syncs?.map((sync: any) => ({
-    date: sync.id,
-    steps: Number(sync.steps) ?? 0,
-  }));
+  const rawStepArray = Object.values(stats?.syncs || {}) as { id: string; steps?: number }[];
+
+  const StepSyncArray: StepSyncEntry[] = rawStepArray
+    .sort((a, b) => b.id.localeCompare(a.id)) // Oldest → Newest
+    .map((sync) => ({
+      date: sync.id,
+      steps: typeof sync.steps === "number" ? sync.steps : 0,
+    }));
+
+
 
   const stepValues = (StepSyncArray || [])
     .filter(entry => typeof entry.steps === "number")
@@ -170,7 +180,10 @@ export default function SyncReport() {
     ? [...new Set(StepSyncArray.map(entry => entry.date.slice(0, 7)))]
     : [];
 
-  const chartStepData = [...filteredStepSyncArray].reverse();
+
+  const reverseStepsArray = [...filteredStepSyncArray].reverse();
+
+
 
   //EXERCISE MINUTES ARRAY//
 
@@ -181,10 +194,16 @@ export default function SyncReport() {
     exerciseMinutes: string | number;
   };
 
-  const MinuteSyncArray: MinuteSyncEntry[] = stats?.syncs?.map((sync: any) => ({
-    date: sync.id,
-    exerciseMinutes: Number(sync.exerciseMinutes) ?? 0,
-  }));
+  const rawMinuteArray = Object.values(stats?.syncs || {}) as { id: string; exerciseMinutes?: number }[];
+
+  const MinuteSyncArray: MinuteSyncEntry[] = rawMinuteArray
+    .sort((a, b) => b.id.localeCompare(a.id)) // Oldest → Newest
+    .map((sync) => ({
+      date: sync.id,
+      exerciseMinutes: typeof sync.exerciseMinutes === "number" ? sync.exerciseMinutes : 0,
+    }));
+
+
 
   const MinuteValues = (MinuteSyncArray || [])
     .filter(entry => typeof entry.exerciseMinutes === "number")
@@ -204,7 +223,9 @@ export default function SyncReport() {
     ? [...new Set(MinuteSyncArray.map(entry => entry.date.slice(0, 7)))]
     : [];
 
-  const chartMinuteData = [...filteredMinutesSyncArray].reverse();
+
+
+  const reverseMinuteArray = [...filteredMinutesSyncArray].reverse();
 
 
   //SELECTED VIEW BAR//
@@ -274,11 +295,11 @@ export default function SyncReport() {
           >
             <div className="p-2 mb-10 bg-white/40 text-white rounded-lg flex flex-col">
               <div className="p-2 items-center rounded-lg shadow bg-white/40 text-white glowing-purple-button">
-                <div className="place-self-center text-left text-xl font-semibold ">Weight History</div>
+                <div className="place-self-center text-left text-xl font-semibold ">Weight Trends</div>
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartWeightData}>
+                  <LineChart data={filledWeightArray}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis
@@ -320,7 +341,7 @@ export default function SyncReport() {
                   </div>
                 </div>
                 <ul className="space-y-2">
-                  {filteredSyncArray.map((entry, index) => (
+                  {filteredSyncArray.filter((entry) => entry.weight !== null).map((entry, index) => (
                     <li key={index} className="p-4 grid grid-cols-2 items-center rounded-lg shadow bg-black/40 text-white">
                       <div className="place-self-center text-left font-semibold"> {entry.date} </div>
                       <div className="place-self-center text-right"> {entry?.weight} {entry.unit}</div>
@@ -347,7 +368,7 @@ export default function SyncReport() {
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartSleepData}>
+                  <LineChart data={reverseSleepArray}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis
@@ -409,7 +430,7 @@ export default function SyncReport() {
               </div>
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartStepData}>
+                  <BarChart data={reverseStepsArray}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis
@@ -473,7 +494,7 @@ export default function SyncReport() {
 
               <div className="w-full h-64 mt-2 mb-2 bg-black/40 rounded-lg p-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartMinuteData}>
+                  <BarChart data={reverseMinuteArray}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                     <XAxis dataKey="date" stroke="#fff" />
                     <YAxis

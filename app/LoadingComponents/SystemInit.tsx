@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getGlobalDataState } from "../../initializing/Global/store/globalStoreInstance";
+import { getGlobalDataState } from "../../Global/store/globalStoreInstance";
 
 export default function NavLoad() {
   const [show, setShow] = useState(true);

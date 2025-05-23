@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { useState, useEffect } from "react";
 import { Lock, Rotate3d, CircleCheckBig, KeyRound, UserPlus, LogIn, ListChecks, SmilePlus, Dumbbell, Utensils, Globe, LogOut } from 'lucide-react';
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
 export default function NavMenuPublic() {
 
 

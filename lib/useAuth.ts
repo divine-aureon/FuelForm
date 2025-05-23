@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { User } from "firebase/auth";
-import { setGlobalDataStore ,getGlobalDataState} from "@/app/initializing/Global/store/globalStoreInstance";
+import { setGlobalDataStore ,getGlobalDataState} from "@/app/Global/store/globalStoreInstance";
 import { sanitizeEmail } from "../lib/utils";
 
 

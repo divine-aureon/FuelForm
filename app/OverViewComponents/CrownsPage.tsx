@@ -1,8 +1,8 @@
 'use client';
 
-import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { UserProfile } from "../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/Global/store/globalStoreInstance";
+import { useGlobalData } from "@/app/Global/GlobalData";
+import { UserProfile } from "../Global/BodySyncManifest"
 
 import ControlHub from "./ControlHub/ControlHubBar";
 import { useState, useEffect } from "react";

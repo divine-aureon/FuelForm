@@ -1,6 +1,6 @@
 
-import { createGlobalDataStore } from "../../../initializing/Global/createGlobalDataStore"
-import type { GlobalSTORE } from "../../../initializing/Global/BodySyncManifest"
+import { createGlobalDataStore } from "../../Global/createGlobalDataStore"
+import type { GlobalSTORE } from "../../Global/BodySyncManifest"
 
 let currentStore = createGlobalDataStore("BodySync_anon");
 

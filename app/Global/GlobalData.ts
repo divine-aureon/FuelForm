@@ -1,42 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { UserProfile, SyncData, FitnessSyncData } from "@/lib/hooks/CoreData";
-import type { GlobalSTATE } from "../../initializing/Global/BodySyncManifest"
+import type { GlobalSTATE } from "../Global/BodySyncManifest"
 import { Niconne } from 'next/font/google';
 
 
 export const useGlobalData = create<GlobalSTATE>()(
     persist(
         (set) => ({
-            //CONNECTION GATE READY SET GO
-            userProfile: null,
-            setUserProfile: (profile) =>
-                set((state) => ({
-                    userProfile:
-                        typeof profile === "function" ? profile(state.userProfile) : profile,
-                })),
-
-            syncHistory: null,
-            setSyncHistory: (data) =>
-                set((state) => ({
-                    syncHistory:
-                        typeof data === "function" ? data(state.syncHistory) : data,
-                })),
-
-            fitnessHistory: {} as { [date: string]: FitnessSyncData },
-
-            setFitnessHistory: (data: { [date: string]: FitnessSyncData } | ((prev: { [date: string]: FitnessSyncData }) => { [date: string]: FitnessSyncData })) =>
-                set((state) => ({
-                    fitnessHistory: typeof data === "function" ? data(state.fitnessHistory) : data,
-                })),
-
-
-            latestSync: null,
-            setLatestSync: (sync: any) => set({ latestSync: sync }),
-
-            latestFitnessSync: null,
-            setLatestFitnessSync: (sync: any) => set({ latestFitnessSync: sync }),
-
 
             //FITNESS INFO
             activeSessionStatus: false,
