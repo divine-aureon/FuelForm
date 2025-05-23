@@ -31,8 +31,6 @@ export default function FitHistoryComponent() {
 
     const fitnessHistory = fitnessHistorySTORE;
 
-    if (!fitnessHistory) return;
-
     const [selectedDate, setSelectedDate] = useState<string>("");
     const [selectedEntry, setSelectedEntry] = useState<FitnessSyncData | null>(null);
     const movements = selectedEntry?.sessionData?.movements || [];
