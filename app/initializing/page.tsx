@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
-import { doc, getDoc, collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, where, orderBy, limit , setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase"; // assuming this is your Firestore instance
 import useAuth from '@/lib/useAuth';
 import type { UserProfile, SyncData, FitnessSyncData } from "../initializing/Global/BodySyncManifest"
@@ -28,43 +28,68 @@ export default function Loading() {
 
             //PULLING FROM DATABASE
             const userRef = doc(db, 'users', user.uid);
-            const syncsRef = collection(db, 'users', user.uid, 'syncs');
-            const FitRef = collection(db, 'users', user.uid, 'fitness');
-
             //QUERY
-            const latestSyncQuery = query(syncsRef, orderBy("__name__", "desc"), limit(1));
-            const latestFitnessSyncQuery = query(FitRef, orderBy("__name__", "desc"), limit(1));
 
 
-
-            const [profileSnap, latestSyncSnap, latestFitSyncSnap] = await Promise.all([
+            const [profileSnap] = await Promise.all([
                 getDoc(userRef),
-                getDocs(latestSyncQuery),
-                getDocs(latestFitnessSyncQuery),
             ]);
 
             //UPDATE USERPROFILE
             const profileData = profileSnap.exists() ? profileSnap.data() : null;
             setUserProfileSTORE(profileData as UserProfile);
 
-            //UPDATE LATEST SYNC
-            const latestDoc = latestSyncSnap.docs[0];
-            setLatestSyncSTORE({
-                id: latestDoc.id,
-                date: latestDoc.id,
-                ...(latestDoc.data() as Omit<SyncData, 'id' | 'date'>),
-            });
 
-            //UPDATE LATEST FITNESS SYNC
-            const latestFitDoc = latestFitSyncSnap.docs[0];
-            setLatestFitnessSyncSTORE({
-                id: latestFitDoc.id,
-                date: latestFitDoc.id,
-                ...(latestFitDoc.data() as Omit<FitnessSyncData, 'id'>),
-            });
+            if (!profileData?.token) {
+                const userRef = doc(db, 'users', user.uid);
+                await setDoc(userRef, { token: true }, { merge: true });
+                window.location.reload(); // refresh so init runs cleanly
+                return;
+            }
+
+
+            if (profileData?.isPaid) {
+
+                const syncsRef = collection(db, 'users', user.uid, 'syncs');
+                const FitRef = collection(db, 'users', user.uid, 'fitness');
+
+                const latestSyncQuery = query(syncsRef, orderBy("__name__", "desc"), limit(1));
+                const latestFitnessSyncQuery = query(FitRef, orderBy("__name__", "desc"), limit(1));
+
+                const [latestSyncSnap, latestFitSyncSnap] = await Promise.all([
+                    getDocs(latestSyncQuery),
+                    getDocs(latestFitnessSyncQuery),
+                ]);
+
+
+                //UPDATE LATEST SYNC
+                const latestDoc = latestSyncSnap.docs[0];
+                if (latestDoc) {
+                    setLatestSyncSTORE({
+                        id: latestDoc.id,
+                        date: latestDoc.id,
+                        ...(latestDoc.data() as Omit<SyncData, 'id' | 'date'>),
+                    });
+                } else {
+                    setLatestSyncSTORE(null); // or leave it undefined
+                }
+
+                //UPDATE LATEST FITNESS SYNC
+                const latestFitDoc = latestFitSyncSnap.docs[0];
+                if (latestFitDoc) {
+                    setLatestFitnessSyncSTORE({
+                        id: latestFitDoc.id,
+                        date: latestFitDoc.id,
+                        ...(latestFitDoc.data() as Omit<FitnessSyncData, 'id'>),
+                    });
+                } else {
+                    setLatestFitnessSyncSTORE(null); // or leave it undefined
+                }
+            }
         };
 
         const runInit = async () => {
+
             await fetchStats(); // ensures data is fully fetched and set
             router.push('/overview');
         }

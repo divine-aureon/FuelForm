@@ -40,9 +40,6 @@ export default function ControlHubMenu() {
     }
   };
 
-  const AccessToken = userProfile?.token ?? null;
-  if (typeof AccessToken !== 'boolean') return;
-
   return (
     <div className=" flex flex-col gap-1 z-60 mb-4 mt-3">
 
