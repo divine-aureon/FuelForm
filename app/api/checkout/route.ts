@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       allow_promotion_codes: true,
-      success_url: 'https://www.fuelform.online/upgrading-access-codes',
-      cancel_url: 'https://www.fuelform.online/command-center',
+      success_url: 'https://www.bodysync.online/initializing',
+      cancel_url: 'https://www.bodysync.online/overview',
       metadata: {
         userId: uid
       },
