@@ -99,7 +99,7 @@ export default function LiftIndexComponent() {
         "Bulgarian Split Squats",
         "Walking Lunges",
         "Abductor (Glutes)",
-        "Adductor (Inner Tight)",
+        "Adductor (Inner Thigh)",
         "Leg Extension Machine",
         "Seated Hamstring Curl",
         "Laying Hamstring Curl",

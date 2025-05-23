@@ -18,8 +18,6 @@ export type GlobalSTORE = {
 
 };
 
-export type SyncDataWithID = SyncData & { id: string };
-
 export type GlobalSTATE = {
 
   //USERID INFO
@@ -165,11 +163,13 @@ export type MovementLog = {
 
 //LATEST SYNC
 export type SyncData = {
-  weight_lbs: number;
-  weight_kg: number;
-  steps: number;
-  exerciseMinutes: number;
-  exerciseIntensity: string;
+  id: string;
+  date: string; 
+  weight_lbs?: number;
+  weight_kg?: number;
+  steps?: number;
+  exerciseMinutes?: number;
+  exerciseIntensity?: string;
   recoveryMacros?: any[];
   activeMacros?: any[];
   vitamins?: any[];
@@ -185,6 +185,7 @@ export type SyncData = {
 
 //LATEST FITNESS SYNC
 export type FitnessSyncData = {
+  id: string;
   split: string;
   bodygroup: string;
   whichProfile: string;
@@ -192,6 +193,7 @@ export type FitnessSyncData = {
   StartTime: any;
   EndTime: any;
   sessionData: SessionData;
+  fitnessSync: Boolean;
 };
 
 export type SessionData = {
@@ -199,27 +201,6 @@ export type SessionData = {
     [setKey: string]: SetEntry;
   };
 };
-
-export type SetEntry2 = {
-  liftWeight_lbs: number | undefined;
-  liftWeight_kg: number | undefined;
-  reps: number | undefined;
-  locked: boolean;
-  dropset: boolean;
-  dropsets: {
-    [dropKey: string]: DropSetEntry;
-  };
-};
-
-export type DropSetEntry = {
-  liftWeight_lbs: number | undefined;
-  liftWeight_kg: number | undefined;
-  reps: number | undefined;
-  locked: boolean;
-};
-
-
-
 
 export type GoalSyncData = {
   liftWeight_lbs: number;
@@ -330,7 +311,6 @@ export type UserProfile = {
 
 export type AllTypes = {
   SetEntry: SetEntry;
-  DropSetEntry: DropSetEntry;
   WorkoutSessionData: WorkoutSessionData;
   MovementLog: MovementLog;
 
@@ -354,7 +334,6 @@ export type AllTypes = {
 
 export const TypeManifest: AllTypes = {
   SetEntry: {} as SetEntry,
-  DropSetEntry: {} as DropSetEntry,
   WorkoutSessionData: {} as WorkoutSessionData,
   MovementLog: {} as MovementLog,
 

@@ -1,5 +1,5 @@
 'use client';
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
 import { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
@@ -15,10 +15,13 @@ const intensityOptions = ["None", "Light", "Moderate", "High"]
 
 export default function DuskSyncComponent() {
 
-           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
-       const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
-    
+    const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+    const setLatestSyncSTORE = getGlobalDataState().setLatestSyncSTORE;
+    const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
+    const latestSync = latestSyncSTORE;
+
     const router = useRouter();
     const [status, setStatus] = useState("");
 
@@ -47,8 +50,8 @@ export default function DuskSyncComponent() {
 
             const { activeTDEE, activeMacros, vitamins, minerals }
                 = calculateActiveFuel({
-                    weight_lbs: userProfile?.latestSync?.weight_lbs,
-                    weight_kg: userProfile?.latestSync?.weight_kg,
+                    weight_lbs: latestSync?.weight_lbs,
+                    weight_kg: latestSync?.weight_kg,
                     steps: parsedSteps,
                     exerciseMinutes: parsedExerciseMinutes,
                     exerciseIntensity: exerciseIntensity.toLowerCase(),
@@ -62,9 +65,7 @@ export default function DuskSyncComponent() {
             const syncRef = collection(db, "users", userId, "syncs");
             const syncDocRef = doc(syncRef, dateString);
 
-
             await setDoc(syncDocRef, {
-
                 steps: parsedSteps,
                 exerciseMinutes: parsedExerciseMinutes,
                 exerciseIntensity: exerciseIntensity.toLowerCase(),
@@ -76,6 +77,46 @@ export default function DuskSyncComponent() {
                 duskTimestamp: serverTimestamp(),
                 timestamp: serverTimestamp(),
             }, { merge: true });
+            const latest = getGlobalDataState().latestSyncSTORE;
+            //const isToday = latestSync?.timestamp?.toISOString().startsWith(dateString);
+            //const isToday = latestSync?.timestamp?.toDate?.().toISOString().startsWith(dateString);
+
+            const isToday = latestSync?.id === dateString;
+
+            if (isToday) {
+                // ✅ Safe to merge into today's sync
+                setLatestSyncSTORE({
+                    ...latest,
+                    steps: parsedSteps,
+                    exerciseMinutes: parsedExerciseMinutes,
+                    exerciseIntensity: exerciseIntensity.toLowerCase(),
+                    vitamins,
+                    minerals,
+                    activeMacros,
+                    activeTDEE,
+                    duskSync: true,
+                    duskTimestamp: serverTimestamp(),
+                    timestamp: serverTimestamp(),
+                });
+            } else {
+                // 🚨 Not today's sync — don't merge. Just create a new object.
+                const newTodaySync = {
+                    id: dateString,
+                    steps: parsedSteps,
+                    exerciseMinutes: parsedExerciseMinutes,
+                    exerciseIntensity: exerciseIntensity.toLowerCase(),
+                    vitamins,
+                    minerals,
+                    activeMacros,
+                    activeTDEE,
+                    duskSync: true,
+                    duskTimestamp: serverTimestamp(),
+                    timestamp: serverTimestamp(),
+                };
+
+                setLatestSyncSTORE(newTodaySync);
+            }
+
 
 
             setStatus("success");
@@ -87,7 +128,8 @@ export default function DuskSyncComponent() {
     useEffect(() => {
         if (status === "success") {
             const timeout = setTimeout(() => {
-                   router.push('/initializing');
+                //router.push('/initializing');
+                setSelectedPage("bodysync");
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);

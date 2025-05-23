@@ -1,9 +1,9 @@
 "use client";
 
 
-import { getGlobalDataState }  from "@/app/initializing/Global/store/globalStoreInstance";
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
-import { AllTypes, TypeManifest, UserProfile , LiftIndexData , FitnessSettingsData } from "@/app/initializing/Global/BodySyncManifest";
+import { AllTypes, TypeManifest, UserProfile, LiftIndexData, FitnessSettingsData } from "@/app/initializing/Global/BodySyncManifest";
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,7 +21,7 @@ export default function CoreStackComponent() {
     //CENTRAL INTELLIGENCE
     const { user } = useAuth();
 
-          const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
 
     const currentSplit = userProfile?.fitnessSettings?.currentSplit || "null";
@@ -577,6 +577,19 @@ export default function CoreStackComponent() {
                                                 completed: false,
                                                 StartTime: serverTimestamp(),
                                             }, { merge: true });
+
+
+                                            const setLatestFitnessSyncSTORE = getGlobalDataState().setLatestFitnessSyncSTORE;
+
+                                            setLatestFitnessSyncSTORE({
+                                                id: dateString,
+                                                split: activeSplit,
+                                                bodygroup: activeBodygroup,
+                                                whichProfile: activeProfile,
+                                                completed: false,
+                                                StartTime: serverTimestamp(),
+                                            });
+
                                             setSelectedPage("RepSync");
                                             setActiveSessionStatus(true);
                                             setTemporaryFitnessSync({

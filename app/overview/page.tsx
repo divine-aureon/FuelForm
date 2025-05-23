@@ -43,9 +43,12 @@ import MineralBreakdown from "../OverViewComponents/NutrientDisplay/MineralBreak
 import { BuildEnergyData } from "../OverViewComponents/NutrientDisplay/BuildEnergyData";
 import { BuildVitaminData } from "../OverViewComponents/NutrientDisplay/BuildVitaminData";
 import { BuildMineralData } from "../OverViewComponents/NutrientDisplay/BuildMineralData";
-import useTodaysSync from '@/lib/hooks/hasDawnDuskSynced';
+import useDawnSyncPoints from '@/app/OverViewComponents/Sync/hasDawnSynced';
+import useDuskSyncPoints from '@/app/OverViewComponents/Sync/hasDuskSynced';
+import useFitnessSyncPoints from '@/app/OverViewComponents/Sync/hasFitnessSynced';
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
 import NavLoad from "../initializing/LoadingComponents/NavLoad"
+import SystemInit from "../initializing/LoadingComponents/SystemInit"
 
 //PULSE DROP COMPONENT
 import BirthdayDrop from "../OverViewComponents/PulseDrops/BirthdayDrop";
@@ -53,22 +56,18 @@ import PulseDropEngine from "../OverViewComponents/PulseDrops/Data/PulseDropEngi
 
 //OVERVIEW PAGE BEGINS
 export default function CommandCenter() {
-
+console.warn("USER PROFILE:", getGlobalDataState().userProfileSTORE);
 
   //CENTRAL INTELLIGENCE
   const { user } = useAuth();
+
+
 
 
   const userProfileSTORE = getGlobalDataState().userProfileSTORE;
   const userProfile = userProfileSTORE;
   const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
   const latestSync = latestSyncSTORE;
-
-  //const setUserProfile = useGlobalData((s) => s.setUserProfile);
-
-  //useEffect(() => {
-  // setUserProfile(userProfileSTORE as UserProfile);
-  //}, []);
 
   ///END NOTE
 
@@ -173,9 +172,11 @@ export default function CommandCenter() {
 
 
   //DAWN SYNC BUTTON MANIPULATION
-  useTodaysSync();
+  useDawnSyncPoints();
   const hasDawnSyncedToday = useGlobalData((s) => s.hasDawnSyncedToday);
+  useDuskSyncPoints();
   const hasDuskSyncedToday = useGlobalData((s) => s.hasDuskSyncedToday);
+  useFitnessSyncPoints();
   const hasFitnessSyncedToday = useGlobalData((s) => s.hasFitnessSyncedToday);
 
   //DAILY SYNC PROGRESS BAR
@@ -188,13 +189,11 @@ export default function CommandCenter() {
 
   const percentage = (TotalBarPoints / 3) * 100;
 
-
   //THE VISUAL PAGE STARTS HERE
   return (
     <>
       <ScrollLoad />
       <NavLoad />
-
       <PageFadeWrapper>
         {/*<BirthdayDrop />*/}
 

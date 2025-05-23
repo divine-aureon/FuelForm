@@ -216,13 +216,13 @@ export default function RepSync() {
   const addDropSetToSet = (movementName: string, parentSetId: string) => {
     setWorkoutSessionData((prev) => {
       const updated = { ...prev };
-    const movement = updated.movements.find((m) => m.name === movementName);
-    if (!movement) return prev;
+      const movement = updated.movements.find((m) => m.name === movementName);
+      if (!movement) return prev;
 
-    // Only count main sets for parent ID
-    const mainSets = movement.sets.filter((s) => !s.isDropset);
-    const lastMainSet = mainSets[mainSets.length - 1];
-    if (!lastMainSet) return prev;
+      // Only count main sets for parent ID
+      const mainSets = movement.sets.filter((s) => !s.isDropset);
+      const lastMainSet = mainSets[mainSets.length - 1];
+      if (!lastMainSet) return prev;
 
       const dropCount = movement.sets.filter(
         (s) => s.isDropset && s.parentSetId === parentSetId
@@ -568,6 +568,17 @@ export default function RepSync() {
                   sessionData: cleanedWorkout,
                   EndTime: serverTimestamp(),
                 }, { merge: true });
+
+                const setLatestFitnessSyncSTORE = getGlobalDataState().setLatestFitnessSyncSTORE;
+                const latest = getGlobalDataState().latestFitnessSyncSTORE;
+
+                setLatestFitnessSyncSTORE({
+                  ...latest,
+                  completed: true,
+                  fitnessSync: true,
+                  sessionData: cleanedWorkout,
+                  EndTime: serverTimestamp(),
+                });
 
                 window.location.reload();
                 setSelectedPage("BodySync");

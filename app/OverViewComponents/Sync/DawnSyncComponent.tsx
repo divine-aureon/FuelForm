@@ -1,7 +1,9 @@
 'use client';
-import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
-import { UserProfile } from "../../initializing/Global/BodySyncManifest"
+import { getGlobalDataState } from "@/app/initializing/Global/store/globalStoreInstance";
+
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile, SyncData } from "../../initializing/Global/BodySyncManifest"
+
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -16,10 +18,13 @@ export default function DawnSyncComponent() {
     const { user } = useAuth();
     const router = useRouter();
     const [status, setStatus] = useState("");
-           const userProfileSTORE = getGlobalDataState().userProfileSTORE;
+    const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
+    const setLatestSyncSTORE = getGlobalDataState().setLatestSyncSTORE;
+    const latestSyncSTORE = getGlobalDataState().latestSyncSTORE;
+    const latestSync = latestSyncSTORE;
 
-      const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
+    const setSelectedPage = useGlobalData((s) => s.setSelectedPage);
 
 
     const [weight_lbs, setWeightLbs] = useState("");
@@ -96,7 +101,65 @@ export default function DawnSyncComponent() {
                 lastKnownWeight_lbs: weight_lbs,
                 lastKnownWeight_kg: weight_kg,
             }, { merge: true });
-        
+
+
+            setLatestSyncSTORE({
+                ...getGlobalDataState().latestSyncSTORE,
+                weight_lbs,
+                weight_kg,
+                recoveryMacros,
+                vitamins,
+                minerals,
+                recoveryTDEE,
+                sleepQuality: sleepQuality || null,
+                sleepDuration: sleepDuration || null,
+                dawnSync: true,
+                dawnTimestamp: serverTimestamp(),
+                timestamp: serverTimestamp(),
+            });
+
+            const latest = getGlobalDataState().latestSyncSTORE;
+            //const isToday2 = latestSync?.timestamp?.toISOString().startsWith(dateString);
+            // const isToday = latestSync?.timestamp?.toDate?.().toISOString().startsWith(dateString);
+
+            const isToday = latestSync?.id === dateString;
+
+            if (isToday) {
+                // ✅ Safe to merge into today's sync
+                setLatestSyncSTORE({
+                    ...latest,
+                    weight_lbs,
+                    weight_kg,
+                    recoveryMacros,
+                    vitamins,
+                    minerals,
+                    recoveryTDEE,
+                    sleepQuality: sleepQuality || null,
+                    sleepDuration: sleepDuration || null,
+                    dawnSync: true,
+                    dawnTimestamp: serverTimestamp(),
+                    timestamp: serverTimestamp(),
+                });
+            } else {
+                // 🚨 Not today's sync — don't merge. Just create a new object.
+                const newTodaySync = {
+                    id: dateString,
+                    weight_lbs,
+                    weight_kg,
+                    recoveryMacros,
+                    vitamins,
+                    minerals,
+                    recoveryTDEE,
+                    sleepQuality: sleepQuality || null,
+                    sleepDuration: sleepDuration || null,
+                    dawnSync: true,
+                    dawnTimestamp: serverTimestamp(),
+                    timestamp: serverTimestamp(),
+                };
+
+                setLatestSyncSTORE(newTodaySync);
+            }
+
 
 
             setStatus("success");
@@ -111,7 +174,8 @@ export default function DawnSyncComponent() {
         if (status === "success") {
 
             const timeout = setTimeout(() => {
-          router.push('/initializing');
+                //router.push('/initializing');
+                setSelectedPage("bodysync");
             }, 0); // optional delay (1 second)
 
             return () => clearTimeout(timeout);
@@ -145,7 +209,7 @@ export default function DawnSyncComponent() {
                             required
                         />
                     </p>
-                   
+
                     <p className="text-lg text-white font-semibold mb-1">
                         Sleep Quality
                         <input
