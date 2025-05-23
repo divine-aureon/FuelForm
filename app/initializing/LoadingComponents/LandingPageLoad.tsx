@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getGlobalDataState  } from "@/app/initializing/Global/store/globalStoreInstance";
 import { useGlobalData } from "@/app/initializing/Global/GlobalData";
+import type { UserProfile } from "../../initializing/Global/BodySyncManifest"
 
 export default function LoadingComponent() {
 
@@ -15,7 +16,7 @@ export default function LoadingComponent() {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setUserProfile(userProfile);
+            setUserProfile(userProfile as UserProfile);
             // do something here after 800ms
             console.log("Time's up!");
             router.push('/home');
