@@ -38,6 +38,7 @@ export default function FitHistoryComponent() {
     const movements = selectedEntry?.sessionData?.movements || [];
 
     useEffect(() => {
+        if (!fitnessHistory) return;
         const todayId = new Date().toISOString().split("T")[0];
         if (fitnessHistory && fitnessHistory[todayId]) {
             setSelectedDate(todayId);
@@ -89,7 +90,7 @@ export default function FitHistoryComponent() {
                             <div className="p-1 rounded-xl bg-white/50 mb-2 "></div>
 
                             <ul className="space-y-1">
-                               <div className="grid grid-cols-[2fr_1fr_1fr] gap-4">
+                                <div className="grid grid-cols-[2fr_1fr_1fr] gap-4">
                                     <div></div>
                                     <div className="bg-black/20 rounded-xl  text-lg text-right pr-2">Reps</div>
                                     <div className="bg-black/20 rounded-xl  text-lg text-left pl-2">Weight</div>
