@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function NavLoad() {
+export default function HomeLoad() {
   const [show, setShow] = useState(true);
 
   useEffect(() => {

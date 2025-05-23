@@ -24,8 +24,6 @@ export default function BiometricsComponent() {
 
       const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
-  const setUserProfile = useGlobalData((s) => s.setUserProfile);
-  const setUserProfileSTORE = getGlobalDataState().setUserProfileSTORE;
 
   const isOpen = useGlobalData((s) => s.isOpen);
   const setIsOpen = useGlobalData((s) => s.setIsOpen);

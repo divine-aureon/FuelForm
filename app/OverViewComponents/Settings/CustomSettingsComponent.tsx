@@ -18,7 +18,6 @@ export default function SettingsPageComponent() {
 
         const userProfileSTORE = getGlobalDataState().userProfileSTORE;
     const userProfile = userProfileSTORE
-    const setUserProfile = useGlobalData((s) => s.setUserProfile);
 
     const router = useRouter();
     const [status, setStatus] = useState("");

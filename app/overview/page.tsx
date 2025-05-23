@@ -46,7 +46,6 @@ import useDuskSyncPoints from '@/app/OverViewComponents/Sync/hasDuskSynced';
 import useFitnessSyncPoints from '@/app/OverViewComponents/Sync/hasFitnessSynced';
 import ScrollLoad from "@/Backgrounds/ScrollLoad";
 import NavLoad from "../LoadingComponents/NavLoad"
-import SystemInit from "../LoadingComponents/SystemInit"
 
 //PULSE DROP COMPONENT
 import BirthdayDrop from "../OverViewComponents/PulseDrops/BirthdayDrop";
